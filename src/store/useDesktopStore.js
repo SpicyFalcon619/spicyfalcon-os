@@ -13,6 +13,7 @@ const useDesktopStore = create((set) => ({
   selectedIconIds: [],
   contextMenu: { visible: false, x: 0, y: 0 },
   startMenuVisible: false,
+  systemTrayPopup: null,
   
   hasBooted: false,
   setHasBooted: () => set({ hasBooted: true }),
@@ -22,13 +23,15 @@ const useDesktopStore = create((set) => ({
       ? (state.selectedIconIds.includes(id) ? state.selectedIconIds : [...state.selectedIconIds, id])
       : [id],
     contextMenu: { visible: false, x: 0, y: 0 },
-    startMenuVisible: false
+    startMenuVisible: false,
+    systemTrayPopup: null
   })),
 
   clearSelection: () => set({ 
     selectedIconIds: [], 
     contextMenu: { visible: false, x: 0, y: 0 }, 
-    startMenuVisible: false 
+    startMenuVisible: false,
+    systemTrayPopup: null 
   }),
 
   updateIconPosition: (id, x, y) => set((state) => ({
@@ -41,6 +44,12 @@ const useDesktopStore = create((set) => ({
   }),
 
   hideContextMenu: () => set({ contextMenu: { visible: false, x: 0, y: 0 } }),
+
+  setSystemTrayPopup: (popup) => set((state) => ({ 
+    systemTrayPopup: state.systemTrayPopup === popup ? null : popup,
+    startMenuVisible: false,
+    contextMenu: { visible: false, x: 0, y: 0 }
+  })),
 
   toggleStartMenu: () => set((state) => ({
     startMenuVisible: !state.startMenuVisible,

@@ -1,16 +1,20 @@
-import React from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import useDesktopStore from '../../store/useDesktopStore';
 import { Windows7Logo } from '../shared/BootScreen';
+import { CalendarPopup, VolumePopup } from './SystemTrayPopups';
 
 const Taskbar = () => {
+  const [taskbarMenu, setTaskbarMenu] = React.useState({ visible: false, x: 0, y: 0, winId: null });
   const windows = useWindowStore(state => state.windows);
   const activeWindowId = useWindowStore(state => state.activeWindowId);
   const focusWindow = useWindowStore(state => state.focusWindow);
   const restoreWindow = useWindowStore(state => state.restoreWindow);
   const minimizeWindow = useWindowStore(state => state.minimizeWindow);
+  const closeWindow = useWindowStore(state => state.closeWindow);
   
   const toggleStartMenu = useDesktopStore(state => state.toggleStartMenu);
+  const systemTrayPopup = useDesktopStore(state => state.systemTrayPopup);
+  const setSystemTrayPopup = useDesktopStore(state => state.setSystemTrayPopup);
 
   const taskbarStyle = {
     position: 'absolute',
@@ -60,11 +64,18 @@ const Taskbar = () => {
     }
   };
 
+  const handleContextMenu = (e, winId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setTaskbarMenu({ visible: true, x: e.clientX, y: e.clientY - 120, winId }); // offset so it doesn't spawn under cursor and immediately click
+    setSystemTrayPopup(null);
+  };
+
   return (
-    <div style={taskbarStyle} onContextMenu={(e) => e.preventDefault()}>
+    <div style={taskbarStyle} onContextMenu={(e) => e.preventDefault()} onPointerDown={() => setTaskbarMenu({ ...taskbarMenu, visible: false })}>
       <div 
         style={startButtonStyle} 
-        onClick={handleStartClick}
+        onPointerDown={handleStartClick}
         onMouseOver={(e) => { e.currentTarget.style.filter = 'brightness(1.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(255,255,255,0.8), inset 0 2px 5px rgba(255,255,255,0.8)'; }}
         onMouseOut={(e) => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.8)'; }}
         onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
@@ -82,7 +93,8 @@ const Taskbar = () => {
           return (
             <div 
               key={win.id} 
-              onClick={() => handleTaskbarItemClick(win)}
+              onPointerDown={() => handleTaskbarItemClick(win)}
+              onContextMenu={(e) => handleContextMenu(e, win.id)}
               style={{
                 width: '140px',
                 height: '32px',
@@ -119,12 +131,64 @@ const Taskbar = () => {
         textShadow: '0 1px 2px black',
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
-        borderLeft: '1px solid rgba(255,255,255,0.3)'
+        gap: '15px',
+        borderLeft: '1px solid rgba(255,255,255,0.3)',
+        height: '100%',
+        position: 'relative'
       }}>
-        <span>🔊</span>
-        <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        {systemTrayPopup === 'volume' && <VolumePopup />}
+        {systemTrayPopup === 'calendar' && <CalendarPopup />}
+        
+        <div 
+          onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup('volume'); }} 
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+        >
+          🔊
+        </div>
+        <div 
+          onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup('calendar'); }} 
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+        >
+          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
       </div>
+
+      {/* Taskbar Context Menu */}
+      {taskbarMenu.visible && (
+        <div style={{
+          position: 'absolute',
+          left: taskbarMenu.x,
+          top: taskbarMenu.y,
+          width: '150px',
+          backgroundColor: '#f0f0f0',
+          border: '1px solid #999',
+          boxShadow: '2px 2px 5px rgba(0,0,0,0.2)',
+          zIndex: 99999,
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '2px'
+        }}>
+          <div 
+            style={{ padding: '6px 20px', cursor: 'pointer', fontSize: '12px' }} 
+            onMouseOver={e => e.target.style.backgroundColor = '#0078d7'}
+            onMouseOut={e => e.target.style.backgroundColor = 'transparent'}
+            onPointerDown={(e) => { e.stopPropagation(); restoreWindow(taskbarMenu.winId); setTaskbarMenu({...taskbarMenu, visible: false}); }}
+          >Restore</div>
+          <div 
+            style={{ padding: '6px 20px', cursor: 'pointer', fontSize: '12px' }} 
+            onMouseOver={e => e.target.style.backgroundColor = '#0078d7'}
+            onMouseOut={e => e.target.style.backgroundColor = 'transparent'}
+            onPointerDown={(e) => { e.stopPropagation(); minimizeWindow(taskbarMenu.winId); setTaskbarMenu({...taskbarMenu, visible: false}); }}
+          >Minimize</div>
+          <div style={{ borderTop: '1px solid #ccc', margin: '2px 0' }}></div>
+          <div 
+            style={{ padding: '6px 20px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }} 
+            onMouseOver={e => e.target.style.backgroundColor = '#0078d7'}
+            onMouseOut={e => e.target.style.backgroundColor = 'transparent'}
+            onPointerDown={(e) => { e.stopPropagation(); closeWindow(taskbarMenu.winId); setTaskbarMenu({...taskbarMenu, visible: false}); }}
+          >Close window</div>
+        </div>
+      )}
     </div>
   );
 };

@@ -6,17 +6,17 @@ import AppRouter from '../apps/AppRouter';
 const Window = ({ windowData }) => {
   const { id, title, x, y, width, height, isMinimized, isMaximized, zIndex } = windowData;
   const focusWindow = useWindowStore(state => state.focusWindow);
+  const updateWindowSize = useWindowStore(state => state.updateWindowSize);
+  const updateWindowPosition = useWindowStore(state => state.updateWindowPosition);
   const activeWindowId = useWindowStore(state => state.activeWindowId);
 
   const windowRef = useRef(null);
+  const resizeRef = useRef({ isResizing: false, direction: '', startX: 0, startY: 0, startWidth: 0, startHeight: 0, startWinX: 0, startWinY: 0 });
+  
   const isActive = activeWindowId === id;
 
-  if (isMinimized) {
-    // Hidden completely for Phase 1. In Phase 2 we will animate to taskbar
-    return null; 
-  }
+  if (isMinimized) return null; 
 
-  // Windows 7 Aero Glass styles
   const windowStyle = {
     position: 'absolute',
     left: isMaximized ? 0 : x,
@@ -32,13 +32,78 @@ const Window = ({ windowData }) => {
     boxShadow: isActive ? 'var(--aero-glass-shadow)' : '0 2px 10px rgba(0,0,0,0.2)',
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden',
-    transition: 'width 0.1s, height 0.1s', // Smooth maximizing, but no transition on left/top to avoid drag lag
+    transition: 'opacity 0.2s', 
   };
 
   const handlePointerDown = () => {
     focusWindow(id);
   };
+
+  const handleResizeDown = (e, dir) => {
+    if (isMaximized) return;
+    e.stopPropagation();
+    e.target.setPointerCapture(e.pointerId);
+    resizeRef.current = {
+      isResizing: true,
+      direction: dir,
+      startX: e.clientX,
+      startY: e.clientY,
+      startWidth: width,
+      startHeight: height,
+      startWinX: x,
+      startWinY: y
+    };
+  };
+
+  const handleResizeMove = (e) => {
+    if (!resizeRef.current.isResizing) return;
+    const { direction, startX, startY, startWidth, startHeight, startWinX, startWinY } = resizeRef.current;
+    
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+
+    let newWidth = startWidth;
+    let newHeight = startHeight;
+    let newX = startWinX;
+    let newY = startWinY;
+
+    if (direction.includes('e')) newWidth = Math.max(300, startWidth + deltaX);
+    if (direction.includes('s')) newHeight = Math.max(200, startHeight + deltaY);
+    if (direction.includes('w')) {
+      const possWidth = startWidth - deltaX;
+      if (possWidth > 300) {
+        newWidth = possWidth;
+        newX = startWinX + deltaX;
+      }
+    }
+    if (direction.includes('n')) {
+      const possHeight = startHeight - deltaY;
+      if (possHeight > 200) {
+        newHeight = possHeight;
+        newY = startWinY + deltaY;
+      }
+    }
+
+    updateWindowSize(id, newWidth, newHeight);
+    if (newX !== startWinX || newY !== startWinY) {
+      updateWindowPosition(id, newX, newY);
+    }
+  };
+
+  const handleResizeUp = (e) => {
+    if (!resizeRef.current.isResizing) return;
+    resizeRef.current.isResizing = false;
+    e.target.releasePointerCapture(e.pointerId);
+  };
+
+  const ResizeHandle = ({ dir, style }) => (
+    <div 
+      style={{ position: 'absolute', zIndex: 10, ...style }}
+      onPointerDown={(e) => handleResizeDown(e, dir)}
+      onPointerMove={handleResizeMove}
+      onPointerUp={handleResizeUp}
+    />
+  );
 
   return (
     <div 
@@ -46,6 +111,19 @@ const Window = ({ windowData }) => {
       style={windowStyle} 
       onPointerDown={handlePointerDown}
     >
+      {!isMaximized && (
+        <>
+          <ResizeHandle dir="n" style={{ top: -5, left: 5, right: 5, height: 10, cursor: 'n-resize' }} />
+          <ResizeHandle dir="s" style={{ bottom: -5, left: 5, right: 5, height: 10, cursor: 's-resize' }} />
+          <ResizeHandle dir="e" style={{ top: 5, bottom: 5, right: -5, width: 10, cursor: 'e-resize' }} />
+          <ResizeHandle dir="w" style={{ top: 5, bottom: 5, left: -5, width: 10, cursor: 'w-resize' }} />
+          <ResizeHandle dir="ne" style={{ top: -5, right: -5, width: 15, height: 15, cursor: 'ne-resize' }} />
+          <ResizeHandle dir="nw" style={{ top: -5, left: -5, width: 15, height: 15, cursor: 'nw-resize' }} />
+          <ResizeHandle dir="se" style={{ bottom: -5, right: -5, width: 15, height: 15, cursor: 'se-resize' }} />
+          <ResizeHandle dir="sw" style={{ bottom: -5, left: -5, width: 15, height: 15, cursor: 'sw-resize' }} />
+        </>
+      )}
+
       <WindowTitleBar 
         windowData={windowData} 
         isActive={isActive} 

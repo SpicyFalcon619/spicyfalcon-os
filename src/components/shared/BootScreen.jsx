@@ -94,7 +94,7 @@ const BootScreen = () => {
           fontWeight: '300',
           color: '#fff'
         }}>
-          Starting Windows
+          Starting SpicyFalcon OS
         </div>
       </div>
       <style>{`

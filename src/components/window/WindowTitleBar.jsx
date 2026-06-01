@@ -32,11 +32,20 @@ const WindowTitleBar = ({ windowData, isActive }) => {
     const deltaX = e.clientX - dragRef.current.startX;
     const deltaY = e.clientY - dragRef.current.startY;
     
-    updateWindowPosition(
-      id, 
-      dragRef.current.initialWinX + deltaX, 
-      dragRef.current.initialWinY + deltaY
-    );
+    let newX = dragRef.current.initialWinX + deltaX;
+    let newY = dragRef.current.initialWinY + deltaY;
+
+    // Constrain Y to not go above screen or below taskbar
+    if (newY < 0) newY = 0;
+    if (newY > window.innerHeight - 60) newY = window.innerHeight - 60;
+    
+    // Constrain X so at least 50px of titlebar is grabbable
+    const minX = -(windowData.width || 600) + 50;
+    const maxX = window.innerWidth - 50;
+    if (newX < minX) newX = minX;
+    if (newX > maxX) newX = maxX;
+
+    updateWindowPosition(id, newX, newY);
   };
 
   const handlePointerUp = (e) => {
