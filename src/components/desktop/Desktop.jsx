@@ -6,6 +6,7 @@ import StartMenu from './StartMenu';
 import ContextMenu from './ContextMenu';
 import BootScreen from '../shared/BootScreen';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
+import { AnimatePresence } from 'framer-motion';
 
 const Desktop = ({ children }) => {
   const icons = useDesktopStore(state => state.icons);
@@ -77,7 +78,9 @@ const Desktop = ({ children }) => {
       ))}
 
       {/* Application Windows */}
-      {children}
+      <AnimatePresence>
+        {children}
+      </AnimatePresence>
 
       <StartMenu />
       <Taskbar />

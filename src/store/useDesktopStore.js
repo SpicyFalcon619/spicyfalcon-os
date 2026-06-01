@@ -14,9 +14,11 @@ const useDesktopStore = create((set) => ({
   contextMenu: { visible: false, x: 0, y: 0 },
   startMenuVisible: false,
   systemTrayPopup: null,
+  globalVolume: 50,
   
   hasBooted: false,
   setHasBooted: () => set({ hasBooted: true }),
+  setGlobalVolume: (vol) => set({ globalVolume: vol }),
 
   selectIcon: (id, multi = false) => set((state) => ({
     selectedIconIds: multi 

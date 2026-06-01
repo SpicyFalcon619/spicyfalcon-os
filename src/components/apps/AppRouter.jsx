@@ -5,7 +5,7 @@ const WindowsExplorer = lazy(() => import('./WindowsExplorer'));
 const InternetExplorer = lazy(() => import('./InternetExplorer'));
 const MSPaint = lazy(() => import('./MSPaint'));
 const Minesweeper = lazy(() => import('./Minesweeper'));
-const RetroSpotify = lazy(() => import('./RetroSpotify'));
+const Spicefify = lazy(() => import('./Spicefify'));
 const CommandPrompt = lazy(() => import('./CommandPrompt'));
 const ControlPanel = lazy(() => import('./ControlPanel'));
 const Calculator = lazy(() => import('./Calculator'));
@@ -22,7 +22,7 @@ const AppRouter = ({ windowData }) => {
       case 'ie': return <InternetExplorer windowData={windowData} />;
       case 'paint': return <MSPaint windowData={windowData} />;
       case 'minesweeper': return <Minesweeper windowData={windowData} />;
-      case 'spotify': return <RetroSpotify windowData={windowData} />;
+      case 'spotify': return <Spicefify windowData={windowData} />;
       case 'cmd': return <CommandPrompt windowData={windowData} />;
       case 'control-panel': return <ControlPanel windowData={windowData} />;
       case 'calculator': return <Calculator windowData={windowData} />;

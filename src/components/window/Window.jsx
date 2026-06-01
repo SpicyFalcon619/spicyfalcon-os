@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { motion } from 'framer-motion';
 import useWindowStore from '../../store/useWindowStore';
 import WindowTitleBar from './WindowTitleBar';
 import AppRouter from '../apps/AppRouter';
@@ -19,10 +20,6 @@ const Window = ({ windowData }) => {
 
   const windowStyle = {
     position: 'absolute',
-    left: isMaximized ? 0 : x,
-    top: isMaximized ? 0 : y,
-    width: isMaximized ? '100vw' : width,
-    height: isMaximized ? 'calc(100vh - var(--taskbar-height))' : height,
     zIndex,
     backgroundColor: 'var(--aero-glass-bg)',
     backdropFilter: 'var(--aero-glass-blur)',
@@ -106,10 +103,21 @@ const Window = ({ windowData }) => {
   );
 
   return (
-    <div 
+    <motion.div 
       ref={windowRef} 
       style={windowStyle} 
       onPointerDown={handlePointerDown}
+      initial={{ scale: 0.95, opacity: 0 }}
+      animate={{ 
+        scale: 1, 
+        opacity: 1, 
+        x: isMaximized ? 0 : x, 
+        y: isMaximized ? 0 : y, 
+        width: isMaximized ? '100vw' : width, 
+        height: isMaximized ? 'calc(100vh - var(--taskbar-height))' : height 
+      }}
+      exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.15 } }}
+      transition={{ type: 'spring', bounce: 0, duration: 0.2 }}
     >
       {!isMaximized && (
         <>
@@ -131,7 +139,7 @@ const Window = ({ windowData }) => {
       <div style={{ flex: 1, backgroundColor: '#fff', border: '1px solid rgba(255,255,255,0.5)', margin: '0 2px 2px 2px', overflow: 'hidden' }}>
         <AppRouter windowData={windowData} />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
