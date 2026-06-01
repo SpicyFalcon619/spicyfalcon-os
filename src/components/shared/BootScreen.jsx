@@ -16,25 +16,25 @@ const Windows7Logo = ({ size = 120, animated = false }) => {
       {/* Red */}
       <path 
         className={animated ? 'pane-red' : ''} 
-        d="M 190 190 L 190 20 Q 110 -10 30 50 L 30 190 Q 110 140 190 190 Z" 
+        d="M 190 170 L 190 30 Q 110 10 30 60 L 30 200 Q 110 150 190 170 Z" 
         fill="#f05025" 
       />
       {/* Green */}
       <path 
         className={animated ? 'pane-green' : ''} 
-        d="M 210 190 L 210 20 Q 290 -10 370 50 L 370 190 Q 290 140 210 190 Z" 
+        d="M 210 170 L 210 30 Q 290 80 370 70 L 370 210 Q 290 220 210 170 Z" 
         fill="#7fb900" 
       />
       {/* Blue */}
       <path 
         className={animated ? 'pane-blue' : ''} 
-        d="M 190 210 L 190 380 Q 110 410 30 350 L 30 210 Q 110 260 190 210 Z" 
+        d="M 190 330 L 190 190 Q 110 170 30 220 L 30 360 Q 110 310 190 330 Z" 
         fill="#00a4ef" 
       />
       {/* Yellow */}
       <path 
         className={animated ? 'pane-yellow' : ''} 
-        d="M 210 210 L 210 380 Q 290 410 370 350 L 370 210 Q 290 260 210 210 Z" 
+        d="M 210 330 L 210 190 Q 290 240 370 230 L 370 370 Q 290 380 210 330 Z" 
         fill="#ffb900" 
       />
     </svg>
