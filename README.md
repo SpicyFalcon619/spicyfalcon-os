@@ -1,55 +1,30 @@
-# Windows 7 Themed Web Portfolio (SpicyFalcon OS)
+# SpicyFalcon OS 🏁
 
-Welcome to the **SpicyFalcon OS** project! This repository contains the source code for a highly interactive, 2010s era Windows 7 (Aero Glass) themed web portfolio. It is designed to act as a nostalgic "desktop within a browser" experience, complete with draggable windows, a functional Start Menu, taskbar, and classic applications.
+A highly interactive, deeply nostalgic Windows 7 / 2010s era web portfolio built with React and Zustand.
+Designed to showcase complex state management, window stacking algorithms, and interaction design.
 
-## Approach & Architecture
+## Features
+- **Window Manager Core**: Bulletproof dragging, z-index arbitration, minimize/maximize.
+- **Desktop Shell**: Functional Start Menu, Taskbar, Draggable Desktop Icons, Context Menus.
+- **Dynamic Apps**: Built-in fully functional MS Paint clone, Calculator, Command Prompt, and Internet Explorer frame.
+- **Aesthetic**: CSS Custom Properties enforcing strict Aero Glass glassmorphism, drop shadows, and authentic period UI components.
 
-Building a complex window manager in the browser requires strict architectural discipline. We are building this project using the following tech stack:
-- **Framework**: React (via Vite for lightning-fast HMR and building).
-- **State Management**: Zustand (for atomic, predictable state across the window stack, desktop icons, and taskbar).
-- **Styling**: Vanilla CSS with custom properties (`:root`) to perfectly emulate the glossy textures, glassmorphism, and metric precision of the Windows 7 Aero UI.
+## Getting Started Locally
 
-### Step-by-Step Implementation Guide
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+2. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+3. **Build for Production**:
+   ```bash
+   npm run build
+   ```
+   The static files will be generated in the `dist` folder, ready to be deployed to Vercel, Netlify, or GitHub Pages.
 
-Our build process is rigorously divided into 6 distinct phases. This structured approach ensures stability, particularly for the complex Window Manager core, and allows anyone to follow along.
+## Documentation
 
-#### Phase 0: Foundation
-- **Goal**: Scaffold the React application and establish the design system.
-- **Actions**: Run Vite setup, create `globals.css` with a comprehensive suite of CSS variables for the Aero Glass aesthetic (colors, drop shadows, borders), and set up the Zustand boilerplate.
-
-#### Phase 1: Window Manager Core
-- **Goal**: The engine of the OS.
-- **Actions**: Implement `useWindowStore` for z-index arbitration, focus states, and minimized/maximized states. Build the base `Window` component, utilizing pointer events for robust, glitch-free dragging and resizing.
-
-#### Phase 2: Desktop Shell
-- **Goal**: The environment containing the windows.
-- **Actions**: Construct the bottom-anchored taskbar and Start Menu (with glowing Windows orb). Build the desktop icon grid with drag-and-drop repositioning and double-click logic. Implement right-click context menus.
-
-#### Phase 3: Application Windows
-- **Goal**: The actual portfolio content and interactive tools.
-- **Actions**: Develop isolated components for each application:
-  - Notepad (Bio/About)
-  - Windows Explorer (Projects)
-  - Internet Explorer (Web links)
-  - MS Paint (Working canvas)
-  - Minesweeper (Game)
-  - Retro Spotify Player (Custom media player)
-  - Command Prompt (Contact form)
-  - Control Panel (Settings/Theme)
-  - Calculator (Advanced)
-
-#### Phase 4: Icon Integration
-- **Goal**: Visual authenticity.
-- **Actions**: Source and integrate period-accurate 32-bit Windows 7 / Aero styled SVG icons. 
-
-#### Phase 5: Polish & Responsiveness
-- **Goal**: The "Wow" factor.
-- **Actions**: Add Windows 7 boot screen animations. Refine glass effects, borders, and shadows. Implement responsive degradation for mobile devices (as desktop environments don't map well to small touch screens).
-
-#### Phase 6: Deployment
-- **Goal**: Ship it.
-- **Actions**: Optimize the build and configure for static deployment (e.g., Vercel, Netlify, or GitHub Pages).
-
-## Getting Started
-
-*(Development server instructions and scripts will be added here once the Vite foundation is scaffolded in Phase 0.)*
+For developers looking to understand the architecture or build their own version, please see the [Step-by-Step Developer Guide](./TUTORIAL.md).
