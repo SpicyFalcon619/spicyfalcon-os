@@ -1,10 +1,11 @@
+import React, { useState } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import useDesktopStore from '../../store/useDesktopStore';
 import { Windows7Logo } from '../shared/BootScreen';
 import { CalendarPopup, VolumePopup } from './SystemTrayPopups';
 
 const Taskbar = () => {
-  const [taskbarMenu, setTaskbarMenu] = React.useState({ visible: false, x: 0, y: 0, winId: null });
+  const [taskbarMenu, setTaskbarMenu] = useState({ visible: false, x: 0, y: 0, winId: null });
   const windows = useWindowStore(state => state.windows);
   const activeWindowId = useWindowStore(state => state.activeWindowId);
   const focusWindow = useWindowStore(state => state.focusWindow);
