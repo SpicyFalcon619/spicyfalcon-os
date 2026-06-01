@@ -13,7 +13,7 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
   const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, initialWinX: 0, initialWinY: 0 });
 
   const handlePointerDown = (e) => {
-    if (e.button !== 0 || isMaximized) return;
+    if (e.button !== 0) return;
 
     dragRef.current = {
       isDragging: true,
@@ -34,6 +34,22 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
     const deltaX = e.clientX - dragRef.current.startX;
     const deltaY = e.clientY - dragRef.current.startY;
     
+    // Aero Snap Restore
+    if (isMaximized) {
+      if (deltaY > 5) {
+        toggleMaximize(id);
+        
+        // Adjust the window's state X to center around the cursor so it doesn't jump
+        const assumedWidth = windowData.width || 600;
+        const newInitialX = e.clientX - (assumedWidth / 2);
+        dragRef.current.initialWinX = newInitialX;
+        dragRef.current.initialWinY = 0; // it was attached to the top
+        dragRef.current.startX = e.clientX;
+        dragRef.current.startY = e.clientY;
+      }
+      return; 
+    }
+
     let newX = dragRef.current.initialWinX + deltaX;
     let newY = dragRef.current.initialWinY + deltaY;
 

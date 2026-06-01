@@ -5,12 +5,15 @@ const WindowsExplorer = lazy(() => import('./WindowsExplorer'));
 const InternetExplorer = lazy(() => import('./InternetExplorer'));
 const MSPaint = lazy(() => import('./MSPaint'));
 const Minesweeper = lazy(() => import('./Minesweeper'));
-const Spicefify = lazy(() => import('./Spicefify'));
+const Spicetify = lazy(() => import('./Spicetify'));
 const CommandPrompt = lazy(() => import('./CommandPrompt'));
 const ControlPanel = lazy(() => import('./ControlPanel'));
 const Calculator = lazy(() => import('./Calculator'));
 const SystemFolder = lazy(() => import('./SystemFolder'));
 const Winver = lazy(() => import('./Winver'));
+const TaskManager = lazy(() => import('./TaskManager'));
+const DeviceManager = lazy(() => import('./DeviceManager'));
+const PhotoViewer = lazy(() => import('./PhotoViewer'));
 
 const AppRouter = ({ windowData }) => {
   const { component } = windowData;
@@ -22,11 +25,14 @@ const AppRouter = ({ windowData }) => {
       case 'ie': return <InternetExplorer windowData={windowData} />;
       case 'paint': return <MSPaint windowData={windowData} />;
       case 'minesweeper': return <Minesweeper windowData={windowData} />;
-      case 'spotify': return <Spicefify windowData={windowData} />;
+      case 'spotify': return <Spicetify windowData={windowData} />;
       case 'cmd': return <CommandPrompt windowData={windowData} />;
       case 'control-panel': return <ControlPanel windowData={windowData} />;
       case 'calculator': return <Calculator windowData={windowData} />;
       case 'winver': return <Winver windowData={windowData} />;
+      case 'task-manager': return <TaskManager windowData={windowData} />;
+      case 'device-manager': return <DeviceManager windowData={windowData} />;
+      case 'photo-viewer': return <PhotoViewer windowData={windowData} />;
       case 'computer':
       case 'recycle-bin':
       case 'documents':

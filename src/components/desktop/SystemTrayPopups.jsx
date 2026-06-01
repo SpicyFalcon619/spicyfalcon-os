@@ -4,6 +4,7 @@ import { IconVolume } from '@tabler/icons-react';
 
 export const CalendarPopup = () => {
   const [time, setTime] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -12,8 +13,8 @@ export const CalendarPopup = () => {
 
   return (
     <div style={{
-      position: 'absolute',
-      bottom: '100%',
+      position: 'fixed',
+      bottom: '40px',
       right: '10px',
       width: '240px',
       background: 'linear-gradient(to bottom, #f0f4f9, #dce6f2)',
@@ -36,14 +37,25 @@ export const CalendarPopup = () => {
       {/* Mock Calendar Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px', marginTop: '15px', fontSize: '12px', textAlign: 'center' }}>
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => <div key={d} style={{ fontWeight: 'bold' }}>{d}</div>)}
-        {Array.from({length: 31}).map((_, i) => (
-          <div key={i} style={{ 
-            padding: '4px', 
-            backgroundColor: (i+1) === time.getDate() ? '#c1d5ed' : 'transparent',
-            border: (i+1) === time.getDate() ? '1px solid #7a96df' : '1px solid transparent',
-            borderRadius: '2px'
-          }}>{i+1}</div>
-        ))}
+        {Array.from({length: 31}).map((_, i) => {
+          const isToday = (i+1) === time.getDate();
+          const isSelected = (i+1) === selectedDate;
+          return (
+            <div 
+              key={i} 
+              onClick={() => setSelectedDate(i+1)}
+              style={{ 
+                padding: '4px', 
+                backgroundColor: isSelected ? '#3399ff' : (isToday ? '#c1d5ed' : 'transparent'),
+                color: isSelected ? '#fff' : '#003366',
+                border: isToday && !isSelected ? '1px solid #7a96df' : '1px solid transparent',
+                borderRadius: '2px',
+                cursor: 'pointer'
+              }}>
+              {i+1}
+            </div>
+          )
+        })}
       </div>
     </div>
   );
@@ -55,8 +67,8 @@ export const VolumePopup = () => {
   
   return (
     <div style={{
-      position: 'absolute',
-      bottom: '100%',
+      position: 'fixed',
+      bottom: '40px',
       right: '60px',
       width: '80px',
       height: '240px',

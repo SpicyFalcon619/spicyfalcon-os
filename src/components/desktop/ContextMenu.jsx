@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
+import useWindowStore from '../../store/useWindowStore';
 
 const ContextMenu = () => {
   const { visible, x, y } = useDesktopStore(state => state.contextMenu);
   const hideContextMenu = useDesktopStore(state => state.hideContextMenu);
+  const openWindow = useWindowStore(state => state.openWindow);
 
   useEffect(() => {
     const handleGlobalClick = () => {
@@ -49,13 +51,35 @@ const ContextMenu = () => {
     borderBottom: '1px solid #fff'
   };
 
+  const handleRefresh = (e) => {
+    e.stopPropagation();
+    hideContextMenu();
+    const bg = document.getElementById('desktop-bg');
+    if (bg) {
+      bg.style.display = 'none';
+      setTimeout(() => bg.style.display = 'block', 50);
+    }
+  };
+
+  const handlePersonalize = (e) => {
+    e.stopPropagation();
+    hideContextMenu();
+    openWindow({
+      id: 'app-control-panel',
+      title: 'Control Panel',
+      component: 'control-panel',
+      width: 600,
+      height: 450
+    });
+  };
+
   return (
     <div style={style} onMouseDown={(e) => e.stopPropagation()} onContextMenu={(e) => e.preventDefault()}>
-      <div style={itemStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3399ff'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>View</div>
-      <div style={itemStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3399ff'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>Sort by</div>
-      <div style={itemStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3399ff'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>Refresh</div>
+      <div style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>View</div>
+      <div style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>Sort by</div>
+      <div onClick={handleRefresh} style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>Refresh</div>
       <hr style={hrStyle} />
-      <div style={itemStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3399ff'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>Personalize</div>
+      <div onClick={handlePersonalize} style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>Personalize</div>
     </div>
   );
 };

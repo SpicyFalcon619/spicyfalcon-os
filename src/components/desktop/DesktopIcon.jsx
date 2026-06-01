@@ -10,6 +10,9 @@ const getIconComponent = (id) => {
     case 'explorer': return <IconFolder size={40} stroke={1.5} color="#fff" fill="#fcd34d" />;
     case 'ie': return <IconBrowser size={40} stroke={1.5} color="#fff" fill="#38bdf8" />;
     case 'paint': return <IconPalette size={40} stroke={1.5} color="#fff" fill="#fb923c" />;
+    case 'task-manager': return <IconDeviceDesktop size={40} stroke={1.5} color="#fff" fill="#10b981" />;
+    case 'device-manager': return <IconDeviceDesktop size={40} stroke={1.5} color="#fff" fill="#6366f1" />;
+    case 'photo-viewer': return <IconPalette size={40} stroke={1.5} color="#fff" fill="#ec4899" />;
     default: return <IconFolder size={40} stroke={1.5} color="#fff" fill="#fcd34d" />;
   }
 };
@@ -101,8 +104,7 @@ const DesktopIcon = ({ iconData }) => {
         textAlign: 'center',
         textShadow: '0 1px 2px black, 0 1px 4px black',
         lineHeight: '1.2',
-        wordBreak: 'break-word',
-        backgroundColor: isSelected ? '#0058d6' : 'transparent',
+        backgroundColor: 'transparent',
         padding: '2px 4px',
         pointerEvents: 'none'
       }}>

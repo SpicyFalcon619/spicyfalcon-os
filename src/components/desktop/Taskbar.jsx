@@ -68,7 +68,8 @@ const Taskbar = () => {
   const handleContextMenu = (e, winId) => {
     e.preventDefault();
     e.stopPropagation();
-    setTaskbarMenu({ visible: true, x: e.clientX, y: e.clientY - 120, winId }); // offset so it doesn't spawn under cursor and immediately click
+    // Use fixed bottom offset since taskbar is at bottom
+    setTaskbarMenu({ visible: true, x: e.clientX, winId }); 
     setSystemTrayPopup(null);
   };
 
@@ -157,9 +158,9 @@ const Taskbar = () => {
       {/* Taskbar Context Menu */}
       {taskbarMenu.visible && (
         <div style={{
-          position: 'absolute',
+          position: 'fixed',
           left: taskbarMenu.x,
-          top: taskbarMenu.y,
+          bottom: '40px',
           width: '150px',
           backgroundColor: '#f0f0f0',
           border: '1px solid #999',

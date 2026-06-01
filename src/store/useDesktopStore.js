@@ -6,6 +6,9 @@ const initialIcons = [
   { id: 'explorer', title: 'Projects', icon: '📁', x: 20, y: 180 },
   { id: 'ie', title: 'Internet Explorer', icon: '🌐', x: 20, y: 260 },
   { id: 'paint', title: 'MS Paint', icon: '🎨', x: 20, y: 340 },
+  { id: 'task-manager', title: 'Task Manager', icon: '📊', x: 120, y: 20 },
+  { id: 'device-manager', title: 'Device Manager', icon: '💻', x: 120, y: 100 },
+  { id: 'photo-viewer', title: 'Photo Gallery', icon: '🖼️', x: 120, y: 180 },
 ];
 
 const useDesktopStore = create((set) => ({

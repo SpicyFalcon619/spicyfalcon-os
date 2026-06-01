@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
 import { IconPlayerPlay, IconPlayerPause, IconPlayerSkipForward, IconPlayerSkipBack, IconVolume, IconPlaylist } from '@tabler/icons-react';
+import YouTube from 'react-youtube';
 
+// Replace these videoIds with the songs you want to preload!
 const MOCK_PLAYLIST = [
-  { file: 'coldplay - viva la vida.mp3', id: 1 },
-  { file: 'gotye - somebody that i used to know.mp3', id: 2 },
-  { file: 'rihanna - diamonds.mp3', id: 3 },
-  { file: 'avicii - levels.mp3', id: 4 },
-  { file: 'macklemore - thrift shop.mp3', id: 5 }
+  { videoId: 'dQw4w9WgXcQ', id: 1, title: 'Placeholder Song 1', artist: 'Rick Astley' },
+  { videoId: 'fJ9rUzIMcZQ', id: 2, title: 'Placeholder Song 2', artist: 'Queen' },
+  { videoId: '9bZkp7q19f0', id: 3, title: 'Placeholder Song 3', artist: 'PSY' },
 ];
 
-const Spicefify = () => {
+const Spicetify = () => {
   const globalVolume = useDesktopStore(state => state.globalVolume);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -19,101 +19,117 @@ const Spicefify = () => {
   const [metadata, setMetadata] = useState(null);
   const [playlistMeta, setPlaylistMeta] = useState({});
 
-  const audioRef = useRef(new Audio());
+  const playerRef = useRef(null);
+  const timerRef = useRef(null);
 
+  // Sync global volume to YouTube player
   useEffect(() => {
-    audioRef.current.volume = globalVolume / 100;
+    if (playerRef.current && playerRef.current.internalPlayer) {
+      playerRef.current.internalPlayer.setVolume(globalVolume);
+    }
   }, [globalVolume]);
 
+  // Fetch YouTube Metadata (Thumbnail & Title via oEmbed)
   useEffect(() => {
     const track = MOCK_PLAYLIST[currentTrackIndex];
-    audioRef.current.src = `/assets/music/${track.file}`;
     
-    const searchTerm = track.file.replace('.mp3', '');
-    
-    fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&limit=1`)
+    // Default metadata before fetch finishes
+    setMetadata({
+      title: track.title,
+      artist: track.artist,
+      cover: `https://img.youtube.com/vi/${track.videoId}/hqdefault.jpg`
+    });
+
+    fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${track.videoId}`)
       .then(res => res.json())
       .then(data => {
-        if (data.results && data.results.length > 0) {
-          const result = data.results[0];
+        if (!data.error) {
+          // Attempt to split title by '-' if it follows "Artist - Song" format
+          const parts = data.title.split('-');
+          const artist = parts.length > 1 ? parts[0].trim() : data.author_name;
+          const title = parts.length > 1 ? parts[1].trim() : data.title;
+          
           setMetadata({
-            title: result.trackName,
-            artist: result.artistName,
-            album: result.collectionName,
-            cover: result.artworkUrl100.replace('100x100', '300x300')
+            title: title,
+            artist: artist,
+            cover: `https://img.youtube.com/vi/${track.videoId}/hqdefault.jpg`
           });
-          setPlaylistMeta(prev => ({ ...prev, [track.id]: {
-            title: result.trackName,
-            artist: result.artistName,
-            album: result.collectionName
-          }}));
-        } else {
-          const parts = searchTerm.split('-');
-          setMetadata({
-            title: parts[1] ? parts[1].trim() : searchTerm,
-            artist: parts[0] ? parts[0].trim() : 'Unknown Artist',
-            album: 'Local File',
-            cover: 'https://via.placeholder.com/300/222222/1DB954?text=Spicefify'
-          });
+          
+          setPlaylistMeta(prev => ({
+            ...prev,
+            [track.id]: { title, artist }
+          }));
         }
       })
-      .catch(() => {
-        setMetadata({
-          title: searchTerm,
-          artist: 'Unknown Artist',
-          album: 'Local File',
-          cover: 'https://via.placeholder.com/300/222222/1DB954?text=Spicefify'
-        });
-      });
+      .catch(console.error);
 
-    if (isPlaying) {
-      audioRef.current.play().catch(e => console.error("Playback failed:", e));
-    }
   }, [currentTrackIndex]);
 
+  const onPlayerReady = (event) => {
+    playerRef.current = event.target;
+    event.target.setVolume(globalVolume);
+    if (isPlaying) {
+      event.target.playVideo();
+    }
+  };
+
+  const onPlayerStateChange = (event) => {
+    // 1 = PLAYING, 2 = PAUSED, 0 = ENDED
+    if (event.data === 1) {
+      setIsPlaying(true);
+      setDuration(event.target.getDuration());
+      
+      // Start tracking time
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = setInterval(async () => {
+        const time = await event.target.getCurrentTime();
+        setProgress(time);
+      }, 1000);
+      
+    } else if (event.data === 2) {
+      setIsPlaying(false);
+      if (timerRef.current) clearInterval(timerRef.current);
+    } else if (event.data === 0) {
+      nextTrack();
+    }
+  };
+
+  // Cleanup timer
   useEffect(() => {
-    const audio = audioRef.current;
-    
-    const updateProgress = () => setProgress(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-    const handleEnded = () => nextTrack();
-
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', updateDuration);
-    audio.addEventListener('ended', handleEnded);
-
     return () => {
-      audio.removeEventListener('timeupdate', updateProgress);
-      audio.removeEventListener('loadedmetadata', updateDuration);
-      audio.removeEventListener('ended', handleEnded);
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
 
   const togglePlay = () => {
+    if (!playerRef.current) return;
     if (isPlaying) {
-      audioRef.current.pause();
+      playerRef.current.pauseVideo();
     } else {
-      audioRef.current.play().catch(e => console.error("Playback failed:", e));
+      playerRef.current.playVideo();
     }
-    setIsPlaying(!isPlaying);
   };
 
   const nextTrack = () => {
     setCurrentTrackIndex((prev) => (prev + 1) % MOCK_PLAYLIST.length);
+    setIsPlaying(true); // Auto-play next track
   };
 
   const prevTrack = () => {
     setCurrentTrackIndex((prev) => (prev - 1 + MOCK_PLAYLIST.length) % MOCK_PLAYLIST.length);
+    setIsPlaying(true);
   };
 
   const handleSeek = (e) => {
     const time = Number(e.target.value);
-    audioRef.current.currentTime = time;
     setProgress(time);
+    if (playerRef.current) {
+      playerRef.current.seekTo(time, true);
+    }
   };
 
   const formatTime = (time) => {
-    if (isNaN(time)) return "0:00";
+    if (isNaN(time) || time === undefined) return "0:00";
     const mins = Math.floor(time / 60);
     const secs = Math.floor(time % 60);
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
@@ -122,17 +138,27 @@ const Spicefify = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#222326', color: '#b3b3b3', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}>
       
+      {/* Headless YouTube Player */}
+      <div style={{ display: 'none' }}>
+        <YouTube 
+          videoId={MOCK_PLAYLIST[currentTrackIndex].videoId} 
+          opts={{ playerVars: { autoplay: isPlaying ? 1 : 0, controls: 0, disablekb: 1 } }}
+          onReady={onPlayerReady}
+          onStateChange={onPlayerStateChange}
+        />
+      </div>
+
       {/* Main Split */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         
         {/* Sidebar */}
         <div style={{ width: '220px', backgroundColor: '#121314', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '20px', fontWeight: 'bold', color: '#fff', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#1db954', fontSize: '24px' }}>●</span> Spicefify
+            <span style={{ color: '#1db954', fontSize: '24px' }}>●</span> Spicetify
           </div>
           
           <div style={{ padding: '10px 20px', fontSize: '12px', letterSpacing: '1px', textTransform: 'uppercase', color: '#aaa' }}>Your Music</div>
-          <div style={{ padding: '8px 20px', cursor: 'pointer', borderLeft: '3px solid #1db954', color: '#fff', backgroundColor: '#282828' }}>Local Files</div>
+          <div style={{ padding: '8px 20px', cursor: 'pointer', borderLeft: '3px solid #1db954', color: '#fff', backgroundColor: '#282828' }}>YouTube Stream</div>
           <div style={{ padding: '8px 20px', cursor: 'pointer' }}>Starred</div>
           
           <div style={{ padding: '15px 20px 10px', fontSize: '12px', letterSpacing: '1px', textTransform: 'uppercase', color: '#aaa' }}>Playlists</div>
@@ -145,7 +171,7 @@ const Spicefify = () => {
           {/* Now Playing Art */}
           <div style={{ borderTop: '1px solid #282828' }}>
             <img 
-              src={metadata?.cover || 'https://via.placeholder.com/220/222222/1DB954?text=Spicefify'} 
+              src={metadata?.cover || 'https://via.placeholder.com/220/222222/1DB954?text=Spicetify'} 
               alt="Album Art" 
               style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', display: 'block' }} 
             />
@@ -159,8 +185,8 @@ const Spicefify = () => {
           <div style={{ padding: '30px', background: 'linear-gradient(transparent, rgba(0,0,0,0.5))', backgroundColor: '#444', display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
             <div>
               <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Playlist</div>
-              <h1 style={{ color: '#fff', fontSize: '48px', margin: '5px 0', fontWeight: '800', letterSpacing: '-1px' }}>Local Files</h1>
-              <p style={{ margin: 0, fontSize: '14px', color: '#ddd' }}>Place .mp3s in public/assets/music/ and update MOCK_PLAYLIST in Spicefify.jsx</p>
+              <h1 style={{ color: '#fff', fontSize: '48px', margin: '5px 0', fontWeight: '800', letterSpacing: '-1px' }}>YouTube Stream</h1>
+              <p style={{ margin: 0, fontSize: '14px', color: '#ddd' }}>Provide YouTube IDs in Spicetify.jsx to stream natively!</p>
             </div>
           </div>
           
@@ -172,12 +198,11 @@ const Spicefify = () => {
                   <th style={{ paddingBottom: '8px', width: '40px' }}>#</th>
                   <th style={{ paddingBottom: '8px' }}>TITLE</th>
                   <th style={{ paddingBottom: '8px' }}>ARTIST</th>
-                  <th style={{ paddingBottom: '8px' }}>ALBUM</th>
                 </tr>
               </thead>
               <tbody>
                 {MOCK_PLAYLIST.map((track, i) => {
-                  const meta = playlistMeta[track.id] || {};
+                  const meta = playlistMeta[track.id] || { title: track.title, artist: track.artist };
                   const isCurrent = i === currentTrackIndex;
                   return (
                     <tr 
@@ -194,9 +219,8 @@ const Spicefify = () => {
                       onMouseOut={e => !isCurrent && (e.currentTarget.style.backgroundColor = 'transparent')}
                     >
                       <td style={{ padding: '12px 10px', textAlign: 'center' }}>{isCurrent && isPlaying ? '▶' : i + 1}</td>
-                      <td>{meta.title || track.file}</td>
-                      <td style={{ color: isCurrent ? '#1db954' : '#b3b3b3' }}>{meta.artist || '...'}</td>
-                      <td style={{ color: isCurrent ? '#1db954' : '#b3b3b3' }}>{meta.album || '...'}</td>
+                      <td>{meta.title}</td>
+                      <td style={{ color: isCurrent ? '#1db954' : '#b3b3b3' }}>{meta.artist}</td>
                     </tr>
                   )
                 })}
@@ -258,4 +282,4 @@ const Spicefify = () => {
   );
 };
 
-export default Spicefify;
+export default Spicetify;
