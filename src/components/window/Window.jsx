@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import WindowTitleBar from './WindowTitleBar';
+import AppRouter from '../apps/AppRouter';
 
 const Window = ({ windowData }) => {
   const { id, title, x, y, width, height, isMinimized, isMaximized, zIndex } = windowData;
@@ -49,12 +50,8 @@ const Window = ({ windowData }) => {
         windowData={windowData} 
         isActive={isActive} 
       />
-      <div style={{ flex: 1, backgroundColor: '#fff', border: '1px solid #ccc', margin: '0 4px 4px 4px', overflow: 'auto' }}>
-        {/* Content goes here based on window component type in Phase 3 */}
-        <div style={{ padding: '20px', color: '#000' }}>
-          <h2>{title}</h2>
-          <p>This is a draggable Windows 7 style window component.</p>
-        </div>
+      <div style={{ flex: 1, backgroundColor: '#fff', border: '1px solid rgba(255,255,255,0.5)', margin: '0 2px 2px 2px', overflow: 'hidden' }}>
+        <AppRouter windowData={windowData} />
       </div>
     </div>
   );
