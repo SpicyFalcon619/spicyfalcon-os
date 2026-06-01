@@ -1,6 +1,7 @@
 import React from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import useDesktopStore from '../../store/useDesktopStore';
+import { Windows7Logo } from '../shared/BootScreen';
 
 const Taskbar = () => {
   const windows = useWindowStore(state => state.windows);
@@ -29,19 +30,19 @@ const Taskbar = () => {
   };
 
   const startButtonStyle = {
-    width: '36px',
-    height: '36px',
+    width: '44px',
+    height: '44px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle at 30% 30%, #5ceb5c 0%, #158f15 70%, #0d4a0d 100%)',
-    border: '2px solid rgba(255,255,255,0.7)',
+    background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(150,180,220,0.5) 40%, rgba(50,100,180,0.8) 100%)',
+    border: '1px solid rgba(255,255,255,0.7)',
     boxShadow: '0 0 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.8)',
     cursor: 'pointer',
     marginRight: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '18px',
-    transition: 'filter 0.2s, transform 0.1s',
+    transition: 'filter 0.2s, transform 0.1s, box-shadow 0.2s',
+    overflow: 'hidden'
   };
 
   const handleStartClick = (e) => {
@@ -64,12 +65,14 @@ const Taskbar = () => {
       <div 
         style={startButtonStyle} 
         onClick={handleStartClick}
-        onMouseOver={(e) => e.target.style.filter = 'brightness(1.2)'}
-        onMouseOut={(e) => e.target.style.filter = 'brightness(1)'}
-        onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
-        onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+        onMouseOver={(e) => { e.currentTarget.style.filter = 'brightness(1.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(255,255,255,0.8), inset 0 2px 5px rgba(255,255,255,0.8)'; }}
+        onMouseOut={(e) => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.8)'; }}
+        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        🏁
+        <div style={{ transform: 'scale(0.35)' }}>
+          <Windows7Logo size={100} animated={false} />
+        </div>
       </div>
       
       {/* Active Windows Buttons */}

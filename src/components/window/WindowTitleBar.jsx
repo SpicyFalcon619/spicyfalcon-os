@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import useWindowStore from '../../store/useWindowStore';
-import { IconDeviceDesktop, IconTrash, IconFolder, IconBrowser, IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2, IconSettings } from '@tabler/icons-react';
+import { IconDeviceDesktop, IconTrash, IconFolder, IconBrowser, IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2, IconSettings, IconInfoCircle } from '@tabler/icons-react';
 
 const WindowTitleBar = ({ windowData, isActive }) => {
   const { id, title, isMaximized } = windowData;
@@ -100,6 +100,7 @@ const WindowTitleBar = ({ windowData, isActive }) => {
     if (comp.includes('spotify')) return <IconMusic size={16} stroke={2} />;
     if (comp.includes('minesweeper')) return <IconBomb size={16} stroke={2} />;
     if (comp.includes('cmd')) return <IconTerminal2 size={16} stroke={2} />;
+    if (comp.includes('winver')) return <IconInfoCircle size={16} stroke={2} />;
     return <IconSettings size={16} stroke={2} />;
   };
 

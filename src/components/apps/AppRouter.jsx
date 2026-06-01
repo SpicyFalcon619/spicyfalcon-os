@@ -10,6 +10,7 @@ const CommandPrompt = lazy(() => import('./CommandPrompt'));
 const ControlPanel = lazy(() => import('./ControlPanel'));
 const Calculator = lazy(() => import('./Calculator'));
 const SystemFolder = lazy(() => import('./SystemFolder'));
+const Winver = lazy(() => import('./Winver'));
 
 const AppRouter = ({ windowData }) => {
   const { component } = windowData;
@@ -25,6 +26,7 @@ const AppRouter = ({ windowData }) => {
       case 'cmd': return <CommandPrompt windowData={windowData} />;
       case 'control-panel': return <ControlPanel windowData={windowData} />;
       case 'calculator': return <Calculator windowData={windowData} />;
+      case 'winver': return <Winver windowData={windowData} />;
       case 'computer':
       case 'recycle-bin':
       case 'documents':

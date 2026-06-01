@@ -1,7 +1,7 @@
 import React from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
 import useWindowStore from '../../store/useWindowStore';
-import { IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2 } from '@tabler/icons-react';
+import { IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2, IconInfoCircle } from '@tabler/icons-react';
 
 const StartMenu = () => {
   const visible = useDesktopStore(state => state.startMenuVisible);
@@ -46,6 +46,7 @@ const StartMenu = () => {
     { id: 'spotify', title: 'Retro Spotify', icon: <IconMusic size={24} color="#22c55e" /> },
     { id: 'minesweeper', title: 'Minesweeper', icon: <IconBomb size={24} color="#ef4444" /> },
     { id: 'cmd', title: 'Command Prompt', icon: <IconTerminal2 size={24} color="#333" /> },
+    { id: 'winver', title: 'About SpicyFalcon', icon: <IconInfoCircle size={24} color="#00a4ef" /> },
   ];
 
   return (

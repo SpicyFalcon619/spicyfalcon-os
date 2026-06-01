@@ -1,6 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
-import { IconBrandWindows } from '@tabler/icons-react';
+
+const Windows7Logo = ({ size = 120, animated = false }) => {
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gridTemplateRows: '1fr 1fr',
+      gap: `${size * 0.05}px`,
+      width: size,
+      height: size,
+      transform: 'perspective(200px) rotateY(-15deg)',
+      filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.4))'
+    }}>
+      {/* Red */}
+      <div className={`win-pane ${animated ? 'pane-red' : ''}`} style={{
+        backgroundColor: '#f05025',
+        borderTopLeftRadius: '30%',
+        borderBottomLeftRadius: '10%',
+        borderBottomRightRadius: '5%',
+        borderTopRightRadius: '5%',
+        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
+      }}></div>
+      {/* Green */}
+      <div className={`win-pane ${animated ? 'pane-green' : ''}`} style={{
+        backgroundColor: '#7fb900',
+        borderTopRightRadius: '30%',
+        borderBottomRightRadius: '10%',
+        borderBottomLeftRadius: '5%',
+        borderTopLeftRadius: '5%',
+        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
+      }}></div>
+      {/* Blue */}
+      <div className={`win-pane ${animated ? 'pane-blue' : ''}`} style={{
+        backgroundColor: '#00a4ef',
+        borderBottomLeftRadius: '30%',
+        borderTopLeftRadius: '10%',
+        borderTopRightRadius: '5%',
+        borderBottomRightRadius: '5%',
+        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
+      }}></div>
+      {/* Yellow */}
+      <div className={`win-pane ${animated ? 'pane-yellow' : ''}`} style={{
+        backgroundColor: '#ffb900',
+        borderBottomRightRadius: '30%',
+        borderTopRightRadius: '10%',
+        borderTopLeftRadius: '5%',
+        borderBottomLeftRadius: '5%',
+        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
+      }}></div>
+    </div>
+  );
+};
 
 const BootScreen = () => {
   const hasBooted = useDesktopStore(state => state.hasBooted);
@@ -11,14 +62,13 @@ const BootScreen = () => {
   useEffect(() => {
     if (hasBooted) return;
 
-    // Simulate boot sequence
     const timer = setTimeout(() => {
       setOpacity(0);
       setTimeout(() => {
         setVisible(false);
         setHasBooted();
-      }, 1000); // Fade out duration
-    }, 2500); // Time spent on boot screen
+      }, 1000);
+    }, 4000); // Wait 4 seconds for full animation
 
     return () => clearTimeout(timer);
   }, [hasBooted, setHasBooted]);
@@ -41,34 +91,63 @@ const BootScreen = () => {
       cursor: 'wait'
     }}>
       <div style={{
-        animation: 'pulse 2s infinite ease-in-out',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '30px'
+        gap: '40px'
       }}>
-        <div style={{ filter: 'drop-shadow(0 0 15px rgba(0, 164, 239, 0.8))' }}>
-          <IconBrandWindows size={120} color="#00a4ef" stroke={1.5} />
+        <div style={{ filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))' }}>
+          <Windows7Logo size={140} animated={true} />
         </div>
-        <div style={{ 
-          fontSize: '22px', 
+        <div className="boot-text" style={{ 
+          fontSize: '24px', 
           fontFamily: '"Segoe UI", Tahoma, sans-serif', 
           letterSpacing: '1px', 
           fontWeight: '300',
-          textShadow: '0 0 10px rgba(255,255,255,0.5)'
+          color: '#fff'
         }}>
           Starting Windows
         </div>
       </div>
       <style>{`
-        @keyframes pulse {
-          0% { filter: brightness(1); transform: scale(0.98); }
-          50% { filter: brightness(1.3); transform: scale(1.02); }
-          100% { filter: brightness(1); transform: scale(0.98); }
+        @keyframes flyInRed {
+          0% { transform: translate(-200px, -200px) scale(0); opacity: 0; }
+          40% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
         }
+        @keyframes flyInGreen {
+          0% { transform: translate(200px, -200px) scale(0); opacity: 0; }
+          50% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+        @keyframes flyInBlue {
+          0% { transform: translate(-200px, 200px) scale(0); opacity: 0; }
+          60% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+        @keyframes flyInYellow {
+          0% { transform: translate(200px, 200px) scale(0); opacity: 0; }
+          70% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+        @keyframes glowPulse {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.3); }
+        }
+        @keyframes textFade {
+          0%, 40% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        
+        .pane-red { animation: flyInRed 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, glowPulse 3s infinite; }
+        .pane-green { animation: flyInGreen 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, glowPulse 3s infinite; }
+        .pane-blue { animation: flyInBlue 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, glowPulse 3s infinite; }
+        .pane-yellow { animation: flyInYellow 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, glowPulse 3s infinite; }
+        .boot-text { animation: textFade 3s ease forwards; }
       `}</style>
     </div>
   );
 };
 
+export { Windows7Logo };
 export default BootScreen;
