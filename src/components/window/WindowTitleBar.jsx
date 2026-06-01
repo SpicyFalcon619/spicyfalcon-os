@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import useWindowStore from '../../store/useWindowStore';
+import { IconDeviceDesktop, IconTrash, IconFolder, IconBrowser, IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2, IconSettings } from '@tabler/icons-react';
 
 const WindowTitleBar = ({ windowData, isActive }) => {
   const { id, title, isMaximized } = windowData;
@@ -12,7 +13,6 @@ const WindowTitleBar = ({ windowData, isActive }) => {
   const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, initialWinX: 0, initialWinY: 0 });
 
   const handlePointerDown = (e) => {
-    // Only drag with left click (button 0), and don't drag if maximized
     if (e.button !== 0 || isMaximized) return;
 
     dragRef.current = {
@@ -23,7 +23,6 @@ const WindowTitleBar = ({ windowData, isActive }) => {
       initialWinY: windowData.y
     };
     
-    // Crucial for bulletproof dragging even if pointer leaves the window
     e.target.setPointerCapture(e.pointerId);
   };
 
@@ -89,6 +88,21 @@ const WindowTitleBar = ({ windowData, isActive }) => {
     border: '1px solid #701010',
   };
 
+  const getTitleIcon = () => {
+    const comp = windowData.component || '';
+    if (comp.includes('computer')) return <IconDeviceDesktop size={16} stroke={2} />;
+    if (comp.includes('recycle-bin')) return <IconTrash size={16} stroke={2} />;
+    if (comp.includes('explorer')) return <IconFolder size={16} stroke={2} />;
+    if (comp.includes('ie')) return <IconBrowser size={16} stroke={2} />;
+    if (comp.includes('notepad')) return <IconFileText size={16} stroke={2} />;
+    if (comp.includes('paint')) return <IconPalette size={16} stroke={2} />;
+    if (comp.includes('calculator')) return <IconCalculator size={16} stroke={2} />;
+    if (comp.includes('spotify')) return <IconMusic size={16} stroke={2} />;
+    if (comp.includes('minesweeper')) return <IconBomb size={16} stroke={2} />;
+    if (comp.includes('cmd')) return <IconTerminal2 size={16} stroke={2} />;
+    return <IconSettings size={16} stroke={2} />;
+  };
+
   return (
     <div 
       ref={titleBarRef}
@@ -99,8 +113,9 @@ const WindowTitleBar = ({ windowData, isActive }) => {
       onDoubleClick={() => toggleMaximize(id)}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        {/* Placeholder Icon */}
-        <div style={{ width: '16px', height: '16px', background: 'white', borderRadius: '2px', border: '1px solid #999' }}></div>
+        <div style={{ display: 'flex', alignItems: 'center', color: isActive ? '#000' : '#555', filter: isActive ? 'drop-shadow(0px 0px 2px rgba(255,255,255,0.8))' : 'none' }}>
+          {getTitleIcon()}
+        </div>
         <span style={{ 
           fontSize: '12px', 
           fontWeight: 'bold', 

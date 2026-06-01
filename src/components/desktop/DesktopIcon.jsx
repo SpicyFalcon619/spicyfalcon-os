@@ -1,9 +1,21 @@
 import React, { useRef } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
 import useWindowStore from '../../store/useWindowStore';
+import { IconDeviceDesktop, IconTrash, IconFolder, IconBrowser, IconPalette } from '@tabler/icons-react';
+
+const getIconComponent = (id) => {
+  switch(id) {
+    case 'computer': return <IconDeviceDesktop size={40} stroke={1.5} color="#fff" fill="#2c89f0" />;
+    case 'recycle-bin': return <IconTrash size={40} stroke={1.5} color="#fff" fill="#888" />;
+    case 'explorer': return <IconFolder size={40} stroke={1.5} color="#fff" fill="#fcd34d" />;
+    case 'ie': return <IconBrowser size={40} stroke={1.5} color="#fff" fill="#38bdf8" />;
+    case 'paint': return <IconPalette size={40} stroke={1.5} color="#fff" fill="#fb923c" />;
+    default: return <IconFolder size={40} stroke={1.5} color="#fff" fill="#fcd34d" />;
+  }
+};
 
 const DesktopIcon = ({ iconData }) => {
-  const { id, title, icon, x, y } = iconData;
+  const { id, title, x, y } = iconData;
   const isSelected = useDesktopStore(state => state.selectedIconIds.includes(id));
   const selectIcon = useDesktopStore(state => state.selectIcon);
   const updateIconPosition = useDesktopStore(state => state.updateIconPosition);
@@ -80,14 +92,14 @@ const DesktopIcon = ({ iconData }) => {
       onPointerUp={handlePointerUp}
       onDoubleClick={handleDoubleClick}
     >
-      <div style={{ fontSize: '32px', marginBottom: '4px', textShadow: '0 2px 4px rgba(0,0,0,0.5)', pointerEvents: 'none' }}>
-        {icon}
+      <div style={{ marginBottom: '4px', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.5))', pointerEvents: 'none', display: 'flex' }}>
+        {getIconComponent(id)}
       </div>
       <div style={{
         color: 'white',
         fontSize: '12px',
         textAlign: 'center',
-        textShadow: '0 1px 2px black',
+        textShadow: '0 1px 2px black, 0 1px 4px black',
         lineHeight: '1.2',
         wordBreak: 'break-word',
         backgroundColor: isSelected ? '#0b59a6' : 'transparent',

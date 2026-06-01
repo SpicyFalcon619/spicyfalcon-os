@@ -1,6 +1,7 @@
 import React from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
 import useWindowStore from '../../store/useWindowStore';
+import { IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2 } from '@tabler/icons-react';
 
 const StartMenu = () => {
   const visible = useDesktopStore(state => state.startMenuVisible);
@@ -39,12 +40,12 @@ const StartMenu = () => {
   };
 
   const apps = [
-    { id: 'notepad', title: 'Notepad', icon: '📝' },
-    { id: 'paint', title: 'MS Paint', icon: '🎨' },
-    { id: 'calculator', title: 'Calculator', icon: '🖩' },
-    { id: 'spotify', title: 'Retro Spotify', icon: '🎵' },
-    { id: 'minesweeper', title: 'Minesweeper', icon: '💣' },
-    { id: 'cmd', title: 'Command Prompt', icon: 'C:\\' },
+    { id: 'notepad', title: 'Notepad', icon: <IconFileText size={24} color="#3b82f6" /> },
+    { id: 'paint', title: 'MS Paint', icon: <IconPalette size={24} color="#f97316" /> },
+    { id: 'calculator', title: 'Calculator', icon: <IconCalculator size={24} color="#64748b" /> },
+    { id: 'spotify', title: 'Retro Spotify', icon: <IconMusic size={24} color="#22c55e" /> },
+    { id: 'minesweeper', title: 'Minesweeper', icon: <IconBomb size={24} color="#ef4444" /> },
+    { id: 'cmd', title: 'Command Prompt', icon: <IconTerminal2 size={24} color="#333" /> },
   ];
 
   return (
@@ -59,7 +60,7 @@ const StartMenu = () => {
               padding: '10px 8px',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
+              gap: '12px',
               cursor: 'pointer',
               borderRadius: '4px',
               fontSize: '13px',
@@ -68,7 +69,7 @@ const StartMenu = () => {
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,120,215,0.1)'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <span style={{ fontSize: '20px' }}>{app.icon}</span>
+            <span style={{ display: 'flex', filter: 'drop-shadow(1px 2px 2px rgba(0,0,0,0.2))' }}>{app.icon}</span>
             <span>{app.title}</span>
           </div>
         ))}
