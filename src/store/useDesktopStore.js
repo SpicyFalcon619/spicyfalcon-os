@@ -29,6 +29,10 @@ const useDesktopStore = create((set) => ({
     systemTrayPopup: null
   })),
 
+  setSelection: (ids) => set({
+    selectedIconIds: ids
+  }),
+
   clearSelection: () => set({ 
     selectedIconIds: [], 
     contextMenu: { visible: false, x: 0, y: 0 }, 

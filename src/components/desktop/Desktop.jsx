@@ -11,8 +11,10 @@ import { AnimatePresence } from 'framer-motion';
 const Desktop = ({ children }) => {
   const icons = useDesktopStore(state => state.icons);
   const clearSelection = useDesktopStore(state => state.clearSelection);
+  const setSelection = useDesktopStore(state => state.setSelection);
   const showContextMenu = useDesktopStore(state => state.showContextMenu);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectionBox, setSelectionBox] = useState(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -24,7 +26,53 @@ const Desktop = ({ children }) => {
   }, []);
 
   const handlePointerDown = (e) => {
-    clearSelection();
+    if (e.target.id === 'desktop-bg') {
+      clearSelection();
+      setSelectionBox({
+        startX: e.clientX,
+        startY: e.clientY,
+        x: e.clientX,
+        y: e.clientY,
+        width: 0,
+        height: 0
+      });
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } else if (e.target.closest && !e.target.closest('[data-no-deselect]')) {
+      clearSelection();
+    }
+  };
+
+  const handlePointerMove = (e) => {
+    if (selectionBox) {
+      const currentX = e.clientX;
+      const currentY = e.clientY;
+      const x = Math.min(selectionBox.startX, currentX);
+      const y = Math.min(selectionBox.startY, currentY);
+      const width = Math.abs(currentX - selectionBox.startX);
+      const height = Math.abs(currentY - selectionBox.startY);
+      
+      setSelectionBox(prev => ({ ...prev, x, y, width, height }));
+
+      const selectedIds = [];
+      icons.forEach(icon => {
+         const ix = icon.x;
+         const iy = icon.y;
+         const iw = 74;
+         const ih = 80;
+
+         if (ix < x + width && ix + iw > x && iy < y + height && iy + ih > y) {
+           selectedIds.push(icon.id);
+         }
+      });
+      setSelection(selectedIds);
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (selectionBox) {
+      setSelectionBox(null);
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
   };
 
   const handleContextMenu = (e) => {
@@ -57,6 +105,7 @@ const Desktop = ({ children }) => {
 
   return (
     <div 
+      id="desktop-bg"
       style={{ 
         width: '100%', 
         height: '100%', 
@@ -65,12 +114,29 @@ const Desktop = ({ children }) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundColor: '#00539c' // Fallback color
+        backgroundColor: '#00539c',
+        overflow: 'hidden'
       }}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
       onContextMenu={handleContextMenu}
     >
       <BootScreen />
+
+      {selectionBox && (
+        <div style={{
+          position: 'absolute',
+          left: selectionBox.x,
+          top: selectionBox.y,
+          width: selectionBox.width,
+          height: selectionBox.height,
+          backgroundColor: 'rgba(0, 88, 214, 0.3)',
+          border: '1px solid rgba(0, 88, 214, 0.8)',
+          pointerEvents: 'none',
+          zIndex: 9999
+        }} />
+      )}
 
       {/* Desktop Icons */}
       {icons.map(icon => (

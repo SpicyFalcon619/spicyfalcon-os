@@ -13,6 +13,7 @@ const Window = ({ windowData }) => {
 
   const windowRef = useRef(null);
   const resizeRef = useRef({ isResizing: false, direction: '', startX: 0, startY: 0, startWidth: 0, startHeight: 0, startWinX: 0, startWinY: 0 });
+  const [isInteracting, setIsInteracting] = React.useState(false);
   
   const isActive = activeWindowId === id;
 
@@ -50,6 +51,7 @@ const Window = ({ windowData }) => {
       startWinX: x,
       startWinY: y
     };
+    setIsInteracting(true);
   };
 
   const handleResizeMove = (e) => {
@@ -91,6 +93,7 @@ const Window = ({ windowData }) => {
     if (!resizeRef.current.isResizing) return;
     resizeRef.current.isResizing = false;
     e.target.releasePointerCapture(e.pointerId);
+    setIsInteracting(false);
   };
 
   const ResizeHandle = ({ dir, style }) => (
@@ -117,7 +120,7 @@ const Window = ({ windowData }) => {
         height: isMaximized ? 'calc(100vh - var(--taskbar-height))' : height 
       }}
       exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.15 } }}
-      transition={{ type: 'spring', bounce: 0, duration: 0.2 }}
+      transition={isInteracting ? { duration: 0 } : { type: 'spring', bounce: 0, duration: 0.3 }}
     >
       {!isMaximized && (
         <>
@@ -135,6 +138,7 @@ const Window = ({ windowData }) => {
       <WindowTitleBar 
         windowData={windowData} 
         isActive={isActive} 
+        setIsInteracting={setIsInteracting}
       />
       <div style={{ flex: 1, backgroundColor: '#fff', border: '1px solid rgba(255,255,255,0.5)', margin: '0 2px 2px 2px', overflow: 'hidden' }}>
         <AppRouter windowData={windowData} />

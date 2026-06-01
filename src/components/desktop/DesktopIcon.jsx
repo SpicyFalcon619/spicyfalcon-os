@@ -77,10 +77,10 @@ const DesktopIcon = ({ iconData }) => {
     padding: '4px',
     cursor: 'default',
     zIndex: 'var(--z-desktop-icons)',
-    backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.3)' : 'transparent',
-    border: isSelected ? '1px dotted rgba(255, 255, 255, 0.6)' : '1px solid transparent',
+    backgroundColor: isSelected ? 'rgba(0, 88, 214, 0.3)' : 'transparent',
+    border: isSelected ? '1px dotted rgba(255, 255, 255, 0.5)' : '1px solid transparent',
     borderRadius: '4px',
-    boxShadow: isSelected ? 'inset 0 0 5px rgba(255,255,255,0.4)' : 'none',
+    boxShadow: isSelected ? '0 0 4px rgba(0,0,0,0.2)' : 'none',
   };
 
   return (
@@ -102,8 +102,8 @@ const DesktopIcon = ({ iconData }) => {
         textShadow: '0 1px 2px black, 0 1px 4px black',
         lineHeight: '1.2',
         wordBreak: 'break-word',
-        backgroundColor: isSelected ? '#0b59a6' : 'transparent',
-        padding: '0 2px',
+        backgroundColor: isSelected ? '#0058d6' : 'transparent',
+        padding: '2px 4px',
         pointerEvents: 'none'
       }}>
         {title}

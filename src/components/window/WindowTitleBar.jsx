@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import { IconDeviceDesktop, IconTrash, IconFolder, IconBrowser, IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2, IconSettings, IconInfoCircle } from '@tabler/icons-react';
 
-const WindowTitleBar = ({ windowData, isActive }) => {
+const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
   const { id, title, isMaximized } = windowData;
   const closeWindow = useWindowStore(state => state.closeWindow);
   const toggleMaximize = useWindowStore(state => state.toggleMaximize);
@@ -20,9 +20,11 @@ const WindowTitleBar = ({ windowData, isActive }) => {
       startX: e.clientX,
       startY: e.clientY,
       initialWinX: windowData.x,
-      initialWinY: windowData.y
+      initialWinY: windowData.y,
+      lastY: windowData.y
     };
     
+    setIsInteracting?.(true);
     e.target.setPointerCapture(e.pointerId);
   };
 
@@ -45,6 +47,7 @@ const WindowTitleBar = ({ windowData, isActive }) => {
     if (newX < minX) newX = minX;
     if (newX > maxX) newX = maxX;
 
+    dragRef.current.lastY = newY;
     updateWindowPosition(id, newX, newY);
   };
 
@@ -52,6 +55,12 @@ const WindowTitleBar = ({ windowData, isActive }) => {
     if (!dragRef.current.isDragging) return;
     dragRef.current.isDragging = false;
     e.target.releasePointerCapture(e.pointerId);
+    setIsInteracting?.(false);
+    
+    // Aero Snap to Maximize
+    if (dragRef.current.lastY <= 0 && !isMaximized) {
+      toggleMaximize(id);
+    }
   };
 
   const titleBarStyle = {
