@@ -13,6 +13,9 @@ const useDesktopStore = create((set) => ({
   selectedIconIds: [],
   contextMenu: { visible: false, x: 0, y: 0 },
   startMenuVisible: false,
+  
+  hasBooted: false,
+  setHasBooted: () => set({ hasBooted: true }),
 
   selectIcon: (id, multi = false) => set((state) => ({
     selectedIconIds: multi 
