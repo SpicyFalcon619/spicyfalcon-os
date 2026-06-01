@@ -28,7 +28,8 @@ const StartMenu = () => {
     color: '#333'
   };
 
-  const handleAppClick = (appId, title) => {
+  const handleAppClick = (e, appId, title) => {
+    e.stopPropagation();
     hideStartMenu();
     openWindow({
       id: `app-${appId}`,
@@ -56,7 +57,7 @@ const StartMenu = () => {
         {apps.map(app => (
           <div 
             key={app.id}
-            onClick={() => handleAppClick(app.id, app.title)}
+            onPointerDown={(e) => handleAppClick(e, app.id, app.title)}
             style={{
               padding: '10px 8px',
               display: 'flex',
@@ -81,11 +82,11 @@ const StartMenu = () => {
         <div style={{ padding: '8px 4px', fontWeight: 'bold', fontSize: '14px', borderBottom: '1px solid rgba(0,0,0,0.1)', color: '#003366' }}>
           SpicyFalcon
         </div>
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onClick={() => handleAppClick('documents', 'Documents')}>Documents</div>
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onClick={() => handleAppClick('pictures', 'Pictures')}>Pictures</div>
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onClick={() => handleAppClick('music', 'Music')}>Music</div>
+        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onPointerDown={(e) => handleAppClick(e, 'documents', 'Documents')}>Documents</div>
+        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onPointerDown={(e) => handleAppClick(e, 'pictures', 'Pictures')}>Pictures</div>
+        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onPointerDown={(e) => handleAppClick(e, 'music', 'Music')}>Music</div>
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)', margin: '8px 0' }}></div>
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onClick={() => handleAppClick('control-panel', 'Control Panel')}>Control Panel</div>
+        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }} onPointerDown={(e) => handleAppClick(e, 'control-panel', 'Control Panel')}>Control Panel</div>
         <div style={{ fontSize: '13px', cursor: 'pointer', padding: '4px' }}>Run...</div>
       </div>
     </div>

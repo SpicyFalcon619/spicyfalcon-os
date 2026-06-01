@@ -3,53 +3,41 @@ import useDesktopStore from '../../store/useDesktopStore';
 
 const Windows7Logo = ({ size = 120, animated = false }) => {
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gridTemplateRows: '1fr 1fr',
-      gap: `${size * 0.05}px`,
-      width: size,
-      height: size,
-      transform: 'perspective(200px) rotateY(-15deg)',
-      filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.4))'
-    }}>
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 400 400" 
+      style={{ 
+        filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.5))',
+        transform: 'perspective(400px) rotateY(-10deg)',
+        overflow: 'visible'
+      }}
+    >
       {/* Red */}
-      <div className={`win-pane ${animated ? 'pane-red' : ''}`} style={{
-        backgroundColor: '#f05025',
-        borderTopLeftRadius: '30%',
-        borderBottomLeftRadius: '10%',
-        borderBottomRightRadius: '5%',
-        borderTopRightRadius: '5%',
-        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
-      }}></div>
+      <path 
+        className={animated ? 'pane-red' : ''} 
+        d="M 190 190 L 190 20 Q 110 -10 30 50 L 30 190 Q 110 140 190 190 Z" 
+        fill="#f05025" 
+      />
       {/* Green */}
-      <div className={`win-pane ${animated ? 'pane-green' : ''}`} style={{
-        backgroundColor: '#7fb900',
-        borderTopRightRadius: '30%',
-        borderBottomRightRadius: '10%',
-        borderBottomLeftRadius: '5%',
-        borderTopLeftRadius: '5%',
-        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
-      }}></div>
+      <path 
+        className={animated ? 'pane-green' : ''} 
+        d="M 210 190 L 210 20 Q 290 -10 370 50 L 370 190 Q 290 140 210 190 Z" 
+        fill="#7fb900" 
+      />
       {/* Blue */}
-      <div className={`win-pane ${animated ? 'pane-blue' : ''}`} style={{
-        backgroundColor: '#00a4ef',
-        borderBottomLeftRadius: '30%',
-        borderTopLeftRadius: '10%',
-        borderTopRightRadius: '5%',
-        borderBottomRightRadius: '5%',
-        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
-      }}></div>
+      <path 
+        className={animated ? 'pane-blue' : ''} 
+        d="M 190 210 L 190 380 Q 110 410 30 350 L 30 210 Q 110 260 190 210 Z" 
+        fill="#00a4ef" 
+      />
       {/* Yellow */}
-      <div className={`win-pane ${animated ? 'pane-yellow' : ''}`} style={{
-        backgroundColor: '#ffb900',
-        borderBottomRightRadius: '30%',
-        borderTopRightRadius: '10%',
-        borderTopLeftRadius: '5%',
-        borderBottomLeftRadius: '5%',
-        boxShadow: 'inset -2px -2px 10px rgba(0,0,0,0.3), inset 2px 2px 10px rgba(255,255,255,0.5)'
-      }}></div>
-    </div>
+      <path 
+        className={animated ? 'pane-yellow' : ''} 
+        d="M 210 210 L 210 380 Q 290 410 370 350 L 370 210 Q 290 260 210 210 Z" 
+        fill="#ffb900" 
+      />
+    </svg>
   );
 };
 

@@ -30,8 +30,8 @@ const Taskbar = () => {
   };
 
   const startButtonStyle = {
-    width: '44px',
-    height: '44px',
+    width: '52px',
+    height: '52px',
     borderRadius: '50%',
     background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(150,180,220,0.5) 40%, rgba(50,100,180,0.8) 100%)',
     border: '1px solid rgba(255,255,255,0.7)',
@@ -70,7 +70,7 @@ const Taskbar = () => {
         onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
         onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        <div style={{ transform: 'scale(0.35)' }}>
+        <div style={{ transform: 'scale(0.4)' }}>
           <Windows7Logo size={100} animated={false} />
         </div>
       </div>
