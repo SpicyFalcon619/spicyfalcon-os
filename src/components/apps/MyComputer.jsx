@@ -17,7 +17,7 @@ const SECTIONS = [
     items: [
       { id: 'folder-about', icon: '/assets/icons/notepad.png',   label: 'About Me',  sub: 'Bio & Background', action: 'portfolio', actionData: { section: 'about' } },
       { id: 'folder-skills', icon: '/assets/icons/control-panel.png', label: 'Skills', sub: 'Languages & Tools', action: 'portfolio', actionData: { section: 'skills' } },
-      { id: 'folder-edu',   icon: '/assets/icons/winver.png',    label: 'Education', sub: '2 Institutes', action: 'portfolio', actionData: { section: 'education' } },
+      { id: 'folder-edu',   icon: '/assets/icons/education.png',    label: 'Education', sub: '2 Institutes', action: 'portfolio', actionData: { section: 'education' } },
       { id: 'folder-waste', icon: '/assets/icons/ie.png',         label: 'Wastopia',  sub: 'Blockchain Project', action: 'external-link', actionData: { url: 'https://project-wastopia.vercel.app' } }
     ]
   }
