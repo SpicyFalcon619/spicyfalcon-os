@@ -6,8 +6,9 @@ Designed to showcase complex state management, window stacking algorithms, and i
 ## Features
 - **Window Manager Core**: Bulletproof dragging, z-index arbitration, minimize/maximize.
 - **Desktop Shell**: Functional Start Menu, Taskbar, Draggable Desktop Icons, Context Menus.
-- **Dynamic Apps**: Built-in fully functional MS Paint clone, Calculator, Command Prompt, and Internet Explorer frame.
+- **Dynamic Apps**: Built-in fully functional applications including MS Paint clone, Calculator, Command Prompt, Internet Explorer frame, Retro Spotify Player (Spicetify), Minesweeper, Task Manager, Device Manager, Photo Viewer, and a comprehensive File Explorer (My Computer).
 - **Aesthetic**: CSS Custom Properties enforcing strict Aero Glass glassmorphism, drop shadows, and authentic period UI components.
+- **Project Showcase**: Custom "Spicyver" system information panel and text-based portfolio viewers.
 
 ## Getting Started Locally
 
