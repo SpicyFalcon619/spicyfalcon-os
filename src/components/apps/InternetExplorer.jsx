@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import useWindowStore from '../../store/useWindowStore';
 
 // Sites that are known to block embedding via X-Frame-Options / CSP
 // These will be auto-opened in the real browser instead of shown in the iframe
@@ -33,6 +34,7 @@ const NavBtn = ({ children, onClick, disabled, title }) => (
 );
 
 const InternetExplorer = ({ windowData }) => {
+  const closeWindow = useWindowStore(state => state.closeWindow);
   const initialUrl = windowData?.appData?.url || 'about:blank';
 
   const [history, setHistory] = useState([initialUrl]);
@@ -47,7 +49,13 @@ const InternetExplorer = ({ windowData }) => {
   // Sync input bar with current url
   useEffect(() => {
     if (currentUrl !== 'about:blank') setInputUrl(currentUrl);
-  }, [currentUrl]);
+    
+    if (isLikelyBlocked(currentUrl) && !autoOpened) {
+      window.open(currentUrl, '_blank');
+      setAutoOpened(true);
+      closeWindow(windowData.id);
+    }
+  }, [currentUrl, autoOpened, closeWindow, windowData.id]);
 
   const navigateTo = (url) => {
     let finalUrl = url.trim();
