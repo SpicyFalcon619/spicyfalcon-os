@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
-const Windows7Logo = ({ size = 120, animated = false }) => {
+export const Windows7Logo = ({ size = 120, animated = false }) => {
   return (
     <div style={{
       width: size,
