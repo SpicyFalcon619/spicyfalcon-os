@@ -19,7 +19,7 @@ const ContextMenu = () => {
 
   // Prevent menu from overflowing screen
   const menuWidth = 150;
-  const menuHeight = 150;
+  const menuHeight = 280;
   const safeX = x + menuWidth > window.innerWidth ? window.innerWidth - menuWidth : x;
   const safeY = y + menuHeight > window.innerHeight ? window.innerHeight - menuHeight : y;
 
@@ -80,6 +80,33 @@ const ContextMenu = () => {
         onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
         onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
       >Refresh</div>
+      <hr style={hrStyle} />
+      <div 
+        style={{...itemStyle, color: '#999'}} 
+      >Paste</div>
+      <div 
+        style={{...itemStyle, color: '#999'}} 
+      >Paste shortcut</div>
+      <hr style={hrStyle} />
+      <div 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >New</div>
+      <hr style={hrStyle} />
+      <div 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >Screen resolution</div>
+      <div 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >Gadgets</div>
+      <div 
+        style={{...itemStyle, color: '#999'}} 
+      >Personalize</div>
     </div>
   );
 };
