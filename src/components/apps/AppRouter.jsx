@@ -9,7 +9,7 @@ const Spicetify = lazy(() => import('./Spicetify'));
 const CommandPrompt = lazy(() => import('./CommandPrompt'));
 const Calculator = lazy(() => import('./Calculator'));
 const SystemFolder = lazy(() => import('./SystemFolder'));
-const Winver = lazy(() => import('./Winver'));
+const Spicyver = lazy(() => import('./Spicyver'));
 const SystemProperties = lazy(() => import('./SystemProperties'));
 const TaskManager = lazy(() => import('./TaskManager'));
 const DeviceManager = lazy(() => import('./DeviceManager'));
@@ -31,7 +31,7 @@ const AppRouter = ({ windowData }) => {
       case 'spicetify': return <Spicetify windowData={windowData} />;
       case 'cmd': return <CommandPrompt windowData={windowData} />;
       case 'calculator': return <Calculator windowData={windowData} />;
-      case 'winver': return <Winver windowData={windowData} />;
+      case 'spicyver': return <Spicyver windowData={windowData} />;
       case 'system-properties': return <SystemProperties windowData={windowData} />;
       case 'task-manager': return <TaskManager windowData={windowData} />;
       case 'device-manager': return <DeviceManager windowData={windowData} />;

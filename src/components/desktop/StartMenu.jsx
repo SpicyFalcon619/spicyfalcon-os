@@ -45,7 +45,7 @@ const StartMenu = () => {
       'task-manager': { width: 720, height: 540 },
       'minesweeper': { width: 340, height: 440 },
       'calculator': { width: 280, height: 380 },
-      'winver': { width: 420, height: 550 }
+      'spicyver': { width: 450, height: 580 }
     };
     const size = sizeMap[appId] || { width: 600, height: 450 };
     openWindow({
@@ -150,7 +150,7 @@ const StartMenu = () => {
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.3)', margin: '4px 6px', borderBottom: '1px solid rgba(255,255,255,0.2)' }}></div>
         
         <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => handleAppClick(e, 'my-computer', 'My Computer')} onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>My Computer</div>
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => handleAppClick(e, 'winver', 'System Info')} onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>System Info</div>
+        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => handleAppClick(e, 'spicyver', 'System Info')} onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>System Info</div>
 
         
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.3)', margin: '4px 6px', borderBottom: '1px solid rgba(255,255,255,0.2)' }}></div>

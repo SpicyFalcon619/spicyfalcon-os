@@ -58,7 +58,7 @@ const MyComputer = ({ windowData }) => {
         <div style={{ width: '190px', borderRight: '1px solid #d8dde0', padding: '12px', backgroundColor: '#f5f6f7', overflowY: 'auto', flexShrink: 0 }}>
           <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#003366', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>System Tasks</div>
           {[
-            { label: 'View system info', cb: () => openWindow({ id: 'app-winver', title: 'About SpicyFalcon OS', component: 'winver', width: 420, height: 550 }) },
+            { label: 'View system info', cb: () => openWindow({ id: 'app-spicyver', title: 'About SpicyFalcon OS', component: 'spicyver', width: 420, height: 550 }) },
             { label: 'Add or remove programs', cb: () => {} },
             { label: 'Change a setting', cb: () => {} }
           ].map(t => (
