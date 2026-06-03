@@ -102,6 +102,8 @@
 │   │   └── useWindowStore.js
 │   ├── styles/
 │   │   └── globals.css
+│   ├── utils/
+│   │   └── urlUtils.js
 │   ├── App.jsx
 │   └── main.jsx
 ├── index.html
