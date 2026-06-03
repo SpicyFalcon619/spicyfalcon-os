@@ -101,6 +101,7 @@ const BootScreen = () => {
           <img src="/assets/avatar.jpg" alt="User" style={{ width: 120, height: 120, borderRadius: '4px', border: '3px solid rgba(255,255,255,0.8)', boxShadow: '0 4px 15px rgba(0,0,0,0.4)', marginBottom: '20px' }} />
           <div style={{ fontSize: '28px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Welcome</div>
         </div>
+      )}
       <style>{`
         @keyframes flyInRed {
           0% { transform: translate(-200px, -200px) scale(0); opacity: 0; }
