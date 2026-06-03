@@ -28,6 +28,9 @@ This document chronicles the exact steps taken to build the SpicyFalcon OS from 
    - `MSPaint.jsx`: A fully functional HTML5 `<canvas>` implementation utilizing a `useRef` and 2D context to track drawing states.
    - `CommandPrompt.jsx`: A simulated terminal using an array in React state to track command history, capturing the 'Enter' key to evaluate mock commands like `help` and `clear`.
    - `Calculator.jsx`: A functional calculator using mathematical evaluation.
+   - `Spicetify.jsx`: An embedded Spotify web player.
+   - `MyComputer.jsx`, `TaskManager.jsx`, `DeviceManager.jsx`, `SystemProperties.jsx`, `PhotoViewer.jsx`: Authentic replica apps leveraging flexbox and CSS for pixel-perfect Windows styling.
+   - `Spicyver.jsx`: A highly detailed "About" window summarizing the tech stack and OS features.
 
 ## Phase 4: Icon Integration
 1. **Sourcing Icons**: We installed `@tabler/icons-react` via npm to get scalable, crisp vector icons (SVGs).
@@ -35,9 +38,10 @@ This document chronicles the exact steps taken to build the SpicyFalcon OS from 
 3. **Aesthetic Treatment**: We applied CSS `drop-shadow()` and `filter` effects to the SVGs to give them a slightly glossy, elevated look, mimicking the 32-bit Windows 7 icon depth without relying on raster images.
 
 ## Phase 5: Polish & Responsiveness
-1. **Boot Screen**: We created a `BootScreen.jsx` component that renders a classic glowing Windows logo for 3 seconds on initial load, controlled by a `hasBooted` flag in the Zustand store.
+1. **Boot Screen**: We created a `BootScreen.jsx` component that renders a custom logo for 2 seconds on initial load, controlled by a `hasBooted` flag in the Zustand store.
 2. **Mobile Overlay**: Since a draggable window manager doesn't translate well to touch screens, we added a `window.innerWidth` check in `Desktop.jsx` to render a 'Best Viewed on Desktop' overlay for mobile users.
 3. **Aesthetics**: We injected the iconic Windows 7 default wallpaper into the Desktop container background.
+4. **Taskbar Sounds**: We added nostalgic UI clicking sound effects triggered upon taskbar button clicks and Start button toggles.
 
 ## Phase 6: Deployment
 1. **Build Configuration**: We updated `vite.config.js` to include `base: './'`. This ensures that when the site is exported and deployed (whether to a root domain or a subdirectory like GitHub Pages), all assets (CSS, JS, Wallpapers) are resolved with relative paths.

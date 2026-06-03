@@ -71,7 +71,14 @@ const Portfolio = ({ windowData }) => {
 
   const openInBrowser = (e, url) => {
     e.preventDefault();
-    window.open(url, '_blank');
+    openWindow({
+      id: `app-ie-${Date.now()}`,
+      title: 'Internet Explorer',
+      component: 'ie',
+      width: 800,
+      height: 600,
+      appData: { url }
+    });
   };
 
   const tabStyle = (id) => ({

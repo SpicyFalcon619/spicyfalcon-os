@@ -5,8 +5,8 @@ import React, { useState, useRef, useEffect } from 'react';
 const BLOCKED_HOSTS = [
   'github.com', 'linkedin.com', 'spotify.com', 'open.spotify.com',
   'instagram.com', 'twitter.com', 'x.com', 'facebook.com',
-  'google.com', 'youtube.com', 'vercel.app', 'netlify.app',
-  'notion.so', 'notion.site', 'figma.com', 'canva.com',
+  'google.com', 'youtube.com', 'notion.so', 'notion.site', 
+  'figma.com', 'canva.com',
 ];
 
 const isLikelyBlocked = (url) => {
