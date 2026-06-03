@@ -104,7 +104,7 @@ const SystemProperties = () => {
             <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>Service Pack 1</div>
           </div>
           <div style={{ paddingRight: '20px' }}>
-            <Windows7Logo size={80} animated={false} />
+            <img src="/assets/avatar.jpg" alt="User Avatar" width={100} style={{ borderRadius: '4px', border: '1px solid #ccc', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />
           </div>
         </div>
 

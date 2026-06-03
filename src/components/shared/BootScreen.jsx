@@ -31,59 +31,76 @@ const Windows7Logo = ({ size = 120, animated = false }) => {
 const BootScreen = () => {
   const hasBooted = useDesktopStore(state => state.hasBooted);
   const setHasBooted = useDesktopStore(state => state.setHasBooted);
-  const [opacity, setOpacity] = useState(1);
-  const [visible, setVisible] = useState(!hasBooted);
+  const [phase, setPhase] = useState('boot'); // 'boot', 'welcome', 'fadeout', 'done'
 
   useEffect(() => {
     if (hasBooted) return;
 
-    const timer = setTimeout(() => {
-      setOpacity(0);
-      setTimeout(() => {
-        setVisible(false);
-        setHasBooted();
-      }, 1000);
-    }, 4000); // Wait 4 seconds for full animation
+    const timer1 = setTimeout(() => {
+      setPhase('welcome');
+      
+      const timer2 = setTimeout(() => {
+        setPhase('fadeout');
+        
+        const timer3 = setTimeout(() => {
+          setPhase('done');
+          setHasBooted();
+        }, 1000); // Fade out duration
+        
+        return () => clearTimeout(timer3);
+      }, 2000); // Welcome screen duration
+      
+      return () => clearTimeout(timer2);
+    }, 4000); // Boot logo duration
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer1);
   }, [hasBooted, setHasBooted]);
 
-  if (!visible) return null;
+  if (phase === 'done' || hasBooted) return null;
 
   return (
     <div style={{
       position: 'fixed',
       top: 0, left: 0, right: 0, bottom: 0,
       backgroundColor: '#000',
+      opacity: phase === 'fadeout' ? 0 : 1,
+      transition: 'opacity 1s ease-out',
       zIndex: 99999,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      opacity: opacity,
-      transition: 'opacity 1s ease-in-out',
-      color: '#fff',
       cursor: 'wait'
     }}>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '40px'
-      }}>
-        <div style={{ filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))' }}>
-          <Windows7Logo size={140} animated={true} />
-        </div>
-        <div className="boot-text" style={{ 
-          fontSize: '24px', 
-          fontFamily: '"Segoe UI", Tahoma, sans-serif', 
-          letterSpacing: '1px', 
-          fontWeight: '300',
-          color: '#fff'
+      
+      {phase === 'boot' && (
+        <>
+          <div style={{ flex: 1 }} />
+          <Windows7Logo animated={true} />
+          <div style={{ 
+            color: '#fff', 
+            fontSize: '24px', 
+            fontFamily: '"Segoe UI", sans-serif',
+            marginTop: '30px',
+            textShadow: '0 0 10px rgba(255,255,255,0.5)'
+          }}>
+            Starting Windows
+          </div>
+          <div style={{ flex: 1 }} />
+        </>
+      )}
+
+      {(phase === 'welcome' || phase === 'fadeout') && (
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: '#004c99', // Classic Win7 login background blue
+          backgroundImage: 'radial-gradient(circle at center, #0078d7 0%, #002244 100%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          color: '#fff', fontFamily: '"Segoe UI", sans-serif'
         }}>
-          Starting SpicyFalcon OS
+          <img src="/assets/avatar.jpg" alt="User" style={{ width: 120, height: 120, borderRadius: '4px', border: '3px solid rgba(255,255,255,0.8)', boxShadow: '0 4px 15px rgba(0,0,0,0.4)', marginBottom: '20px' }} />
+          <div style={{ fontSize: '28px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Welcome</div>
         </div>
-      </div>
       <style>{`
         @keyframes flyInRed {
           0% { transform: translate(-200px, -200px) scale(0); opacity: 0; }

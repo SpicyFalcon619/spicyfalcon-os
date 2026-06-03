@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import { portfolioData } from '../../data/portfolioData';
+import { Windows7Logo } from '../shared/BootScreen';
+
+const Windows7DriveIcon = () => (
+  <div style={{ position: 'relative', width: 48, height: 48 }}>
+    <svg viewBox="0 0 64 64" width="48" height="48" style={{ filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.3))' }}>
+      <path d="M10 20 L54 20 L60 44 L4 44 Z" fill="#b0b5b9" />
+      <path d="M4 44 L60 44 L54 54 L10 54 Z" fill="#888c90" />
+      <path d="M10 20 L54 20 L54 24 L10 24 Z" fill="#d2d6d9" />
+      <rect x="46" y="47" width="4" height="4" fill="#50e3c2" />
+    </svg>
+    <div style={{ position: 'absolute', bottom: 4, right: 4, width: 20, height: 20, background: '#1874cd', borderRadius: '50%', border: '2px solid white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+      <div style={{ transform: 'scale(0.12)' }}>
+        <Windows7Logo size={100} animated={false} />
+      </div>
+    </div>
+  </div>
+);
 
 const SECTIONS = [
   {
     id: 'drives',
     label: 'Portfolio Drives',
     items: [
-      { id: 'drive-c', icon: '/assets/icons/computer.png', label: 'SpicyFalcon OS (C:)', sub: 'System Drive', action: 'system-properties', actionData: {} },
+      { id: 'drive-c', icon: <Windows7DriveIcon />, label: 'SpicyFalcon OS (C:)', sub: 'System Drive', action: 'system-properties', actionData: {} },
       { id: 'drive-p', icon: '/assets/icons/explorer.png',  label: 'Projects (P:)', sub: '3 items', action: 'portfolio', actionData: { section: 'projects' } },
       { id: 'drive-g', icon: '/assets/icons/ie.png',         label: 'GitHub (G:)', sub: 'Network Location', action: 'task-manager', actionData: {} }
     ]
@@ -24,7 +41,7 @@ const SECTIONS = [
   }
 ];
 
-const MyComputer = () => {
+const MyComputer = ({ windowData }) => {
   const openWindow = useWindowStore(state => state.openWindow);
   const [selected, setSelected] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -126,7 +143,13 @@ const MyComputer = () => {
                         boxSizing: 'border-box'
                       }}
                     >
-                      <img src={item.icon} alt="" style={{ width: 40, height: 40, objectFit: 'contain', flexShrink: 0 }} onError={e => e.target.style.display='none'} />
+                      <div style={{ marginRight: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {typeof item.icon === 'string' ? (
+                          <img src={item.icon} alt="" width={48} height={48} style={{ filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.2))' }} />
+                        ) : (
+                          item.icon
+                        )}
+                      </div>
                       <div>
                         <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#1a2c4a' }}>{item.label}</div>
                         <div style={{ fontSize: '10px', color: '#777' }}>{item.sub}</div>

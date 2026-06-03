@@ -82,6 +82,15 @@ const Spicetify = () => {
   const [repeat, setRepeat]     = useState(false);
   const [ready, setReady]       = useState(_ready);
   const [search, setSearch]     = useState('');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
+
+  useEffect(() => {
+    const uri = PLAYLIST[idx].uri;
+    fetch(`https://open.spotify.com/oembed?url=${uri}`)
+      .then(res => res.json())
+      .then(data => setThumbnailUrl(data.thumbnail_url))
+      .catch(() => setThumbnailUrl(''));
+  }, [idx]);
 
   // Refs so Spotify callbacks always read fresh values without stale closures
   const idxRef     = useRef(idx);
@@ -357,9 +366,13 @@ const Spicetify = () => {
 
         {/* Track info */}
         <div style={{ width: '28%', display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
-          <div style={{ width: 48, height: 48, borderRadius: 3, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <IconMusic size={22} color="#b3b3b3" />
-          </div>
+          {thumbnailUrl ? (
+            <img src={thumbnailUrl} alt="Album Art" style={{ width: 48, height: 48, borderRadius: 3, objectFit: 'cover', flexShrink: 0 }} />
+          ) : (
+            <div style={{ width: 48, height: 48, borderRadius: 3, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <IconMusic size={22} color="#b3b3b3" />
+            </div>
+          )}
           <div style={{ overflow: 'hidden', flex: 1 }}>
             <div style={{ fontSize: 12, color: '#fff', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{track.title}</div>
             <div style={{ fontSize: 11, color: '#b3b3b3', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{track.artist}</div>
