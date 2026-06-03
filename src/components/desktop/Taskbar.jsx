@@ -1,59 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import useDesktopStore from '../../store/useDesktopStore';
-import { Windows7Logo } from '../shared/BootScreen';
-import { CalendarPopup, VolumePopup } from './SystemTrayPopups';
+import { CalendarPopup, VolumePopup, BatteryIcon } from './SystemTrayPopups';
+import { IconVolume } from '@tabler/icons-react';
+
+// Small SVG icon helper — renders a simple app icon from the /assets/icons/ folder
+const AppIcon = ({ src, size = 16 }) => (
+  <img
+    src={src}
+    alt=""
+    width={size}
+    height={size}
+    style={{ objectFit: 'contain', flexShrink: 0 }}
+    onError={(e) => { e.target.style.display = 'none'; }}
+  />
+);
+
+const Clock = () => {
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div style={{ lineHeight: '1.25', textAlign: 'center' }}>
+      <div style={{ fontSize: '12px', fontWeight: '600' }}>
+        {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      </div>
+      <div style={{ fontSize: '11px' }}>
+        {time.toLocaleDateString([], { month: '2-digit', day: '2-digit', year: 'numeric' })}
+      </div>
+    </div>
+  );
+};
 
 const Taskbar = () => {
-  const [taskbarMenu, setTaskbarMenu] = useState({ visible: false, x: 0, y: 0, winId: null });
-  const windows = useWindowStore(state => state.windows);
-  const activeWindowId = useWindowStore(state => state.activeWindowId);
-  const focusWindow = useWindowStore(state => state.focusWindow);
-  const restoreWindow = useWindowStore(state => state.restoreWindow);
-  const minimizeWindow = useWindowStore(state => state.minimizeWindow);
-  const closeWindow = useWindowStore(state => state.closeWindow);
-  
-  const toggleStartMenu = useDesktopStore(state => state.toggleStartMenu);
-  const systemTrayPopup = useDesktopStore(state => state.systemTrayPopup);
-  const setSystemTrayPopup = useDesktopStore(state => state.setSystemTrayPopup);
+  const [taskbarMenu, setTaskbarMenu] = useState({ visible: false, x: 0, winId: null });
+  const windows = useWindowStore(s => s.windows);
+  const activeWindowId = useWindowStore(s => s.activeWindowId);
+  const focusWindow = useWindowStore(s => s.focusWindow);
+  const restoreWindow = useWindowStore(s => s.restoreWindow);
+  const minimizeWindow = useWindowStore(s => s.minimizeWindow);
+  const closeWindow = useWindowStore(s => s.closeWindow);
 
-  const taskbarStyle = {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100vw',
-    height: 'var(--taskbar-height)',
-    zIndex: 'var(--z-taskbar)',
-    background: 'linear-gradient(to bottom, rgba(185, 209, 234, 0.7) 0%, rgba(135, 179, 224, 0.8) 40%, rgba(85, 149, 214, 0.9) 100%)',
-    backdropFilter: 'blur(15px)',
-    WebkitBackdropFilter: 'blur(15px)',
-    borderTop: '1px solid rgba(255, 255, 255, 0.6)',
-    boxShadow: '0 -2px 10px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.8)',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 10px',
-  };
-
-  const startButtonStyle = {
-    width: '52px',
-    height: '52px',
-    borderRadius: '50%',
-    background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(150,180,220,0.5) 40%, rgba(50,100,180,0.8) 100%)',
-    border: '1px solid rgba(255,255,255,0.7)',
-    boxShadow: '0 0 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.8)',
-    cursor: 'pointer',
-    marginRight: '10px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'filter 0.2s, transform 0.1s, box-shadow 0.2s',
-    overflow: 'hidden'
-  };
-
-  const handleStartClick = (e) => {
-    e.stopPropagation();
-    toggleStartMenu();
-  };
+  const toggleStartMenu = useDesktopStore(s => s.toggleStartMenu);
+  const systemTrayPopup = useDesktopStore(s => s.systemTrayPopup);
+  const setSystemTrayPopup = useDesktopStore(s => s.setSystemTrayPopup);
 
   const handleTaskbarItemClick = (win) => {
     if (win.isMinimized) {
@@ -68,130 +60,242 @@ const Taskbar = () => {
   const handleContextMenu = (e, winId) => {
     e.preventDefault();
     e.stopPropagation();
-    // Use fixed bottom offset since taskbar is at bottom
-    setTaskbarMenu({ visible: true, x: e.clientX, winId }); 
+    setTaskbarMenu({ visible: true, x: e.clientX, winId });
+    setSystemTrayPopup(null);
+  };
+
+  const dismissAll = () => {
+    setTaskbarMenu({ ...taskbarMenu, visible: false });
     setSystemTrayPopup(null);
   };
 
   return (
-    <div style={taskbarStyle} onContextMenu={(e) => e.preventDefault()} onPointerDown={() => setTaskbarMenu({ ...taskbarMenu, visible: false })}>
-      <div 
-        style={startButtonStyle} 
-        onPointerDown={handleStartClick}
-        onMouseOver={(e) => { e.currentTarget.style.filter = 'brightness(1.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(255,255,255,0.8), inset 0 2px 5px rgba(255,255,255,0.8)'; }}
-        onMouseOut={(e) => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.boxShadow = '0 0 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.8)'; }}
-        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-      >
-        <div style={{ transform: 'scale(0.4)' }}>
-          <Windows7Logo size={100} animated={false} />
-        </div>
-      </div>
-      
-      {/* Active Windows Buttons */}
-      <div style={{ display: 'flex', gap: '4px', flex: 1, overflowX: 'hidden' }}>
-        {windows.map(win => {
-          const isActive = activeWindowId === win.id && !win.isMinimized;
-          return (
-            <div 
-              key={win.id} 
-              onPointerDown={() => handleTaskbarItemClick(win)}
-              onContextMenu={(e) => handleContextMenu(e, win.id)}
-              style={{
-                width: '140px',
-                height: '32px',
-                background: isActive 
-                  ? 'linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.2))' 
-                  : 'linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.0))',
-                border: isActive ? '1px solid rgba(255,255,255,0.7)' : '1px solid rgba(255,255,255,0.3)',
-                borderRadius: '3px',
-                boxShadow: isActive ? 'inset 0 0 5px rgba(255,255,255,0.8), 0 0 5px rgba(255,255,255,0.5)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0 8px',
-                cursor: 'pointer',
-                color: '#111',
-                fontSize: '12px',
-                fontWeight: isActive ? '600' : '400',
-                textShadow: '0 1px 1px rgba(255,255,255,0.5)',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
-              {win.title}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Tray area */}
-      <div style={{
-        padding: '0 10px',
-        color: 'white',
-        fontSize: '12px',
-        textShadow: '0 1px 2px black',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '15px',
-        borderLeft: '1px solid rgba(255,255,255,0.3)',
-        height: '100%',
-        position: 'relative'
-      }}>
-        {systemTrayPopup === 'volume' && <VolumePopup />}
-        {systemTrayPopup === 'calendar' && <CalendarPopup />}
-        
-        <div 
-          onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup('volume'); }} 
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-        >
-          🔊
-        </div>
-        <div 
-          onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup('calendar'); }} 
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-        >
-          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </div>
-      </div>
-
-      {/* Taskbar Context Menu */}
-      {taskbarMenu.visible && (
-        <div style={{
+    <>
+      {/* ── TASKBAR ── */}
+      <div
+        style={{
           position: 'fixed',
-          left: taskbarMenu.x,
-          bottom: '40px',
-          width: '150px',
-          backgroundColor: '#f0f0f0',
-          border: '1px solid #999',
-          boxShadow: '2px 2px 5px rgba(0,0,0,0.2)',
-          zIndex: 99999,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 'var(--taskbar-height, 40px)',
+          zIndex: 'var(--z-taskbar, 9000)',
+          /* Win7 Aero glass */
+          background: 'linear-gradient(180deg, rgba(70,120,160,0.82) 0%, rgba(30,70,110,0.92) 48%, rgba(20,55,90,0.96) 49%, rgba(10,40,75,0.98) 100%)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(255,255,255,0.30)',
+          boxShadow: '0 -1px 0 rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25)',
           display: 'flex',
-          flexDirection: 'column',
-          padding: '2px'
-        }}>
-          <div 
-            style={{ padding: '6px 20px', cursor: 'pointer', fontSize: '12px' }} 
-            onMouseOver={e => e.target.style.backgroundColor = '#0078d7'}
-            onMouseOut={e => e.target.style.backgroundColor = 'transparent'}
-            onPointerDown={(e) => { e.stopPropagation(); restoreWindow(taskbarMenu.winId); setTaskbarMenu({...taskbarMenu, visible: false}); }}
-          >Restore</div>
-          <div 
-            style={{ padding: '6px 20px', cursor: 'pointer', fontSize: '12px' }} 
-            onMouseOver={e => e.target.style.backgroundColor = '#0078d7'}
-            onMouseOut={e => e.target.style.backgroundColor = 'transparent'}
-            onPointerDown={(e) => { e.stopPropagation(); minimizeWindow(taskbarMenu.winId); setTaskbarMenu({...taskbarMenu, visible: false}); }}
-          >Minimize</div>
-          <div style={{ borderTop: '1px solid #ccc', margin: '2px 0' }}></div>
-          <div 
-            style={{ padding: '6px 20px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }} 
-            onMouseOver={e => e.target.style.backgroundColor = '#0078d7'}
-            onMouseOut={e => e.target.style.backgroundColor = 'transparent'}
-            onPointerDown={(e) => { e.stopPropagation(); closeWindow(taskbarMenu.winId); setTaskbarMenu({...taskbarMenu, visible: false}); }}
-          >Close window</div>
+          alignItems: 'center',
+          padding: '0',
+          gap: 0,
+          userSelect: 'none',
+        }}
+        onPointerDown={dismissAll}
+        onContextMenu={(e) => e.preventDefault()}
+      >
+        {/* ── START BUTTON ── */}
+        <button
+          id="start-button"
+          onPointerDown={(e) => { e.stopPropagation(); toggleStartMenu(); }}
+          style={{
+            width: 54,
+            height: '100%',
+            border: 'none',
+            background: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            outline: 'none',
+          }}
+        >
+          <img
+            src="/assets/start.png"
+            alt="Start"
+            style={{ width: 44, height: 44, objectFit: 'contain', pointerEvents: 'none' }}
+          />
+        </button>
+
+        {/* ── WINDOW BUTTONS ── */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', height: '100%', gap: '2px', padding: '3px 4px', overflowX: 'hidden' }}>
+          {windows.map(win => {
+            const isActive = activeWindowId === win.id && !win.isMinimized;
+            return (
+              <button
+                key={win.id}
+                onPointerDown={(e) => { if (e.button !== 0) return; e.stopPropagation(); handleTaskbarItemClick(win); }}
+                onContextMenu={(e) => handleContextMenu(e, win.id)}
+                title={win.title}
+                style={{
+                  minWidth: 120,
+                  maxWidth: 200,
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '0 8px',
+                  border: 'none',
+                  borderRadius: '3px',
+                  cursor: 'pointer',
+                  outline: 'none',
+                  overflow: 'hidden',
+                  // Active: brighter, inset glow
+                  background: isActive
+                    ? 'linear-gradient(180deg, rgba(140,190,230,0.55) 0%, rgba(80,140,200,0.65) 45%, rgba(50,110,170,0.7) 50%, rgba(30,80,140,0.75) 100%)'
+                    : 'linear-gradient(180deg, rgba(100,150,200,0.25) 0%, rgba(60,110,170,0.3) 100%)',
+                  boxShadow: isActive
+                    ? 'inset 0 0 0 1px rgba(255,255,255,0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
+                    : 'inset 0 0 0 1px rgba(255,255,255,0.10)',
+                  color: '#fff',
+                  fontSize: '12px',
+                  fontFamily: '"Segoe UI", Tahoma, sans-serif',
+                  fontWeight: isActive ? '600' : '400',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.9)',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  transition: 'background 0.1s',
+                  flexShrink: 0,
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) e.currentTarget.style.background = 'linear-gradient(180deg,rgba(130,180,230,0.45) 0%,rgba(80,140,200,0.5) 100%)';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) e.currentTarget.style.background = 'linear-gradient(180deg,rgba(100,150,200,0.25) 0%,rgba(60,110,170,0.3) 100%)';
+                }}
+              >
+                {/* App icon from assets */}
+                <AppIcon
+                  src={`/assets/icons/${win.component || win.id.split('-')[1] || 'notepad'}.png`}
+                  size={16}
+                />
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, textAlign: 'left' }}>
+                  {win.title}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── SYSTEM TRAY ── */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            height: '100%',
+            borderLeft: '1px solid rgba(255,255,255,0.15)',
+            gap: 0,
+            flexShrink: 0,
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          {/* Network / battery / volume icons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 10px', color: '#fff', fontSize: '11px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+            <BatteryIcon />
+            <div
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+              onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup(systemTrayPopup === 'volume' ? null : 'volume'); }}
+            >
+              <IconVolume size={18} color="#fff" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.8))' }} />
+            </div>
+          </div>
+
+          {/* Popups rendered via portals on the fixed layer */}
+          {systemTrayPopup === 'volume'   && <VolumePopup />}
+          {systemTrayPopup === 'calendar' && <CalendarPopup />}
+
+          {/* Clock — clicking opens calendar */}
+          <div
+            onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup(systemTrayPopup === 'calendar' ? null : 'calendar'); }}
+            style={{
+              cursor: 'pointer',
+              padding: '0 10px',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              textShadow: '0 1px 2px rgba(0,0,0,0.9)',
+              fontSize: '12px',
+              fontFamily: '"Segoe UI", Tahoma, sans-serif',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+          >
+            <Clock />
+          </div>
+
+          {/* Show Desktop sliver */}
+          <div
+            title="Show Desktop"
+            style={{
+              width: 10,
+              height: '100%',
+              borderLeft: '1px solid rgba(255,255,255,0.2)',
+              background: 'rgba(255,255,255,0.04)',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              // Minimize all windows
+              windows.forEach(w => { if (!w.isMinimized) minimizeWindow(w.id); });
+            }}
+          />
+        </div>
+      </div>
+
+      {/* ── WINDOW CONTEXT MENU ── */}
+      {taskbarMenu.visible && (
+        <div
+          style={{
+            position: 'fixed',
+            left: taskbarMenu.x,
+            bottom: 42,
+            width: 160,
+            backgroundColor: '#f0f0f0',
+            border: '1px solid #999',
+            boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+            zIndex: 99999,
+            fontFamily: '"Segoe UI", Tahoma, sans-serif',
+            fontSize: '12px',
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          {[
+            { label: 'Restore', action: () => restoreWindow(taskbarMenu.winId) },
+            { label: 'Minimize', action: () => minimizeWindow(taskbarMenu.winId) },
+            { label: 'Maximize', action: () => restoreWindow(taskbarMenu.winId) },
+            null, // separator
+            { label: 'Close window', action: () => closeWindow(taskbarMenu.winId), bold: true },
+          ].map((item, i) =>
+            item === null ? (
+              <div key={i} style={{ height: 1, backgroundColor: '#c0c0c0', margin: '3px 0' }} />
+            ) : (
+              <div
+                key={item.label}
+                onClick={() => { item.action(); setTaskbarMenu({ ...taskbarMenu, visible: false }); }}
+                style={{
+                  padding: '6px 14px',
+                  cursor: 'pointer',
+                  fontWeight: item.bold ? 'bold' : 'normal',
+                  color: '#000',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'; }}
+              >
+                {item.label}
+              </div>
+            )
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 };
 

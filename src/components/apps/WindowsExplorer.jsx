@@ -1,13 +1,12 @@
 import React from 'react';
-import { IconFolder, IconBrandReact, IconBrandPython, IconFileCode, IconExternalLink } from '@tabler/icons-react';
+import useWindowStore from '../../store/useWindowStore';
+import { portfolioData } from '../../data/portfolioData';
+import { IconFolder } from '@tabler/icons-react';
 
 const WindowsExplorer = () => {
-  const items = [
-    { name: 'SpicyFalcon OS', type: 'React App', icon: <IconBrandReact size={48} color="#61dafb" />, link: 'https://github.com/SpicyFalcon619/spicyfalcon-os' },
-    { name: 'Data Analysis', type: 'Python Script', icon: <IconBrandPython size={48} color="#3776ab" />, link: '#' },
-    { name: 'Old Portfolio', type: 'HTML/CSS', icon: <IconFileCode size={48} color="#e34c26" />, link: '#' },
-    { name: 'Secret Project', type: 'Folder', icon: <IconFolder size={48} color="#fcd34d" />, link: '#' },
-  ];
+  const openWindow = useWindowStore(state => state.openWindow);
+  
+  const items = portfolioData.projects;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#fff', color: '#000' }}>
@@ -24,9 +23,9 @@ const WindowsExplorer = () => {
         {/* Sidebar */}
         <div style={{ width: '200px', borderRight: '1px solid #e0e0e0', padding: '15px', backgroundColor: '#f5f6f7', overflowY: 'auto' }}>
           <div style={{ fontWeight: 'bold', color: '#003366', marginBottom: '10px', fontSize: '13px' }}>Favorite Links</div>
-          <div style={{ padding: '4px', cursor: 'pointer', color: '#333', fontSize: '13px' }}>⭐ Recent Places</div>
-          <div style={{ padding: '4px', cursor: 'pointer', color: '#333', fontSize: '13px' }}>🖥️ Desktop</div>
-          <div style={{ padding: '4px', cursor: 'pointer', color: '#333', fontSize: '13px' }}>⬇️ Downloads</div>
+          <div style={{ padding: '4px', cursor: 'pointer', color: '#333', fontSize: '13px' }}>[★] Recent Places</div>
+          <div style={{ padding: '4px', cursor: 'pointer', color: '#333', fontSize: '13px' }}>[D] Desktop</div>
+          <div style={{ padding: '4px', cursor: 'pointer', color: '#333', fontSize: '13px' }}>[↓] Downloads</div>
         </div>
         
         {/* Main Content */}
@@ -34,7 +33,20 @@ const WindowsExplorer = () => {
           {items.map((item, i) => (
             <div 
               key={i}
-              onClick={() => { if(item.link !== '#') window.open(item.link, '_blank') }}
+              onClick={() => {
+                if (item.id === 'wastopia') {
+                  window.open(item.link, '_blank');
+                } else if (item.link) {
+                  openWindow({
+                    id: `ie-${Date.now()}`,
+                    title: 'Internet Explorer',
+                    component: 'ie',
+                    width: 1000,
+                    height: 700,
+                    appData: { url: item.link }
+                  });
+                }
+              }}
               style={{
                 width: '110px',
                 display: 'flex',
@@ -54,7 +66,7 @@ const WindowsExplorer = () => {
                 e.currentTarget.style.border = '1px solid transparent';
               }}
             >
-              {item.icon}
+              <img src={item.icon} alt={item.name} style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
               <div style={{ textAlign: 'center', fontSize: '13px', marginTop: '8px', wordBreak: 'break-word', color: '#222' }}>{item.name}</div>
               <div style={{ textAlign: 'center', fontSize: '11px', color: '#777' }}>{item.type}</div>
             </div>

@@ -33,7 +33,7 @@ const useWindowStore = create((set) => ({
       width: windowData.width ?? 600,
       height: windowData.height ?? 400,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: true,
       zIndex: newZIndex
     };
 

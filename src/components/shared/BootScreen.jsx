@@ -1,43 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
-
 const Windows7Logo = ({ size = 120, animated = false }) => {
   return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 400 400" 
-      style={{ 
-        filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.5))',
-        transform: 'perspective(400px) rotateY(-10deg)',
-        overflow: 'visible'
-      }}
-    >
-      {/* Red */}
-      <path 
-        className={animated ? 'pane-red' : ''} 
-        d="M 190 170 L 190 30 Q 110 10 30 60 L 30 200 Q 110 150 190 170 Z" 
-        fill="#f05025" 
-      />
-      {/* Green */}
-      <path 
-        className={animated ? 'pane-green' : ''} 
-        d="M 210 170 L 210 30 Q 290 80 370 70 L 370 210 Q 290 220 210 170 Z" 
-        fill="#7fb900" 
-      />
-      {/* Blue */}
-      <path 
-        className={animated ? 'pane-blue' : ''} 
-        d="M 190 330 L 190 190 Q 110 170 30 220 L 30 360 Q 110 310 190 330 Z" 
-        fill="#00a4ef" 
-      />
-      {/* Yellow */}
-      <path 
-        className={animated ? 'pane-yellow' : ''} 
-        d="M 210 330 L 210 190 Q 290 240 370 230 L 370 370 Q 290 380 210 330 Z" 
-        fill="#ffb900" 
-      />
-    </svg>
+    <div style={{
+      width: size,
+      height: size,
+      filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.6))',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      animation: animated ? 'glowPulse 3s infinite' : 'none'
+    }}>
+      <svg 
+        viewBox="0 0 400 400" 
+        style={{
+          width: '100%',
+          height: '100%',
+          transform: 'perspective(400px) rotateY(-10deg)',
+        }}
+      >
+        <path fill="#f05025" d="M 30 60 C 80 10, 140 10, 190 30 L 190 170 C 140 150, 80 150, 30 200 Z" />
+        <path fill="#7fb900" d="M 210 30 C 260 50, 320 70, 370 60 L 370 200 C 320 210, 260 190, 210 170 Z" />
+        <path fill="#00a4ef" d="M 30 220 C 80 170, 140 170, 190 190 L 190 330 C 140 310, 80 310, 30 360 Z" />
+        <path fill="#ffb900" d="M 210 190 C 260 210, 320 230, 370 220 L 370 360 C 320 370, 260 350, 210 330 Z" />
+      </svg>
+    </div>
   );
 };
 

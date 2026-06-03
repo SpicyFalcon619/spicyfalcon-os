@@ -25,9 +25,9 @@ const Window = ({ windowData }) => {
     backgroundColor: 'var(--aero-glass-bg)',
     backdropFilter: 'var(--aero-glass-blur)',
     WebkitBackdropFilter: 'var(--aero-glass-blur)',
-    border: '1px solid var(--aero-glass-border)',
-    borderRadius: isMaximized ? 0 : 'var(--window-border-radius)',
-    boxShadow: isActive ? 'var(--aero-glass-shadow)' : '0 2px 10px rgba(0,0,0,0.2)',
+    border: '1px solid rgba(0, 0, 0, 0.4)',
+    borderRadius: isMaximized ? 0 : '8px',
+    boxShadow: isActive ? 'inset 0 1px 1px rgba(255,255,255,0.7), 0 5px 25px rgba(0,0,0,0.5)' : 'inset 0 1px 1px rgba(255,255,255,0.4), 0 2px 10px rgba(0,0,0,0.3)',
     display: 'flex',
     flexDirection: 'column',
     transition: 'opacity 0.2s', 
@@ -140,7 +140,7 @@ const Window = ({ windowData }) => {
         isActive={isActive} 
         setIsInteracting={setIsInteracting}
       />
-      <div style={{ flex: 1, backgroundColor: '#fff', border: '1px solid rgba(255,255,255,0.5)', margin: '0 2px 2px 2px', overflow: 'hidden' }}>
+      <div style={{ flex: 1, backgroundColor: '#fff', border: '1px solid rgba(0,0,0,0.4)', margin: isMaximized ? '0' : '0 8px 8px 8px', overflow: 'hidden' }}>
         <AppRouter windowData={windowData} />
       </div>
     </motion.div>

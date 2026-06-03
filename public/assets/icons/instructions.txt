@@ -1,0 +1,1 @@
+Drop your Windows 7 .png or .ico files here. Name them: computer.png, recycle-bin.png, explorer.png, ie.png, paint.png, task-manager.png, device-manager.png, photo-viewer.png

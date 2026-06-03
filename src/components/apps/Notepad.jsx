@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { aboutMeText } from '../../data/portfolioData';
 
-const Notepad = () => {
-  const [text, setText] = useState('Hi! I am SpicyFalcon.\n\nWelcome to my 2010s Windows 7 inspired web portfolio.\nI built this to showcase my skills in React, complex state management, and interaction design.\n\nFeel free to explore!');
+const Notepad = ({ windowData }) => {
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (windowData?.appData?.file === 'about-me') {
+      setText(aboutMeText);
+    } else {
+      setText('Hi! I am SpicyFalcon.\n\nWelcome to my 2010s Windows 7 inspired web portfolio.\nI built this to showcase my skills in React, complex state management, and interaction design.\n\nFeel free to explore!');
+    }
+  }, [windowData]);
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }}>

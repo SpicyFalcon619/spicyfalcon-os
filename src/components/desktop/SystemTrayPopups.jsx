@@ -1,6 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
-import { IconVolume } from '@tabler/icons-react';
+import { IconBattery, IconBatteryCharging, IconBattery1, IconBattery2, IconBattery3, IconBattery4, IconVolume, IconDeviceSpeaker } from '@tabler/icons-react';
+
+export const BatteryIcon = () => {
+  const [level, setLevel] = useState(100);
+  const [isCharging, setIsCharging] = useState(false);
+
+  useEffect(() => {
+    let batteryPromise;
+    if ('getBattery' in navigator) {
+      batteryPromise = navigator.getBattery().then(battery => {
+        const updateBattery = () => {
+          setLevel(Math.round(battery.level * 100));
+          setIsCharging(battery.charging);
+        };
+        updateBattery();
+        battery.addEventListener('levelchange', updateBattery);
+        battery.addEventListener('chargingchange', updateBattery);
+        
+        return () => {
+          battery.removeEventListener('levelchange', updateBattery);
+          battery.removeEventListener('chargingchange', updateBattery);
+        };
+      });
+    }
+  }, []);
+
+  const getBatteryIcon = () => {
+    if (isCharging) return <IconBatteryCharging size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+    if (level > 90) return <IconBattery size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+    if (level > 70) return <IconBattery4 size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+    if (level > 40) return <IconBattery3 size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+    if (level > 15) return <IconBattery2 size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+    return <IconBattery1 size={18} color="#ff3333" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+  };
+
+  return (
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }} title={`${level}% remaining`}>
+      {getBatteryIcon()}
+      <span style={{ color: '#fff', fontSize: '11px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{level}%</span>
+    </div>
+  );
+};
 
 export const CalendarPopup = () => {
   const [time, setTime] = useState(new Date());
@@ -14,15 +55,17 @@ export const CalendarPopup = () => {
   return (
     <div style={{
       position: 'fixed',
-      bottom: '40px',
-      right: '10px',
+      bottom: 'var(--taskbar-height)',
+      right: '0px',
       width: '240px',
-      background: 'linear-gradient(to bottom, #f0f4f9, #dce6f2)',
-      border: '1px solid #7a96df',
+      background: 'linear-gradient(to right, #eef4fc, #e1eaf5)',
+      border: '1px solid rgba(0, 0, 0, 0.5)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.5)',
+      borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
       borderBottom: 'none',
       borderTopLeftRadius: '5px',
       borderTopRightRadius: '5px',
-      boxShadow: '0 -2px 10px rgba(0,0,0,0.2), inset 0 1px 1px white',
+      boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.6), 2px -2px 10px rgba(0,0,0,0.5)',
       padding: '15px',
       color: '#003366',
       zIndex: 9999
@@ -64,45 +107,150 @@ export const CalendarPopup = () => {
 export const VolumePopup = () => {
   const globalVolume = useDesktopStore(state => state.globalVolume);
   const setGlobalVolume = useDesktopStore(state => state.setGlobalVolume);
+  const sliderRef = useRef(null);
+
+  const handlePointerDown = (e) => {
+    if (!sliderRef.current) return;
+    const updateVolume = (e) => {
+      const rect = sliderRef.current.getBoundingClientRect();
+      const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+      const percentage = 100 - (y / rect.height) * 100;
+      setGlobalVolume(Math.round(percentage));
+    };
+    updateVolume(e);
+    
+    const handlePointerMove = (e) => updateVolume(e);
+    const handlePointerUp = () => {
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerUp);
+    };
+    
+    document.addEventListener('pointermove', handlePointerMove);
+    document.addEventListener('pointerup', handlePointerUp);
+  };
   
   return (
     <div style={{
       position: 'fixed',
-      bottom: '40px',
-      right: '60px',
-      width: '80px',
-      height: '240px',
-      background: 'linear-gradient(to bottom, #f0f4f9, #c0d2f0)',
-      border: '1px solid #7a96df',
-      borderBottom: 'none',
-      borderTopLeftRadius: '5px',
-      borderTopRightRadius: '5px',
-      boxShadow: '0 -2px 10px rgba(0,0,0,0.2), inset 0 1px 1px white',
-      padding: '15px 10px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+      bottom: 'var(--taskbar-height)',
+      right: '40px',
+      padding: '4px',
+      background: 'rgba(25, 60, 90, 0.5)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      border: '1px solid rgba(0, 0, 0, 0.4)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.3)',
+      borderLeft: '1px solid rgba(255, 255, 255, 0.3)',
+      borderRadius: '6px 6px 0 0',
+      boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4), 2px -2px 10px rgba(0,0,0,0.5)',
       zIndex: 9999
     }} onPointerDown={(e) => e.stopPropagation()}>
-      <div style={{ fontSize: '13px', textShadow: '0 1px white', marginBottom: '15px', color: '#003366', fontWeight: 'bold' }}>Mixer</div>
-      <div style={{ flex: 1, padding: '5px 0', display: 'flex', justifyContent: 'center' }}>
-        <input 
-          type="range" 
-          min="0" max="100" 
-          value={globalVolume}
-          onChange={(e) => setGlobalVolume(parseInt(e.target.value))}
-          style={{
-            writingMode: 'bt-lr',
-            WebkitAppearance: 'slider-vertical',
-            width: '24px',
-            height: '100%'
-          }} 
-        />
+      
+      {/* Inner White Container */}
+      <div style={{
+        width: '80px',
+        height: '320px',
+        backgroundColor: '#fff',
+        border: '1px solid #7a96df',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}>
+        
+        {/* Top Device Button */}
+        <div style={{ padding: '10px 0 5px 0' }}>
+          <div 
+            title="Speakers (High Definition Audio Device)"
+            style={{
+              width: '42px',
+              height: '42px',
+              border: '1px solid #ccc',
+              borderRadius: '3px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'linear-gradient(to bottom, #fff, #f0f0f0)',
+              cursor: 'pointer'
+            }}
+          >
+            <IconDeviceSpeaker size={28} color="#444" stroke={1.5} />
+          </div>
+        </div>
+        
+        {/* Slider Area */}
+        <div style={{ flex: 1, position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', margin: '15px 0' }}>
+          {/* Tick marks behind slider */}
+          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+             {[...Array(5)].map((_, i) => (
+                <div key={i} style={{ width: '30px', height: '1px', backgroundColor: '#e0e0e0' }}></div>
+             ))}
+          </div>
+          
+          {/* The Slider Track */}
+          <div 
+            ref={sliderRef}
+            onPointerDown={handlePointerDown}
+            style={{
+              position: 'relative',
+              width: '8px',
+              height: '100%',
+              backgroundColor: '#fff',
+              border: '1px solid #a0a0a0',
+              borderRight: '1px solid #fff',
+              borderBottom: '1px solid #fff',
+              boxShadow: 'inset 1px 1px 3px rgba(0,0,0,0.2)',
+              cursor: 'pointer',
+              zIndex: 2
+            }}
+          >
+             {/* Volume level indicator fill */}
+             <div style={{
+               position: 'absolute',
+               bottom: 0,
+               left: 0,
+               width: '100%',
+               height: `${globalVolume}%`,
+               background: 'linear-gradient(to right, #2ab125 0%, #3fe739 100%)',
+               opacity: 0.2
+             }}></div>
+          </div>
+          
+          {/* The Slider Thumb */}
+          <div style={{
+            position: 'absolute',
+            bottom: `calc(${globalVolume}% - 8px)`,
+            left: 'calc(50% - 14px)',
+            width: '18px',
+            height: '16px',
+            pointerEvents: 'none',
+            zIndex: 3
+          }}>
+            <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <polygon points="0,0 60,0 100,50 60,100 0,100" fill="#3b82f6" stroke="#1d4ed8" strokeWidth="5" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Bottom Speaker Icon */}
+        <div style={{ marginBottom: '10px' }}>
+          <IconVolume size={20} color="#0058d6" />
+        </div>
+
+        {/* Mixer Label */}
+        <div style={{
+          width: '100%',
+          padding: '8px 0',
+          borderTop: '1px solid #dfdfdf',
+          textAlign: 'center',
+          fontSize: '12px',
+          color: '#0058d6',
+          cursor: 'pointer',
+          background: 'linear-gradient(to bottom, #f9f9f9, #e0e0e0)'
+        }}>
+          Mixer
+        </div>
+        
       </div>
-      <div style={{ marginTop: '15px' }}>
-        <IconVolume size={28} color="#003366" style={{ filter: 'drop-shadow(0 1px 1px white)' }} />
-      </div>
-      <div style={{ fontSize: '12px', marginTop: '5px', color: '#003366' }}>{globalVolume}%</div>
     </div>
   );
 };

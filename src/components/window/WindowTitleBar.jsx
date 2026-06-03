@@ -80,62 +80,57 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
   };
 
   const titleBarStyle = {
-    height: 'var(--titlebar-height)',
+    height: '28px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '0 6px 0 10px',
-    background: isActive 
-      ? 'linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.0) 100%)' 
-      : 'linear-gradient(to bottom, rgba(230,230,230,0.6) 0%, rgba(230,230,230,0.2) 50%, rgba(230,230,230,0.0) 100%)',
+    padding: '0 4px 0 8px',
     cursor: isMaximized ? 'default' : 'default',
     userSelect: 'none',
   };
 
   const buttonContainerStyle = {
     display: 'flex',
-    gap: '2px',
+    gap: '1px',
     height: '20px',
   };
 
   const baseButtonStyle = {
-    width: '28px',
+    width: '26px',
     height: '20px',
-    border: '1px solid rgba(0,0,0,0.4)',
-    borderRadius: '3px',
-    background: 'linear-gradient(to bottom, #f0f0f0, #c0c0c0)',
+    border: '1px solid rgba(255, 255, 255, 0.4)',
+    borderTop: 'none',
+    borderBottomLeftRadius: '3px',
+    borderBottomRightRadius: '3px',
+    background: 'linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(200,200,200,0.1))',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    fontSize: '10px',
-    fontWeight: 'bold',
+    fontSize: '11px',
+    fontWeight: 'normal',
     color: '#000',
-    boxShadow: 'inset 0 1px 1px rgba(255,255,255,1)',
+    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.8), inset 0 -3px 5px rgba(255,255,255,0.2), 0 1px 3px rgba(0,0,0,0.3)',
+    transition: 'all 0.1s',
+    textShadow: '0 0 2px rgba(255,255,255,0.8)'
   };
 
   const closeButtonStyle = {
     ...baseButtonStyle,
-    background: 'linear-gradient(to bottom, #f5a5a5, #c22929)',
+    width: '43px',
+    borderTopRightRadius: isMaximized ? '0' : '6px',
+    background: 'linear-gradient(to bottom, rgba(220,100,100,0.7), rgba(180,30,30,0.6))',
     color: 'white',
-    boxShadow: 'inset 0 1px 1px rgba(255,200,200,1)',
-    border: '1px solid #701010',
+    boxShadow: 'inset 0 1px 1px rgba(255,180,180,0.8), inset 0 -3px 5px rgba(200,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3)',
+    border: '1px solid rgba(150,0,0,0.6)',
+    borderTop: 'none',
+    textShadow: '0 0 2px rgba(0,0,0,0.8)'
   };
 
   const getTitleIcon = () => {
     const comp = windowData.component || '';
-    if (comp.includes('computer')) return <IconDeviceDesktop size={16} stroke={2} />;
-    if (comp.includes('recycle-bin')) return <IconTrash size={16} stroke={2} />;
-    if (comp.includes('explorer')) return <IconFolder size={16} stroke={2} />;
-    if (comp.includes('ie')) return <IconBrowser size={16} stroke={2} />;
-    if (comp.includes('notepad')) return <IconFileText size={16} stroke={2} />;
-    if (comp.includes('paint')) return <IconPalette size={16} stroke={2} />;
-    if (comp.includes('calculator')) return <IconCalculator size={16} stroke={2} />;
-    if (comp.includes('spotify')) return <IconMusic size={16} stroke={2} />;
-    if (comp.includes('minesweeper')) return <IconBomb size={16} stroke={2} />;
-    if (comp.includes('cmd')) return <IconTerminal2 size={16} stroke={2} />;
-    if (comp.includes('winver')) return <IconInfoCircle size={16} stroke={2} />;
-    return <IconSettings size={16} stroke={2} />;
+    const iconId = comp.replace('app-', '');
+    return <img src={`/assets/icons/${iconId}.png`} onError={(e) => { e.target.style.display = 'none'; }} style={{ width: '16px', height: '16px' }} alt="" />;
   };
 
   return (
@@ -163,9 +158,45 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
       </div>
       
       <div style={buttonContainerStyle} onPointerDown={(e) => e.stopPropagation()}>
-        <button style={baseButtonStyle} onClick={() => minimizeWindow(id)}>_</button>
-        <button style={baseButtonStyle} onClick={() => toggleMaximize(id)}>{isMaximized ? '❐' : '□'}</button>
-        <button style={closeButtonStyle} onClick={() => closeWindow(id)}>X</button>
+        <button 
+          style={baseButtonStyle} 
+          onClick={() => minimizeWindow(id)}
+          onMouseOver={e => { e.currentTarget.style.background = 'linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(200,230,255,0.7))'; e.currentTarget.style.boxShadow = 'inset 0 1px 1px rgba(255,255,255,1), inset 0 -3px 5px rgba(100,200,255,0.6), 0 1px 3px rgba(0,0,0,0.3)' }}
+          onMouseOut={e => { e.currentTarget.style.background = baseButtonStyle.background; e.currentTarget.style.boxShadow = baseButtonStyle.boxShadow }}
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10">
+            <rect x="1" y="7" width="8" height="2" fill="currentColor" />
+          </svg>
+        </button>
+        <button 
+          style={baseButtonStyle} 
+          onClick={() => toggleMaximize(id)}
+          onMouseOver={e => { e.currentTarget.style.background = 'linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(200,230,255,0.7))'; e.currentTarget.style.boxShadow = 'inset 0 1px 1px rgba(255,255,255,1), inset 0 -3px 5px rgba(100,200,255,0.6), 0 1px 3px rgba(0,0,0,0.3)' }}
+          onMouseOut={e => { e.currentTarget.style.background = baseButtonStyle.background; e.currentTarget.style.boxShadow = baseButtonStyle.boxShadow }}
+        >
+          {isMaximized ? (
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <path d="M 2 4 L 2 2 L 8 2 L 8 8 L 6 8" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <rect x="0.5" y="4.5" width="6" height="5" fill="none" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          ) : (
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1" />
+              <rect x="1" y="1" width="8" height="2" fill="currentColor" />
+            </svg>
+          )}
+        </button>
+        <button 
+          style={closeButtonStyle} 
+          onClick={() => closeWindow(id)}
+          onMouseOver={e => { e.currentTarget.style.background = 'linear-gradient(to bottom, rgba(250,150,150,0.9), rgba(220,30,30,0.8))'; e.currentTarget.style.boxShadow = 'inset 0 1px 1px rgba(255,200,200,1), inset 0 -3px 5px rgba(255,50,50,0.8), 0 1px 3px rgba(0,0,0,0.3)' }}
+          onMouseOut={e => { e.currentTarget.style.background = closeButtonStyle.background; e.currentTarget.style.boxShadow = closeButtonStyle.boxShadow }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <path d="M 1 1 L 11 11 M 1 11 L 11 1" stroke="white" stroke-width="2" stroke-linecap="round" />
+            <path d="M 1 1 L 11 11 M 1 11 L 11 1" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+          </svg>
+        </button>
       </div>
     </div>
   );

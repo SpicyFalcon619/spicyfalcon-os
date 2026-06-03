@@ -1,14 +1,12 @@
 import { create } from 'zustand';
 
 const initialIcons = [
-  { id: 'computer', title: 'My Computer', icon: '💻', x: 20, y: 20 },
-  { id: 'recycle-bin', title: 'Recycle Bin', icon: '🗑️', x: 20, y: 100 },
-  { id: 'explorer', title: 'Projects', icon: '📁', x: 20, y: 180 },
-  { id: 'ie', title: 'Internet Explorer', icon: '🌐', x: 20, y: 260 },
-  { id: 'paint', title: 'MS Paint', icon: '🎨', x: 20, y: 340 },
-  { id: 'task-manager', title: 'Task Manager', icon: '📊', x: 120, y: 20 },
-  { id: 'device-manager', title: 'Device Manager', icon: '💻', x: 120, y: 100 },
-  { id: 'photo-viewer', title: 'Photo Gallery', icon: '🖼️', x: 120, y: 180 },
+  { id: 'recycle-bin',    title: 'Recycle Bin',    icon: '/assets/icons/recycle-bin.png', iconFull: '/assets/icons/recycle-bin-full.png', isEmpty: true, x: 20, y: 20 },
+  { id: 'my-computer',   title: 'My Computer',     icon: '/assets/icons/computer.png',      component: 'my-computer', x: 20, y: 100 },
+  { id: 'about-me',      title: 'About Me.txt',    icon: '/assets/icons/notepad.png',       component: 'portfolio', appData: { section: 'about' }, x: 20, y: 180 },
+  { id: 'wastopia-icon', title: 'Wastopia',         icon: '/assets/icons/ie.png',            component: 'ie', appData: { url: 'https://project-wastopia.vercel.app' }, x: 20, y: 260 },
+  { id: 'task-manager',  title: 'Task Manager',     icon: '/assets/icons/task-manager.svg',  x: 120, y: 20 },
+  { id: 'device-manager','title': 'Device Manager', icon: '/assets/icons/device-manager.png', x: 120, y: 100 }
 ];
 
 const useDesktopStore = create((set) => ({

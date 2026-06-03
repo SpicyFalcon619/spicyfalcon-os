@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#84da45" />
+      <stop offset="40%" stop-color="#55c13b" />
+      <stop offset="100%" stop-color="#148624" />
+    </linearGradient>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a2a2a" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.5)" />
+    </filter>
+  </defs>
+  <!-- Optional black background circle if they wanted the old black-bg one, but the classic green gradient with black lines is best -->
+  <circle cx="50" cy="50" r="48" fill="url(#grad)" filter="url(#shadow)" />
+  
+  <!-- Inset highlight -->
+  <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" />
+  
+  <!-- Audio waves -->
+  <path d="M22 38 Q50 22 78 38" stroke="#111" stroke-width="8.5" stroke-linecap="round" fill="none" opacity="0.95" />
+  <path d="M26 53 Q50 40 74 53" stroke="#111" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.95" />
+  <path d="M30 68 Q50 58 70 68" stroke="#111" stroke-width="5.5" stroke-linecap="round" fill="none" opacity="0.95" />
+</svg>

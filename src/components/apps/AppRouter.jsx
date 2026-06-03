@@ -11,9 +11,13 @@ const ControlPanel = lazy(() => import('./ControlPanel'));
 const Calculator = lazy(() => import('./Calculator'));
 const SystemFolder = lazy(() => import('./SystemFolder'));
 const Winver = lazy(() => import('./Winver'));
+const SystemProperties = lazy(() => import('./SystemProperties'));
 const TaskManager = lazy(() => import('./TaskManager'));
 const DeviceManager = lazy(() => import('./DeviceManager'));
 const PhotoViewer = lazy(() => import('./PhotoViewer'));
+const Portfolio = lazy(() => import('./Portfolio'));
+const MyComputer = lazy(() => import('./MyComputer'));
+const RecycleBin = lazy(() => import('./RecycleBin'));
 
 const AppRouter = ({ windowData }) => {
   const { component } = windowData;
@@ -25,21 +29,24 @@ const AppRouter = ({ windowData }) => {
       case 'ie': return <InternetExplorer windowData={windowData} />;
       case 'paint': return <MSPaint windowData={windowData} />;
       case 'minesweeper': return <Minesweeper windowData={windowData} />;
-      case 'spotify': return <Spicetify windowData={windowData} />;
+      case 'spicetify': return <Spicetify windowData={windowData} />;
       case 'cmd': return <CommandPrompt windowData={windowData} />;
       case 'control-panel': return <ControlPanel windowData={windowData} />;
       case 'calculator': return <Calculator windowData={windowData} />;
       case 'winver': return <Winver windowData={windowData} />;
+      case 'system-properties': return <SystemProperties windowData={windowData} />;
       case 'task-manager': return <TaskManager windowData={windowData} />;
       case 'device-manager': return <DeviceManager windowData={windowData} />;
       case 'photo-viewer': return <PhotoViewer windowData={windowData} />;
+      case 'portfolio': return <Portfolio windowData={windowData} />;
+      case 'my-computer': return <MyComputer windowData={windowData} />;
+      case 'recycle-bin': return <RecycleBin windowData={windowData} />;
       case 'computer':
-      case 'recycle-bin':
       case 'documents':
       case 'pictures':
       case 'music':
         return <SystemFolder windowData={windowData} />;
-      default: return <div style={{ padding: '20px' }}>Application "{component}" not found.</div>;
+      default: return <div style={{ padding: '20px' }}>Application not found.</div>;
     }
   };
 
@@ -51,3 +58,4 @@ const AppRouter = ({ windowData }) => {
 };
 
 export default AppRouter;
+

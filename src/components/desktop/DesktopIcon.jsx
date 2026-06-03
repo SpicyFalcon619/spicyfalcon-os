@@ -19,6 +19,11 @@ const getIconComponent = (id) => {
 
 const DesktopIcon = ({ iconData }) => {
   const { id, title, x, y } = iconData;
+  // For recycle-bin: use iconFull when it has items (isEmpty=false), icon when empty
+  const iconSrc = (iconData.iconFull && iconData.isEmpty === false)
+    ? iconData.iconFull
+    : (iconData.icon || `/assets/icons/${id}.png`);
+  const [imgError, setImgError] = React.useState(false);
   const isSelected = useDesktopStore(state => state.selectedIconIds.includes(id));
   const selectIcon = useDesktopStore(state => state.selectIcon);
   const updateIconPosition = useDesktopStore(state => state.updateIconPosition);
@@ -63,9 +68,10 @@ const DesktopIcon = ({ iconData }) => {
     openWindow({
       id: `app-${id}`,
       title: title,
-      component: id,
+      component: iconData.component || id,
       width: 800,
-      height: 600
+      height: 600,
+      appData: iconData.appData || null
     });
   };
 
@@ -89,14 +95,23 @@ const DesktopIcon = ({ iconData }) => {
   return (
     <div 
       ref={iconRef}
+      data-desktop-icon="true"
+      className="desktop-icon-container"
       style={containerStyle}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onDoubleClick={handleDoubleClick}
     >
-      <div style={{ marginBottom: '4px', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.5))', pointerEvents: 'none', display: 'flex' }}>
-        {getIconComponent(id)}
+      <div style={{ marginBottom: '4px', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.5))', pointerEvents: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '40px', height: '40px' }}>
+        {!imgError ? (
+          <img 
+            src={iconSrc} 
+            onError={() => setImgError(true)} 
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            alt="" 
+          />
+        ) : getIconComponent(id)}
       </div>
       <div style={{
         color: 'white',

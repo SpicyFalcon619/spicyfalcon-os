@@ -18,7 +18,7 @@ const ContextMenu = () => {
   if (!visible) return null;
 
   // Prevent menu from overflowing screen
-  const menuWidth = 200;
+  const menuWidth = 150;
   const menuHeight = 150;
   const safeX = x + menuWidth > window.innerWidth ? window.innerWidth - menuWidth : x;
   const safeY = y + menuHeight > window.innerHeight ? window.innerHeight - menuHeight : y;
@@ -29,8 +29,9 @@ const ContextMenu = () => {
     top: safeY,
     width: `${menuWidth}px`,
     backgroundColor: '#f2f2f2',
-    border: '1px solid #999',
-    boxShadow: '2px 2px 5px rgba(0,0,0,0.3)',
+    background: 'linear-gradient(to right, #e3e3e3 0px, #e3e3e3 26px, #f2f2f2 27px)',
+    border: '1px solid #979797',
+    boxShadow: '2px 2px 5px rgba(0,0,0,0.2)',
     padding: '2px',
     zIndex: 10000,
     fontSize: '12px',
@@ -45,20 +46,20 @@ const ContextMenu = () => {
   };
 
   const hrStyle = {
-    margin: '2px 4px',
+    margin: '3px 2px 3px 28px',
     border: 'none',
-    borderTop: '1px solid #ccc',
+    borderTop: '1px solid #e0e0e0',
     borderBottom: '1px solid #fff'
   };
 
   const handleRefresh = (e) => {
     e.stopPropagation();
     hideContextMenu();
-    const bg = document.getElementById('desktop-bg');
-    if (bg) {
-      bg.style.display = 'none';
-      setTimeout(() => bg.style.display = 'block', 50);
-    }
+    const icons = document.querySelectorAll('.desktop-icon-container');
+    icons.forEach(icon => {
+      icon.style.opacity = '0';
+      setTimeout(() => icon.style.opacity = '1', 100);
+    });
   };
 
   const handlePersonalize = (e) => {
@@ -75,11 +76,29 @@ const ContextMenu = () => {
 
   return (
     <div style={style} onMouseDown={(e) => e.stopPropagation()} onContextMenu={(e) => e.preventDefault()}>
-      <div style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>View</div>
-      <div style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>Sort by</div>
-      <div onClick={handleRefresh} style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>Refresh</div>
+      <div 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >View</div>
+      <div 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >Sort by</div>
+      <div 
+        onPointerDown={handleRefresh} 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >Refresh</div>
       <hr style={hrStyle} />
-      <div onClick={handlePersonalize} style={itemStyle} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = '#3399ff'; e.currentTarget.style.color = '#fff'}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#000'}}>Personalize</div>
+      <div 
+        onPointerDown={handlePersonalize} 
+        style={itemStyle} 
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
+      >Personalize</div>
     </div>
   );
 };

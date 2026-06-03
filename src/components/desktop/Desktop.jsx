@@ -77,6 +77,11 @@ const Desktop = ({ children }) => {
 
   const handleContextMenu = (e) => {
     e.preventDefault();
+    // Only show desktop context menu when clicking on the actual desktop bg or desktop icons
+    // If a window or app consumed the event, it should have called stopPropagation
+    const target = e.target;
+    const isDesktopBg = target.id === 'desktop-bg' || target.closest('[data-desktop-icon]');
+    if (!isDesktopBg) return;
     showContextMenu(e.clientX, e.clientY);
   };
 

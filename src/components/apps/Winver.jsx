@@ -1,13 +1,16 @@
 import React from 'react';
 import { Windows7Logo } from '../shared/BootScreen';
+import useConfigStore from '../../store/useConfigStore';
 
 const Winver = () => {
+  const osName = useConfigStore(state => state.osName);
+  const username = useConfigStore(state => state.username);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#fff', color: '#000', padding: '20px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px', borderBottom: '1px solid #ccc', paddingBottom: '20px', marginBottom: '20px' }}>
         <Windows7Logo size={60} animated={false} />
         <div>
-          <h2 style={{ margin: 0, fontSize: '28px', color: '#003366', fontWeight: '300' }}>SpicyFalcon OS</h2>
+          <h2 style={{ margin: 0, fontSize: '28px', color: '#003366', fontWeight: '300' }}>{osName}</h2>
           <div style={{ color: '#666' }}>Version 1.0.0 (Build 7601)</div>
         </div>
       </div>
@@ -19,7 +22,7 @@ const Winver = () => {
         </p>
         <p style={{ marginTop: '20px' }}>
           This product is licensed to:<br />
-          <strong>The User</strong>
+          <strong>{username}</strong>
         </p>
       </div>
     </div>
