@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import useWindowStore from '../../store/useWindowStore';
-import { IconDeviceDesktop, IconTrash, IconFolder, IconBrowser, IconFileText, IconPalette, IconCalculator, IconMusic, IconBomb, IconTerminal2, IconSettings, IconInfoCircle } from '@tabler/icons-react';
 
 const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
   const { id, title, isMaximized } = windowData;
@@ -96,35 +95,32 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
   };
 
   const baseButtonStyle = {
-    width: '26px',
-    height: '20px',
-    border: '1px solid rgba(255, 255, 255, 0.4)',
+    width: '32px',
+    height: '21px',
+    border: '1px solid rgba(0, 0, 0, 0.4)',
     borderTop: 'none',
-    borderBottomLeftRadius: '3px',
-    borderBottomRightRadius: '3px',
-    background: 'linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(200,200,200,0.1))',
+    borderBottomLeftRadius: '4px',
+    borderBottomRightRadius: '4px',
+    background: 'linear-gradient(to bottom, rgba(235,245,255,0.8), rgba(150,180,210,0.6))',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    fontSize: '11px',
-    fontWeight: 'normal',
     color: '#000',
-    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.8), inset 0 -3px 5px rgba(255,255,255,0.2), 0 1px 3px rgba(0,0,0,0.3)',
-    transition: 'all 0.1s',
-    textShadow: '0 0 2px rgba(255,255,255,0.8)'
+    boxShadow: 'inset 0 1px 2px rgba(255,255,255,1), inset 0 -3px 8px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.2)',
+    transition: 'all 0.1s'
   };
 
   const closeButtonStyle = {
     ...baseButtonStyle,
-    width: '43px',
+    width: '48px',
     borderTopRightRadius: isMaximized ? '0' : '6px',
-    background: 'linear-gradient(to bottom, rgba(220,100,100,0.7), rgba(180,30,30,0.6))',
+    background: 'linear-gradient(to bottom, rgba(235,130,130,0.9), rgba(190,40,40,0.8))',
     color: 'white',
-    boxShadow: 'inset 0 1px 1px rgba(255,180,180,0.8), inset 0 -3px 5px rgba(200,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3)',
-    border: '1px solid rgba(150,0,0,0.6)',
+    boxShadow: 'inset 0 1px 2px rgba(255,200,200,1), inset 0 -3px 8px rgba(255,100,100,0.6), 0 1px 3px rgba(0,0,0,0.3)',
+    border: '1px solid rgba(120,0,0,0.7)',
     borderTop: 'none',
-    textShadow: '0 0 2px rgba(0,0,0,0.8)'
+    textShadow: '0 1px 2px rgba(0,0,0,0.6)'
   };
 
   const getTitleIcon = () => {

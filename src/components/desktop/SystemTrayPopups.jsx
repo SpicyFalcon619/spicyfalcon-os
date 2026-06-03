@@ -166,7 +166,7 @@ export const VolumePopup = () => {
               justifyContent: 'center',
               background: 'linear-gradient(to bottom, #fff, #f0f0f0)',
               cursor: 'pointer'
-            }}
+            }}>
             <img src="/assets/icons/volume-windows.png" alt="Speaker" style={{ width: 24, height: 24, filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))' }} />
           </div>
         </div>

@@ -96,7 +96,7 @@ const Window = ({ windowData }) => {
     setIsInteracting(false);
   };
 
-  const ResizeHandle = ({ dir, style }) => (
+  const renderResizeHandle = (dir, style) => (
     <div 
       style={{ position: 'absolute', zIndex: 10, ...style }}
       onPointerDown={(e) => handleResizeDown(e, dir)}
@@ -124,14 +124,14 @@ const Window = ({ windowData }) => {
     >
       {!isMaximized && (
         <>
-          <ResizeHandle dir="n" style={{ top: -5, left: 5, right: 5, height: 10, cursor: 'n-resize' }} />
-          <ResizeHandle dir="s" style={{ bottom: -5, left: 5, right: 5, height: 10, cursor: 's-resize' }} />
-          <ResizeHandle dir="e" style={{ top: 5, bottom: 5, right: -5, width: 10, cursor: 'e-resize' }} />
-          <ResizeHandle dir="w" style={{ top: 5, bottom: 5, left: -5, width: 10, cursor: 'w-resize' }} />
-          <ResizeHandle dir="ne" style={{ top: -5, right: -5, width: 15, height: 15, cursor: 'ne-resize' }} />
-          <ResizeHandle dir="nw" style={{ top: -5, left: -5, width: 15, height: 15, cursor: 'nw-resize' }} />
-          <ResizeHandle dir="se" style={{ bottom: -5, right: -5, width: 15, height: 15, cursor: 'se-resize' }} />
-          <ResizeHandle dir="sw" style={{ bottom: -5, left: -5, width: 15, height: 15, cursor: 'sw-resize' }} />
+          {renderResizeHandle("n", { top: -5, left: 5, right: 5, height: 10, cursor: 'n-resize' })}
+          {renderResizeHandle("s", { bottom: -5, left: 5, right: 5, height: 10, cursor: 's-resize' })}
+          {renderResizeHandle("e", { top: 5, bottom: 5, right: -5, width: 10, cursor: 'e-resize' })}
+          {renderResizeHandle("w", { top: 5, bottom: 5, left: -5, width: 10, cursor: 'w-resize' })}
+          {renderResizeHandle("ne", { top: -5, right: -5, width: 15, height: 15, cursor: 'ne-resize' })}
+          {renderResizeHandle("nw", { top: -5, left: -5, width: 15, height: 15, cursor: 'nw-resize' })}
+          {renderResizeHandle("se", { bottom: -5, right: -5, width: 15, height: 15, cursor: 'se-resize' })}
+          {renderResizeHandle("sw", { bottom: -5, left: -5, width: 15, height: 15, cursor: 'sw-resize' })}
         </>
       )}
 
