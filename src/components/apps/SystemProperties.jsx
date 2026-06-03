@@ -8,7 +8,6 @@ const SystemProperties = () => {
   
   // Left Sidebar Links
   const sidebarLinks = [
-    { label: 'Control Panel Home', action: 'control-panel', icon: '/assets/icons/control-panel.png' },
     { label: 'Device Manager', action: 'device-manager', icon: '/assets/icons/computer.png' },
     { label: 'Remote settings', action: 'none' },
     { label: 'System protection', action: 'none' },
@@ -18,8 +17,6 @@ const SystemProperties = () => {
   const handleSidebarClick = (action) => {
     if (action === 'device-manager') {
       openWindow({ id: 'app-device-manager', title: 'Device Manager', component: 'device-manager', width: 800, height: 600 });
-    } else if (action === 'control-panel') {
-      openWindow({ id: 'app-control-panel', title: 'Control Panel', component: 'control-panel', width: 800, height: 600 });
     }
   };
 

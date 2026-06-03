@@ -7,7 +7,6 @@ const MSPaint = lazy(() => import('./MSPaint'));
 const Minesweeper = lazy(() => import('./Minesweeper'));
 const Spicetify = lazy(() => import('./Spicetify'));
 const CommandPrompt = lazy(() => import('./CommandPrompt'));
-const ControlPanel = lazy(() => import('./ControlPanel'));
 const Calculator = lazy(() => import('./Calculator'));
 const SystemFolder = lazy(() => import('./SystemFolder'));
 const Winver = lazy(() => import('./Winver'));
@@ -31,7 +30,6 @@ const AppRouter = ({ windowData }) => {
       case 'minesweeper': return <Minesweeper windowData={windowData} />;
       case 'spicetify': return <Spicetify windowData={windowData} />;
       case 'cmd': return <CommandPrompt windowData={windowData} />;
-      case 'control-panel': return <ControlPanel windowData={windowData} />;
       case 'calculator': return <Calculator windowData={windowData} />;
       case 'winver': return <Winver windowData={windowData} />;
       case 'system-properties': return <SystemProperties windowData={windowData} />;

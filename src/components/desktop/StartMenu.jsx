@@ -149,7 +149,7 @@ const StartMenu = () => {
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.3)', margin: '4px 6px', borderBottom: '1px solid rgba(255,255,255,0.2)' }}></div>
         
         <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => handleAppClick(e, 'my-computer', 'My Computer')} onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>My Computer</div>
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => handleAppClick(e, 'control-panel', 'Control Panel')} onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>Control Panel</div>
+
         
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.3)', margin: '4px 6px', borderBottom: '1px solid rgba(255,255,255,0.2)' }}></div>
         

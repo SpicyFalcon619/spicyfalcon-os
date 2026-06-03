@@ -62,18 +62,6 @@ const ContextMenu = () => {
     });
   };
 
-  const handlePersonalize = (e) => {
-    e.stopPropagation();
-    hideContextMenu();
-    openWindow({
-      id: 'app-control-panel',
-      title: 'Control Panel',
-      component: 'control-panel',
-      width: 600,
-      height: 450
-    });
-  };
-
   return (
     <div style={style} onMouseDown={(e) => e.stopPropagation()} onContextMenu={(e) => e.preventDefault()}>
       <div 
@@ -92,13 +80,6 @@ const ContextMenu = () => {
         onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
         onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
       >Refresh</div>
-      <hr style={hrStyle} />
-      <div 
-        onPointerDown={handlePersonalize} 
-        style={itemStyle} 
-        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
-        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
-      >Personalize</div>
     </div>
   );
 };

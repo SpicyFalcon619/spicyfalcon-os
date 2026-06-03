@@ -100,6 +100,11 @@ const Spicetify = () => {
   const mountRef   = useRef(null);
   const clickTimer = useRef(null);
 
+  useEffect(() => {
+    const t = setTimeout(() => { if (!ready) setReady(true); }, 1500);
+    return () => clearTimeout(t);
+  }, [ready]);
+
   useEffect(() => { idxRef.current = idx; },     [idx]);
   useEffect(() => { shuffleRef.current = shuffle; }, [shuffle]);
   useEffect(() => { repeatRef.current = repeat; },   [repeat]);
@@ -247,8 +252,8 @@ const Spicetify = () => {
     }}>
       {/* Hidden Spotify mount — kept in DOM permanently */}
       <div ref={mountRef} style={{
-        position: 'fixed', left: -9999, top: -9999,
-        width: 1, height: 1, overflow: 'hidden', pointerEvents: 'none',
+        position: 'absolute', left: '-9999px', top: '-9999px',
+        width: '300px', height: '380px', opacity: 0.01, pointerEvents: 'none',
         zIndex: -1,
       }} />
 
@@ -300,12 +305,6 @@ const Spicetify = () => {
               )}
             </div>
           </div>
-
-          {!ready && (
-            <div style={{ padding: '6px 12px 10px', fontSize: 10, color: '#555', textAlign: 'center' }}>
-              Connecting to Spotify...
-            </div>
-          )}
         </div>
 
         {/* ── MAIN CONTENT ── */}

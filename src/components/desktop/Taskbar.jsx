@@ -199,7 +199,7 @@ const Taskbar = () => {
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
               onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup(systemTrayPopup === 'volume' ? null : 'volume'); }}
             >
-              <IconVolume size={18} color="#fff" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.8))' }} />
+              <img src="/assets/icons/volume-windows.png" alt="Volume" style={{ width: 16, height: 16, filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.8))' }} />
             </div>
           </div>
 

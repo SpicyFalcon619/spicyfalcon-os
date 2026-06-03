@@ -27,12 +27,7 @@ export const BatteryIcon = () => {
   }, []);
 
   const getBatteryIcon = () => {
-    if (isCharging) return <IconBatteryCharging size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
-    if (level > 90) return <IconBattery size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
-    if (level > 70) return <IconBattery4 size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
-    if (level > 40) return <IconBattery3 size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
-    if (level > 15) return <IconBattery2 size={18} color="#fff" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
-    return <IconBattery1 size={18} color="#ff3333" style={{ filter: 'drop-shadow(0px 1px 1px rgba(0,0,0,0.8))' }} />;
+    return <img src="/assets/icons/battery-windows.png" alt="Battery" style={{ width: 16, height: 16, filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.8))' }} />;
   };
 
   return (
