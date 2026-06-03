@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import { portfolioData } from '../../data/portfolioData';
+import { Windows7Logo } from '../shared/BootScreen';
 
 const SystemProperties = () => {
   const openWindow = useWindowStore(state => state.openWindow);
@@ -103,7 +104,7 @@ const SystemProperties = () => {
             <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>Service Pack 1</div>
           </div>
           <div style={{ paddingRight: '20px' }}>
-            <img src="/assets/my-logo.png" alt="OS Logo" width={80} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />
+            <Windows7Logo size={80} animated={false} />
           </div>
         </div>
 
@@ -114,7 +115,7 @@ const SystemProperties = () => {
         <div style={rowStyle}>
           <div style={labelStyle}>Rating:</div>
           <div style={{ ...valueStyle, display: 'flex', alignItems: 'center', gap: '6px', color: '#003399', cursor: 'pointer' }} onClick={() => window.open(portfolioData.personal.github, '_blank')}>
-            <span style={{ backgroundColor: '#217346', color: '#fff', padding: '1px 8px', borderRadius: '2px', fontWeight: 'bold' }}>5.9</span>
+            <span style={{ backgroundColor: '#217346', color: '#fff', padding: '1px 8px', borderRadius: '2px', fontWeight: 'bold' }}>7.9</span>
             <span style={{ textDecoration: 'underline' }}>Windows Experience Index</span>
           </div>
         </div>
