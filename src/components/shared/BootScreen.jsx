@@ -31,27 +31,21 @@ const Windows7Logo = ({ size = 120, animated = false }) => {
 const BootScreen = () => {
   const hasBooted = useDesktopStore(state => state.hasBooted);
   const setHasBooted = useDesktopStore(state => state.setHasBooted);
-  const [phase, setPhase] = useState('boot'); // 'boot', 'welcome', 'fadeout', 'done'
+  const [phase, setPhase] = useState('boot'); // 'boot', 'fadeout', 'done'
 
   useEffect(() => {
     if (hasBooted) return;
 
     const timer1 = setTimeout(() => {
-      setPhase('welcome');
+      setPhase('fadeout');
       
       const timer2 = setTimeout(() => {
-        setPhase('fadeout');
-        
-        const timer3 = setTimeout(() => {
-          setPhase('done');
-          setHasBooted();
-        }, 1000); // Fade out duration
-        
-        return () => clearTimeout(timer3);
-      }, 2000); // Welcome screen duration
+        setPhase('done');
+        setHasBooted();
+      }, 500); // Fade out duration
       
       return () => clearTimeout(timer2);
-    }, 4000); // Boot logo duration
+    }, 2000); // Boot logo duration
 
     return () => clearTimeout(timer1);
   }, [hasBooted, setHasBooted]);
@@ -76,7 +70,7 @@ const BootScreen = () => {
       {phase === 'boot' && (
         <>
           <div style={{ flex: 1 }} />
-          <Windows7Logo animated={true} />
+          <img src="/assets/my-logo.png" alt="Logo" style={{ width: 140, height: 'auto', filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.4))' }} />
           <div style={{ 
             color: '#fff', 
             fontSize: '24px', 
@@ -84,23 +78,10 @@ const BootScreen = () => {
             marginTop: '30px',
             textShadow: '0 0 10px rgba(255,255,255,0.5)'
           }}>
-            Starting Windows
+            Starting SpicyFalcon OS
           </div>
           <div style={{ flex: 1 }} />
         </>
-      )}
-
-      {(phase === 'welcome' || phase === 'fadeout') && (
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: '#004c99', // Classic Win7 login background blue
-          backgroundImage: 'radial-gradient(circle at center, #0078d7 0%, #002244 100%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          color: '#fff', fontFamily: '"Segoe UI", sans-serif'
-        }}>
-          <img src="/assets/avatar.jpg" alt="User" style={{ width: 120, height: 120, borderRadius: '4px', border: '3px solid rgba(255,255,255,0.8)', boxShadow: '0 4px 15px rgba(0,0,0,0.4)', marginBottom: '20px' }} />
-          <div style={{ fontSize: '28px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Welcome</div>
-        </div>
       )}
       <style>{`
         @keyframes flyInRed {
