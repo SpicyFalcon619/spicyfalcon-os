@@ -18,7 +18,7 @@ const SECTIONS = [
       { id: 'folder-about', icon: '/assets/icons/notepad.png',   label: 'About Me',  sub: 'Bio & Background', action: 'portfolio', actionData: { section: 'about' } },
       { id: 'folder-skills', icon: '/assets/icons/control-panel.png', label: 'Skills', sub: 'Languages & Tools', action: 'portfolio', actionData: { section: 'skills' } },
       { id: 'folder-edu',   icon: '/assets/icons/winver.png',    label: 'Education', sub: '2 Institutes', action: 'portfolio', actionData: { section: 'education' } },
-      { id: 'folder-waste', icon: '/assets/icons/ie.png',         label: 'Wastopia',  sub: 'Blockchain Project', action: 'ie', actionData: { url: 'https://project-wastopia.vercel.app' } }
+      { id: 'folder-waste', icon: '/assets/icons/ie.png',         label: 'Wastopia',  sub: 'Blockchain Project', action: 'external-link', actionData: { url: 'https://project-wastopia.vercel.app' } }
     ]
   }
 ];
@@ -29,14 +29,14 @@ const MyComputer = ({ windowData }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
 
   const handleDoubleClick = (item) => {
-    if (item.action === 'portfolio') {
-      openWindow({ id: 'app-portfolio-' + item.id, title: 'Ahmad Maruf Hossain — Portfolio', component: 'portfolio', width: 740, height: 560, appData: item.actionData });
-    } else if (item.action === 'ie') {
-      openWindow({ id: 'app-ie-' + item.id, title: item.label, component: 'ie', width: 1000, height: 680, appData: item.actionData });
+    if (item.action === 'system-properties') {
+      openWindow({ id: 'app-system-properties', title: 'System', component: 'system-properties', width: 900, height: 600 });
+    } else if (item.action === 'external-link') {
+      window.open(item.actionData.url, '_blank');
     } else if (item.action === 'task-manager') {
       openWindow({ id: 'app-task-manager', title: 'GitHub Activity', component: 'task-manager', width: 720, height: 540 });
-    } else if (item.action === 'system-properties') {
-      openWindow({ id: 'app-system-properties', title: 'System', component: 'system-properties', width: 900, height: 600 });
+    } else {
+      openWindow({ id: 'app-' + item.id, title: item.label, component: item.action, width: 740, height: 560, appData: item.actionData });
     }
   };
 

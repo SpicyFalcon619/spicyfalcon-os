@@ -4,7 +4,7 @@ const initialIcons = [
   { id: 'recycle-bin',    title: 'Recycle Bin',    icon: '/assets/icons/recycle-bin.png', iconFull: '/assets/icons/recycle-bin-full.png', isEmpty: true, x: 20, y: 20 },
   { id: 'my-computer',   title: 'My Computer',     icon: '/assets/icons/computer.png',      component: 'my-computer', x: 20, y: 100 },
   { id: 'about-me',      title: 'About Me.txt',    icon: '/assets/icons/notepad.png',       component: 'portfolio', appData: { section: 'about' }, x: 20, y: 180 },
-  { id: 'wastopia-icon', title: 'Wastopia',         icon: '/assets/icons/ie.png',            component: 'ie', appData: { url: 'https://project-wastopia.vercel.app' }, x: 20, y: 260 },
+  { id: 'wastopia-icon', title: 'Wastopia',         icon: '/assets/icons/ie.png',            component: 'external-link', appData: { url: 'https://project-wastopia.vercel.app' }, x: 20, y: 260 },
   { id: 'task-manager',  title: 'Task Manager',     icon: '/assets/icons/task-manager.svg',  x: 120, y: 20 },
   { id: 'device-manager','title': 'Device Manager', icon: '/assets/icons/device-manager.png', x: 120, y: 100 }
 ];

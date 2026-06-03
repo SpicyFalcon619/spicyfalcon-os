@@ -65,6 +65,10 @@ const DesktopIcon = ({ iconData }) => {
 
   const handleDoubleClick = (e) => {
     e.stopPropagation();
+    if (iconData.component === 'external-link') {
+      window.open(iconData.appData.url, '_blank');
+      return;
+    }
     openWindow({
       id: `app-${id}`,
       title: title,

@@ -34,17 +34,8 @@ const WindowsExplorer = () => {
             <div 
               key={i}
               onClick={() => {
-                if (item.id === 'wastopia') {
+                if (item.link) {
                   window.open(item.link, '_blank');
-                } else if (item.link) {
-                  openWindow({
-                    id: `ie-${Date.now()}`,
-                    title: 'Internet Explorer',
-                    component: 'ie',
-                    width: 1000,
-                    height: 700,
-                    appData: { url: item.link }
-                  });
                 }
               }}
               style={{
