@@ -32,7 +32,14 @@ const MyComputer = ({ windowData }) => {
     if (item.action === 'system-properties') {
       openWindow({ id: 'app-system-properties', title: 'System', component: 'system-properties', width: 900, height: 600 });
     } else if (item.action === 'external-link') {
-      window.open(item.actionData.url, '_blank');
+      openWindow({
+        id: `app-ie-${Date.now()}`,
+        title: item.label,
+        component: 'ie',
+        width: 800,
+        height: 600,
+        appData: { url: item.actionData.url }
+      });
     } else if (item.action === 'task-manager') {
       openWindow({ id: 'app-task-manager', title: 'GitHub Activity', component: 'task-manager', width: 720, height: 540 });
     } else {
