@@ -3,7 +3,7 @@ export const portfolioData = {
     name: 'Ahmad Maruf Hossain',
     gamertag: 'spicyfalcon619',
     tagline: 'CSE Undergrad • UIU',
-    bio: `I tinker with code, Linux, and blockchains. Self-taught coder who loves gaming, problem-solving, and unsolved mysteries. Aiming to become a solid software / AI / Web3 engineer.
+    bio: `I'm a passionate CSE undergrad at United International University, currently in my 2nd year. My journey in tech started with curiosity about how things work under the hood, leading me to explore system-level programming, blockchain technology, and software development.
 
 When I'm not coding, you'll find me competing in esports, solving Rubik's cubes, or tinkering with my Arch Linux with Hyprland setup. I believe in learning by building, which is why I work on projects like Wastopia and various cipher implementations to deepen my understanding of technology.`,
     email: 'a.marufhossain619@gmail.com',
@@ -30,7 +30,7 @@ When I'm not coding, you'll find me competing in esports, solving Rubik's cubes,
   ],
   skills: {
     languages: ['C', 'C++', 'Java', 'HTML/CSS/JS', 'Python (Basic)'],
-    technologies: ['Linux (Arch)', 'Hyprland', 'Git', 'Notion', 'Blockchain', 'IoT Concepts'],
+    technologies: ['Linux (Arch)', 'Hyprland', 'Git', 'Notion API', 'Blockchain', 'IoT Concepts'],
     soft: ['Problem Solving', 'Research', 'Team Collaboration', 'Quick Learning']
   },
   projects: [
@@ -43,6 +43,36 @@ When I'm not coding, you'll find me competing in esports, solving Rubik's cubes,
       link: 'https://project-wastopia.vercel.app',
       extra: 'Won "Best Emerging Team" in Blockchain Category at UIU CSE FEST 2025.',
       icon: '/assets/icons/ie.png' 
+    },
+    {
+      id: 'uiunest',
+      name: 'UIUNest',
+      type: 'Marketplace',
+      description: 'A comprehensive housing, flatmate matching, and peer-to-peer marketplace platform built exclusively for UIU students and landlords.',
+      tags: ['HTML', 'CSS', 'JavaScript', 'Marketplace'],
+      link: 'https://uiunest-production.up.railway.app/',
+      extra: 'Simplifying student housing and item marketplace specifically designed for the UIU community.',
+      icon: '/assets/icons/ie.png'
+    },
+    {
+      id: 'yt-deepnote',
+      name: 'YT-DeepNote',
+      type: 'Chrome Extension',
+      description: 'Your ultimate companion for deep learning on YouTube. Seamlessly capture timestamped Markdown notes, drop precision bookmarks, capture video screenshots, and 1-click sync your entire learning session directly to a Notion workspace.',
+      tags: ['JavaScript', 'Chrome Extension', 'Notion API'],
+      link: 'https://github.com/SpicyFalcon619/YT-DeepNote',
+      extra: 'Boost your productivity and never lose track of a YouTube tutorial again with Notion integration.',
+      icon: '/assets/icons/explorer.png'
+    },
+    {
+      id: 'spicyfalcon-os',
+      name: 'spicyfalcon-os',
+      type: 'OS Simulation',
+      description: 'A browser-based OS simulation acting as an interactive portfolio and desktop environment.',
+      tags: ['JavaScript', 'HTML', 'CSS', 'OS Simulation'],
+      link: 'https://spicyfalcon-os.vercel.app',
+      extra: 'A creative way to showcase skills through a familiar desktop UI entirely in the browser.',
+      icon: '/assets/icons/computer.png'
     },
     {
       id: 'morse-code',

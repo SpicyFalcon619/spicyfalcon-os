@@ -7,7 +7,7 @@ const SECTIONS = [
     label: 'Portfolio Drives',
     items: [
       { id: 'drive-c', icon: '/assets/icons/drive-windows.png', label: 'SpicyFalcon OS (C:)', sub: 'System Drive', action: 'system-properties', actionData: {} },
-      { id: 'drive-p', icon: '/assets/icons/explorer.png',  label: 'Projects (P:)', sub: '3 items', action: 'portfolio', actionData: { section: 'projects' } },
+      { id: 'drive-p', icon: '/assets/icons/explorer.png',  label: 'Projects (P:)', sub: '6 items', action: 'portfolio', actionData: { section: 'projects' } },
       { id: 'drive-g', icon: '/assets/icons/ie.png',         label: 'GitHub (G:)', sub: 'Network Location', action: 'task-manager', actionData: {} }
     ]
   },
