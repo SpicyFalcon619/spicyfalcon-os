@@ -89,7 +89,11 @@ const StartMenu = () => {
   };
 
   return (
-    <div style={menuStyle} onContextMenu={(e) => e.preventDefault()}>
+    <div 
+      style={menuStyle} 
+      onContextMenu={(e) => e.preventDefault()}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
       {/* Left pane - Pinned Apps */}
       <div style={{ 
         flex: 1, 
