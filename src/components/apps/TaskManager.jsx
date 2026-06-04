@@ -209,8 +209,8 @@ const TaskManager = () => {
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ marginBottom: '4px' }}>CPU Usage</div>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <div style={{ width: 40, height: 120, border: '1px solid #777', backgroundColor: '#000', color: '#17fc03', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '4px' }}>
-                    <div style={{ width: '100%', backgroundColor: '#17fc03', height: `${cpuUsage}%`, opacity: 0.8, position: 'absolute' }} />
+                  <div style={{ width: 40, height: 120, border: '1px solid #777', backgroundColor: '#000', color: '#17fc03', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '4px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', backgroundColor: '#17fc03', height: `${cpuUsage}%`, opacity: 0.8, position: 'absolute', bottom: 0, left: 0 }} />
                     <span style={{ zIndex: 1 }}>{Math.round(cpuUsage)}%</span>
                   </div>
                   <Win7Chart data={cpuHistory} />
@@ -219,8 +219,8 @@ const TaskManager = () => {
               <div>
                 <div style={{ marginBottom: '4px' }}>Memory</div>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <div style={{ width: 40, height: 120, border: '1px solid #777', backgroundColor: '#000', color: '#17fc03', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '4px' }}>
-                    <div style={{ width: '100%', backgroundColor: '#17fc03', height: `${ramUsage}%`, opacity: 0.8, position: 'absolute' }} />
+                  <div style={{ width: 40, height: 120, border: '1px solid #777', backgroundColor: '#000', color: '#17fc03', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '4px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', backgroundColor: '#17fc03', height: `${ramUsage}%`, opacity: 0.8, position: 'absolute', bottom: 0, left: 0 }} />
                     <span style={{ zIndex: 1 }}>{Math.round(ramUsage)}%</span>
                   </div>
                   <Win7Chart data={ramHistory} />
