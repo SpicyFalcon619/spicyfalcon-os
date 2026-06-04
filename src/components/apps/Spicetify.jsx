@@ -304,12 +304,12 @@ const Spicetify = ({ windowData }) => {
             <div style={{ fontSize: 13, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTrack.title}</div>
             <div style={{ fontSize: 11, color: '#b3b3b3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>{currentTrack.artist}</div>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-               <button onClick={(e) => { e.stopPropagation(); playTrack(idx === 0 ? tracks.length - 1 : idx - 1); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipBackFilled size={14}/></button>
-               <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} style={{ background: '#fff', border: 'none', color: '#000', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                  {isPlaying ? <IconPlayerPauseFilled size={12}/> : <IconPlayerPlayFilled size={12}/>}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 10 }}>
+               <button onClick={(e) => { e.stopPropagation(); playTrack(idx === 0 ? tracks.length - 1 : idx - 1); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer', display: 'flex' }}><IconPlayerSkipBackFilled size={16}/></button>
+               <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} style={{ background: '#fff', border: 'none', color: '#000', width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+                  {isPlaying ? <IconPlayerPauseFilled size={14}/> : <IconPlayerPlayFilled size={14}/>}
                </button>
-               <button onClick={(e) => { e.stopPropagation(); goToNext(); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipForwardFilled size={14}/></button>
+               <button onClick={(e) => { e.stopPropagation(); goToNext(); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer', display: 'flex' }}><IconPlayerSkipForwardFilled size={16}/></button>
             </div>
           </div>
         </div>
