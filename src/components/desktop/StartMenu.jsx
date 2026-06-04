@@ -57,6 +57,13 @@ const StartMenu = () => {
     });
   };
 
+  const [searchTerm, setSearchTerm] = React.useState('');
+  
+  // Reset search term when menu closes
+  React.useEffect(() => {
+    if (!visible) setSearchTerm('');
+  }, [visible]);
+
   const apps = [
     { id: 'portfolio', title: 'About Me', icon: '/assets/icons/notepad.png', fallbackIcon: <IconFileText size={24} color="#3b82f6" /> },
     { id: 'my-computer', title: 'My Computer', icon: '/assets/icons/computer.png', fallbackIcon: <IconInfoCircle size={24} color="#2c89f0" /> },
@@ -68,6 +75,18 @@ const StartMenu = () => {
     { id: 'device-manager', title: 'Device Manager', icon: '/assets/icons/device-manager.png', fallbackIcon: <IconInfoCircle size={24} color="#64748b" /> },
     { id: 'soundboard', title: 'Soundboard.exe', icon: '/assets/icons/volume.png', fallbackIcon: <IconMusic size={24} color="#eab308" /> },
   ];
+
+  const filteredApps = apps.filter(app => 
+    app.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    app.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter' && filteredApps.length > 0) {
+      handleAppClick(e, filteredApps[0].id, filteredApps[0].title);
+      setSearchTerm('');
+    }
+  };
 
   return (
     <div style={menuStyle} onContextMenu={(e) => e.preventDefault()}>
@@ -84,42 +103,55 @@ const StartMenu = () => {
         color: '#000'
       }}>
         <div style={{ overflowY: 'auto', flex: 1, minHeight: 0 }} className="os-scrollbar">
-          {apps.map(app => (
-            <div 
-              key={app.id}
-              onPointerDown={(e) => handleAppClick(e, app.id, app.title)}
-              style={{
-                padding: '6px 8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                borderRadius: '3px',
-                fontSize: '13px',
-                fontWeight: 'normal',
-                margin: '2px'
-              }}
-              onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0, 145, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(0, 145, 255, 0.4)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div style={{ width: '28px', height: '28px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <img 
-                  src={app.icon || `/assets/icons/${app.id}.png`} 
-                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} 
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  alt="" 
-                />
-                <span style={{ display: 'none' }}>{app.fallbackIcon}</span>
-              </div>
-              <span>{app.title}</span>
+          {filteredApps.length === 0 ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: '#666', fontSize: '13px' }}>
+              No programs match your search.
             </div>
-          ))}
+          ) : (
+            filteredApps.map(app => (
+              <div 
+                key={app.id}
+                onPointerDown={(e) => handleAppClick(e, app.id, app.title)}
+                style={{
+                  padding: '6px 8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  borderRadius: '3px',
+                  fontSize: '13px',
+                  fontWeight: 'normal',
+                  margin: '2px'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0, 145, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(0, 145, 255, 0.4)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}
+              >
+                <div style={{ width: '28px', height: '28px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <img 
+                    src={app.icon || `/assets/icons/${app.id}.png`} 
+                    onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} 
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    alt="" 
+                  />
+                  <span style={{ display: 'none' }}>{app.fallbackIcon}</span>
+                </div>
+                <span>{app.title}</span>
+              </div>
+            ))
+          )}
         </div>
         
         {/* Search Bar */}
         <div style={{ padding: '6px', borderTop: '1px solid #d9d9d9', backgroundColor: '#f0f0f0' }}>
           <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #abadb3', borderRadius: '3px', padding: '2px 6px' }}>
-            <input type="text" placeholder="Search programs and files" style={{ border: 'none', outline: 'none', width: '100%', fontSize: '12px', fontStyle: 'italic', color: '#999' }} />
+            <input 
+              type="text" 
+              placeholder="Search programs and files" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              style={{ border: 'none', outline: 'none', width: '100%', fontSize: '12px', fontStyle: searchTerm ? 'normal' : 'italic', color: searchTerm ? '#000' : '#999' }} 
+            />
           </div>
         </div>
       </div>
