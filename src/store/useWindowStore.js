@@ -5,6 +5,14 @@ const useWindowStore = create((set) => ({
   activeWindowId: null,
   zIndexCounter: 100,
   lastSpawnPos: { x: 50, y: 50 },
+  showBSOD: false,
+  showMatrix: false,
+  triggerBSOD: () => set({ showBSOD: true }),
+  triggerMatrix: () => set({ showMatrix: true }),
+  hideMatrix: () => set({ showMatrix: false }),
+  updateWindowTitle: (id, title) => set((state) => ({
+    windows: state.windows.map(w => w.id === id ? { ...w, title } : w)
+  })),
 
   openWindow: (windowData) => set((state) => {
     // If window already exists, focus and un-minimize it
