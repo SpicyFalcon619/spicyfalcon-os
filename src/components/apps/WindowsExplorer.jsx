@@ -33,7 +33,7 @@ const WindowsExplorer = () => {
           {items.map((item, i) => (
             <div 
               key={i}
-              onClick={() => {
+              onDoubleClick={() => {
                 if (item.link) {
                   window.open(item.link, '_blank');
                 }

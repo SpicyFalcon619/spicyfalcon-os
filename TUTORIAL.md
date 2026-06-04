@@ -44,7 +44,7 @@ This document chronicles the exact steps taken to build the SpicyFalcon OS from 
 4. **Taskbar Sounds**: We added nostalgic UI clicking sound effects triggered upon taskbar button clicks and Start button toggles.
 
 ## Phase 6: Deployment
-1. **Build Configuration**: We updated `vite.config.js` to include `base: './'`. This ensures that when the site is exported and deployed (whether to a root domain or a subdirectory like GitHub Pages), all assets (CSS, JS, Wallpapers) are resolved with relative paths.
+1. **Build Configuration**: We updated `vite.config.js` to include `base: '/'`. This ensures proper routing and asset loading when deployed to platforms like Vercel.
 2. **Documentation**: We finalized the `README.md` and this `TUTORIAL.md` file, providing clear instructions for anyone wanting to clone, run, and modify this operating system.
 3. **Hosting**: To deploy this project yourself, simply run `npm run build`. The resulting `dist` folder contains pure static HTML, CSS, and JS files which can be dragged and dropped into Vercel, Netlify, or uploaded to GitHub Pages for free hosting.
 
