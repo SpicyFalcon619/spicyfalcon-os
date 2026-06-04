@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 import useDesktopStore from '../../store/useDesktopStore';
 import useWindowStore from '../../store/useWindowStore';
 import {
@@ -24,7 +26,6 @@ const Spicetify = ({ windowData }) => {
   const [error, setError] = useState('');
   const [tracks, setTracks] = useState([]);
   
-  const [isMiniMode, setIsMiniMode] = useState(false);
   const [idx, setIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [posMs, setPosMs] = useState(0);
@@ -267,42 +268,62 @@ const Spicetify = ({ windowData }) => {
     );
   }
 
-  const toggleMiniMode = () => {
-    if (isMiniMode) {
-      updateWindowSize(windowData.id, 800, 500);
-      setIsMiniMode(false);
-    } else {
-      updateWindowSize(windowData.id, 300, 120);
-      setIsMiniMode(true);
-    }
-  };
+  if (windowData?.isMinimized && currentTrack) {
+    return createPortal(
+      <motion.div
+        drag
+        dragMomentum={false}
+        initial={{ opacity: 0, scale: 0.9, y: 50 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        style={{
+          position: 'fixed',
+          bottom: 60,
+          right: 20,
+          width: 320,
+          backgroundColor: '#181818',
+          color: '#fff',
+          borderRadius: 8,
+          boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
+          overflow: 'hidden',
+          zIndex: 99999,
+          display: 'flex',
+          flexDirection: 'column',
+          cursor: 'grab',
+          userSelect: 'none'
+        }}
+        whileDrag={{ cursor: 'grabbing' }}
+      >
+        <div style={{ display: 'flex', padding: 12, alignItems: 'center' }}>
+          {currentTrack.albumArt ? (
+            <img src={currentTrack.albumArt} style={{ width: 56, height: 56, borderRadius: 4, objectFit: 'cover', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.5)', pointerEvents: 'none' }} />
+          ) : (
+            <div style={{ width: 56, height: 56, borderRadius: 4, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={24} color="#b3b3b3"/></div>
+          )}
+          
+          <div style={{ flex: 1, padding: '0 14px', overflow: 'hidden' }}>
+            <div style={{ fontSize: 13, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTrack.title}</div>
+            <div style={{ fontSize: 11, color: '#b3b3b3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>{currentTrack.artist}</div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
+               <button onClick={(e) => { e.stopPropagation(); playTrack(idx === 0 ? tracks.length - 1 : idx - 1); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipBackFilled size={14}/></button>
+               <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} style={{ background: '#fff', border: 'none', color: '#000', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  {isPlaying ? <IconPlayerPauseFilled size={12}/> : <IconPlayerPlayFilled size={12}/>}
+               </button>
+               <button onClick={(e) => { e.stopPropagation(); goToNext(); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipForwardFilled size={14}/></button>
+            </div>
+          </div>
+        </div>
 
-  if (isMiniMode) {
-    return (
-      <div style={{ display: 'flex', height: '100%', backgroundColor: '#121212', color: '#fff', alignItems: 'center', padding: '0 12px', userSelect: 'none', position: 'relative' }}>
-         <button onClick={toggleMiniMode} style={{ position: 'absolute', top: 6, right: 6, background: 'none', border: 'none', color: '#b3b3b3', cursor: 'pointer', padding: 4 }} title="Restore">
-           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-         </button>
-         
-         {currentTrack?.albumArt ? (
-           <img src={currentTrack.albumArt} style={{ width: 64, height: 64, borderRadius: 4, objectFit: 'cover', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }} />
-         ) : (
-           <div style={{ width: 64, height: 64, borderRadius: 4, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={24} color="#b3b3b3"/></div>
-         )}
-         
-         <div style={{ flex: 1, padding: '0 14px', overflow: 'hidden' }}>
-           <div style={{ fontSize: 13, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTrack?.title || 'No Track'}</div>
-           <div style={{ fontSize: 11, color: '#b3b3b3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>{currentTrack?.artist || 'Unknown Artist'}</div>
-           
-           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-              <button onClick={() => playTrack(idx === 0 ? tracks.length - 1 : idx - 1)} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipBackFilled size={14}/></button>
-              <button onClick={togglePlay} style={{ background: '#fff', border: 'none', color: '#000', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                 {isPlaying ? <IconPlayerPauseFilled size={12}/> : <IconPlayerPlayFilled size={12}/>}
-              </button>
-              <button onClick={goToNext} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipForwardFilled size={14}/></button>
-           </div>
-         </div>
-      </div>
+        {/* Mini Player Progress Bar */}
+        <div style={{ position: 'relative', height: 4, width: '100%', backgroundColor: '#535353' }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progressPct}%`, backgroundColor: '#1DB954' }} />
+          <input type="range" min={0} max={activeDurationMs} value={posMs}
+            onChange={(e) => { e.stopPropagation(); handleSeek(e); }}
+            style={{ position: 'absolute', inset: '-8px 0', width: '100%', opacity: 0, cursor: 'pointer', height: 20 }}
+          />
+        </div>
+      </motion.div>,
+      document.body
     );
   }
 
@@ -313,9 +334,6 @@ const Spicetify = ({ windowData }) => {
       fontFamily: '"Circular","Helvetica Neue",Helvetica,Arial,sans-serif',
       userSelect: 'none', overflow: 'hidden', position: 'relative'
     }}>
-      <button onClick={toggleMiniMode} style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', cursor: 'pointer', padding: 6, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Mini Player">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M11 3v8H3M21 11h-8v10"/></svg>
-      </button>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ width: 210, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '18px 18px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -366,7 +384,7 @@ const Spicetify = ({ windowData }) => {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#121212' }}>
           <div style={{ background: 'linear-gradient(180deg,rgba(29,185,84,0.35) 0%,transparent 100%)', padding: '18px', flexShrink: 0, display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
             <div style={{ width: 140, height: 140, backgroundColor: '#282828', boxShadow: '0 4px 24px rgba(0,0,0,0.5)', flexShrink: 0, borderRadius: 4, overflow: 'hidden' }}>
-              {tracks[0]?.albumArt ? <img src={tracks[0].albumArt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={48} color="#b3b3b3" /></div>}
+              <img src="https://image-cdn-fa.spotifycdn.com/image/ab67706c0000da84935f08c6ac87172230f4730b" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Playlist Cover" />
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#fff', marginBottom: 6 }}>Playlist</div>
