@@ -83,7 +83,7 @@ const StartMenu = () => {
         justifyContent: 'space-between',
         color: '#000'
       }}>
-        <div style={{ overflowY: 'auto' }}>
+        <div style={{ overflowY: 'auto', flex: 1, minHeight: 0 }} className="os-scrollbar">
           {apps.map(app => (
             <div 
               key={app.id}

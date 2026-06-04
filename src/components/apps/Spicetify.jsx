@@ -6,6 +6,7 @@ import {
   IconPlayerSkipBackFilled, IconPlayerSkipForwardFilled,
   IconArrowsShuffle, IconRepeat, IconVolume, IconMusic, IconList,
 } from '@tabler/icons-react';
+import fallbackPlaylist from '../../data/playlist.json';
 
 const fmtMs = (ms) => {
   if (!ms || isNaN(ms) || ms < 0) return '0:00';
@@ -24,6 +25,7 @@ const Spicetify = () => {
   const [idx, setIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [posMs, setPosMs] = useState(0);
+  const [durationMs, setDurationMs] = useState(30000);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const [search, setSearch] = useState('');
@@ -40,43 +42,53 @@ const Spicetify = () => {
         const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
         const playlistId = import.meta.env.VITE_SPOTIFY_PLAYLIST_ID;
 
-        if (!clientId || !clientSecret || !playlistId) {
-          throw new Error('Spotify credentials missing in .env (VITE_SPOTIFY_CLIENT_ID, VITE_SPOTIFY_CLIENT_SECRET, VITE_SPOTIFY_PLAYLIST_ID)');
+        let parsedTracks = [];
+
+        try {
+          if (!clientId || !clientSecret || !playlistId) {
+            throw new Error('Spotify credentials missing.');
+          }
+
+          const tokenRes = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`
+            },
+            body: 'grant_type=client_credentials'
+          });
+          
+          if (!tokenRes.ok) throw new Error('Failed to fetch Spotify token');
+          const tokenData = await tokenRes.json();
+          const token = tokenData.access_token;
+
+          const plRes = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          
+          if (!plRes.ok) {
+            const errText = await plRes.text();
+            throw new Error(`Spotify API rejected request: ${errText.substring(0, 50)}...`);
+          }
+          
+          const plData = await plRes.json();
+          parsedTracks = plData.tracks.items
+            .filter(item => item.track)
+            .map(item => ({
+              id: item.track.id,
+              title: item.track.name,
+              artist: item.track.artists.map(a => a.name).join(', '),
+              album: item.track.album.name,
+              albumArt: item.track.album.images[0]?.url ?? null,
+              previewUrl: item.track.preview_url,
+              duration: item.track.duration_ms,
+              spotifyUrl: item.track.external_urls.spotify
+            }));
+
+        } catch (err) {
+          console.warn('Using user-extracted fallback playlist due to Spotify API error:', err.message);
+          parsedTracks = fallbackPlaylist;
         }
-
-        // Get token
-        const tokenRes = await fetch('https://accounts.spotify.com/api/token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`
-          },
-          body: 'grant_type=client_credentials'
-        });
-        
-        if (!tokenRes.ok) throw new Error('Failed to fetch Spotify token');
-        const tokenData = await tokenRes.json();
-        const token = tokenData.access_token;
-
-        // Fetch playlist
-        const plRes = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (!plRes.ok) throw new Error('Failed to fetch playlist');
-        const plData = await plRes.json();
-
-        const parsedTracks = plData.tracks.items
-          .filter(item => item.track)
-          .map(item => ({
-            id: item.track.id,
-            title: item.track.name,
-            artist: item.track.artists.map(a => a.name).join(', '),
-            album: item.track.album.name,
-            albumArt: item.track.album.images[0]?.url ?? null,
-            previewUrl: item.track.preview_url,
-            duration: item.track.duration_ms,
-            spotifyUrl: item.track.external_urls.spotify
-          }));
 
         if (mounted) {
           setTracks(parsedTracks);
@@ -84,7 +96,7 @@ const Spicetify = () => {
         }
       } catch (err) {
         if (mounted) {
-          setError(err.message);
+          setError('A critical error occurred loading the player.');
           setLoading(false);
         }
       }
@@ -154,13 +166,21 @@ const Spicetify = () => {
         goToNext();
       }
     };
+    
+    const handleLoadedMetadata = () => {
+      if (audio.duration && audio.duration !== Infinity && !isNaN(audio.duration)) {
+        setDurationMs(audio.duration * 1000);
+      }
+    };
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.pause();
       audio.src = '';
     };
@@ -206,8 +226,8 @@ const Spicetify = () => {
     : tracks;
 
   const currentTrack = tracks[idx];
-  const previewDurationMs = 30000;
-  const progressPct = Math.min((posMs / previewDurationMs) * 100, 100) || 0;
+  const activeDurationMs = currentTrack?.duration && currentTrack?.previewUrl?.includes('spotdown') === false ? currentTrack.duration : durationMs;
+  const progressPct = Math.min((posMs / activeDurationMs) * 100, 100) || 0;
 
   if (loading) {
     return (
@@ -253,9 +273,7 @@ const Spicetify = () => {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ width: 210, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '18px 18px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <svg width="24" height="24" viewBox="0 0 496 512" fill="#1DB954">
-              <path d="M248 8C111.1 8 8 111.1 8 248s103.1 240 240 240 240-103.1 240-240S384.9 8 248 8zm92.8 326.4c-4.7 7.6-14.8 9.9-22.4 5.2-61.3-37.5-138.5-46-229.5-25.2-8.7 2-17.4-3.3-19.4-12.1-2-8.7 3.3-17.4 12.1-19.4 99.5-22.7 184.9-13.1 253.9 29.3 7.6 4.7 9.9 14.8 5.3 22.2zm24.8-58.2c-5.9 9.5-18.5 12.5-28 6.6-70.1-43.1-176.9-55.6-259.8-30.4-10.9 3.3-22.4-2.9-25.7-13.8-3.3-10.9 2.9-22.4 13.8-25.7 94.8-28.8 212.6-14.8 292.6 34.7 9.5 5.9 12.5 18.5 6.6 28.1l.5.5zm2.1-60.6c-84.1-50-222.9-54.6-303.1-30.2-12.9 3.9-26.6-3.4-30.5-16.3-3.9-12.9 3.4-26.6 16.3-30.5 92-27.9 244.9-22.5 341.5 34.9 11.6 6.9 15.4 21.7 8.5 33.3-6.9 11.6-21.7 15.4-33.3 8.5l.6.3z"/>
-            </svg>
+            <img src="/assets/icons/spicetify.svg" width="24" height="24" alt="Spicetify" />
             <span style={{ color: '#fff', fontWeight: 700, fontSize: 14 }}>Spicetify</span>
           </div>
 
@@ -300,11 +318,18 @@ const Spicetify = () => {
         </div>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#121212' }}>
-          <div style={{ background: 'linear-gradient(180deg,rgba(29,185,84,0.35) 0%,transparent 100%)', padding: '18px 18px 10px', flexShrink: 0 }}>
-            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#b3b3b3', marginBottom: 2 }}>Playlist</div>
-            <div style={{ fontSize: 28, fontWeight: 900, color: '#fff' }}>Spicetify Beats</div>
-            <div style={{ fontSize: 11, color: '#b3b3b3', marginTop: 2 }}>{tracks.length} songs</div>
-            <div style={{ marginTop: 10, position: 'relative' }}>
+          <div style={{ background: 'linear-gradient(180deg,rgba(29,185,84,0.35) 0%,transparent 100%)', padding: '18px', flexShrink: 0, display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
+            <div style={{ width: 140, height: 140, backgroundColor: '#282828', boxShadow: '0 4px 24px rgba(0,0,0,0.5)', flexShrink: 0, borderRadius: 4, overflow: 'hidden' }}>
+              {tracks[0]?.albumArt ? <img src={tracks[0].albumArt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={48} color="#b3b3b3" /></div>}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#fff', marginBottom: 6 }}>Playlist</div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 12, letterSpacing: '-1px' }}>Spicetify Beats</div>
+              <div style={{ fontSize: 12, color: '#b3b3b3', marginTop: 2 }}>{tracks.length} songs</div>
+            </div>
+          </div>
+          <div style={{ padding: '0 18px' }}>
+            <div style={{ marginTop: 16, position: 'relative' }}>
               <IconSearch size={13} color="#b3b3b3" style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
               <input type="text" placeholder="Filter songs..." value={search}
                 onChange={e => setSearch(e.target.value)}

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import useDesktopStore from '../../store/useDesktopStore';
 import { 
   IconVolume, IconSpeakerphone, IconBug, 
   IconBellRinging, IconConfetti, IconPhoneCall, 
@@ -9,6 +10,11 @@ import {
 class SynthEngine {
   constructor() {
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.masterVolume = 0.5;
+  }
+
+  setMasterVolume(vol) {
+    this.masterVolume = vol / 100;
   }
 
   resume() {
@@ -20,7 +26,7 @@ class SynthEngine {
     const gain = this.ctx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(freq, startTime);
-    gain.gain.setValueAtTime(vol, startTime);
+    gain.gain.setValueAtTime(vol * this.masterVolume, startTime);
     gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
     osc.connect(gain);
     gain.connect(this.ctx.destination);
@@ -152,6 +158,11 @@ const sounds = [
 
 const Soundboard = () => {
   const [activeBtn, setActiveBtn] = useState(null);
+  const globalVolume = useDesktopStore(s => s.globalVolume);
+
+  useEffect(() => {
+    getSynth().setMasterVolume(globalVolume);
+  }, [globalVolume]);
 
   const handlePlay = (sound) => {
     setActiveBtn(sound.id);
