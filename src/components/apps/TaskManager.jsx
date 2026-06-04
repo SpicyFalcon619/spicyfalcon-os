@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useWindowStore from '../../store/useWindowStore';
+import {
+  IconBrandGithub, IconCpu, IconListDetails, IconLayoutGrid
+} from '@tabler/icons-react';
 
 const GITHUB_USER = 'SpicyFalcon619';
 
@@ -25,8 +28,7 @@ const LANG_COLORS = {
 };
 
 const TaskManager = () => {
-  const openWindow = useWindowStore(state => state.openWindow);
-  const [activeTab, setActiveTab] = useState('GitHub');
+  const [activeTab, setActiveTab] = useState('Processes');
   const [repos, setRepos] = useState([]);
   const [events, setEvents] = useState([]);
   const [contribWeeks, setContribWeeks] = useState([]);
@@ -34,7 +36,9 @@ const TaskManager = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [tooltip, setTooltip] = useState(null);
+
+  const windows = useWindowStore(state => state.windows);
+  const closeWindow = useWindowStore(state => state.closeWindow);
 
   // Fake CPU/RAM state for Performance tab
   const [cpuUsage, setCpuUsage] = useState(12);
@@ -66,7 +70,6 @@ const TaskManager = () => {
         fetch(`https://api.github.com/users/${GITHUB_USER}`),
         fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=30`),
         fetch(`https://api.github.com/users/${GITHUB_USER}/events/public?per_page=100`),
-        // github-contributions-api: free, CORS-enabled proxy for GitHub contribution calendar
         fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=last`)
       ]);
       if (!profileRes.ok) throw new Error('GitHub API rate limit. Try again later.');
@@ -76,9 +79,7 @@ const TaskManager = () => {
 
       if (contribRes.ok) {
         const contribData = await contribRes.json();
-        // The API returns { total: {year: n}, contributions: [{date, count, level}] }
         const contributions = contribData.contributions || [];
-        // Group into weeks (Sun=0 ... Sat=6)
         const weeks = [];
         let week = [];
         contributions.forEach((day, i) => {
@@ -99,21 +100,12 @@ const TaskManager = () => {
 
   useEffect(() => { fetchGitHub(); }, [fetchGitHub]);
 
-  const tabStyle = (id) => ({
-    padding: '4px 12px',
-    border: '1px solid #888',
-    borderBottom: activeTab === id ? '1px solid #f0f0f0' : '1px solid #888',
-    backgroundColor: activeTab === id ? '#f0f0f0' : '#dce3ea',
-    marginBottom: activeTab === id ? '-1px' : 0,
-    borderTopLeftRadius: '3px',
-    borderTopRightRadius: '3px',
-    cursor: 'pointer',
-    fontSize: '12px',
-    fontFamily: '"Tahoma", sans-serif',
-    color: '#000',
-    fontWeight: activeTab === id ? 'bold' : 'normal',
-    whiteSpace: 'nowrap'
-  });
+  const tabs = [
+    { id: 'Processes', icon: <IconListDetails size={18} /> },
+    { id: 'Performance', icon: <IconCpu size={18} /> },
+    { id: 'GitHub', icon: <IconBrandGithub size={18} /> },
+    { id: 'Repositories', icon: <IconLayoutGrid size={18} /> }
+  ];
 
   const SparkLine = ({ data, color, height = 60 }) => {
     const max = Math.max(...data, 1);
@@ -123,237 +115,196 @@ const TaskManager = () => {
       return `${x},${y}`;
     }).join(' ');
     return (
-      <svg width="200" height={height} style={{ display: 'block' }}>
-        <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" />
-        <polygon points={`0,${height} ${pts} 200,${height}`} fill={color} fillOpacity="0.15" />
+      <svg width="200" height={height} style={{ display: 'block', overflow: 'visible', width: '100%' }} preserveAspectRatio="none">
+        <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <polygon points={`0,${height} ${pts} 200,${height}`} fill={color} fillOpacity="0.1" />
       </svg>
     );
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#f0f0f0', fontFamily: '"Tahoma", sans-serif', fontSize: '12px', color: '#000' }}>
-
-      {/* Menu bar */}
-      <div style={{ display: 'flex', gap: '15px', padding: '2px 8px', borderBottom: '1px solid #dfdfdf', backgroundColor: '#fafafa', flexShrink: 0 }}>
-        <span style={{ cursor: 'default' }}>File</span>
-        <span style={{ cursor: 'default' }}>Options</span>
-        <span style={{ cursor: 'default' }}>View</span>
-        <span style={{ cursor: 'default' }}>Help</span>
-      </div>
-
-      {/* Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid #888', marginTop: '6px', padding: '0 5px', flexShrink: 0, flexWrap: 'wrap', gap: '2px' }}>
-        {['GitHub', 'Repositories'].map(tab => (
-          <div key={tab} onClick={() => setActiveTab(tab)} style={tabStyle(tab)}>{tab}</div>
+    <div style={{ display: 'flex', height: '100%', backgroundColor: '#1e1e1e', color: '#e0e0e0', fontFamily: '"Segoe UI", system-ui, sans-serif' }}>
+      
+      {/* Sidebar Navigation */}
+      <div style={{ width: '180px', backgroundColor: '#161616', borderRight: '1px solid #333', display: 'flex', flexDirection: 'column', paddingTop: '10px' }}>
+        {tabs.map(tab => (
+          <div 
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            style={{ 
+              display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', 
+              cursor: 'pointer',
+              backgroundColor: activeTab === tab.id ? '#333' : 'transparent',
+              borderLeft: activeTab === tab.id ? '3px solid #00a2ed' : '3px solid transparent',
+              transition: 'background 0.2s',
+              fontSize: '14px',
+              fontWeight: activeTab === tab.id ? '600' : '400',
+              color: activeTab === tab.id ? '#fff' : '#aaa'
+            }}
+          >
+            {tab.icon}
+            {tab.id}
+          </div>
         ))}
       </div>
 
-      {/* Content */}
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-
-        {/* ========== GITHUB TAB ========== */}
-        {activeTab === 'GitHub' && (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '14px' }}>
-            {loading && (
-              <div style={{ textAlign: 'center', paddingTop: '40px', color: '#555' }}>
-                <div style={{ fontSize: '24px', marginBottom: '8px', color: '#666' }}>[ Loading... ]</div>
-                Fetching GitHub data...
+      {/* Main Content Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+          
+          {/* PROCESSES TAB */}
+          {activeTab === 'Processes' && (
+            <div>
+              <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#fff' }}>Processes</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '10px', paddingBottom: '10px', borderBottom: '1px solid #333', color: '#aaa', fontSize: '13px', fontWeight: '600' }}>
+                <div>Name</div>
+                <div style={{ textAlign: 'right' }}>Status</div>
               </div>
-            )}
-            {error && (
-              <div style={{ padding: '16px', backgroundColor: '#fff8e0', border: '1px solid #f0c020', borderRadius: '3px' }}>
-                <strong>[Error] {error}</strong><br />
-                <span style={{ color: '#555', fontSize: '11px' }}>GitHub API has a 60 req/hr limit for unauthenticated requests.</span>
-                <br /><button onClick={fetchGitHub} style={{ marginTop: '8px', padding: '3px 10px', cursor: 'pointer', fontSize: '11px' }}>Retry</button>
-              </div>
-            )}
-
-            {!loading && !error && profile && (
-              <>
-                {/* Profile card */}
-                <div style={{ display: 'flex', gap: '14px', marginBottom: '16px', padding: '12px 14px', backgroundColor: '#fff', border: '1px solid #d0d8e4', borderRadius: '4px' }}>
-                  <img src={profile.avatar_url} alt="avatar" style={{ width: 56, height: 56, borderRadius: '50%', border: '2px solid #b0c4de' }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 'bold', fontSize: '14px', color: '#0a246a' }}>{profile.name || profile.login}</div>
-                    <div style={{ color: '#555', fontSize: '11px', marginTop: '2px' }}>@{profile.login}</div>
-                    {profile.bio && <div style={{ marginTop: '6px', fontSize: '12px', color: '#333' }}>{profile.bio}</div>}
-                    <div style={{ marginTop: '8px', display: 'flex', gap: '16px', fontSize: '11px' }}>
-                      <span><strong>{profile.public_repos}</strong> repos</span>
-                      <span><strong>{profile.followers}</strong> followers</span>
-                      <span>{profile.location || 'Bangladesh'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contribution grid */}
-                {contribWeeks.length > 0 ? (
-                  <div style={{ backgroundColor: '#0d1117', border: '1px solid #30363d', borderRadius: '6px', padding: '14px 16px', marginBottom: '16px' }}>
-                    <div style={{ fontWeight: 'bold', color: '#e6edf3', marginBottom: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 'bold' }}>{totalContribs} contributions in the last year</span>
-                      <a href={`https://github.com/${GITHUB_USER}`} onClick={(e) => { e.preventDefault(); window.open(`https://github.com/${GITHUB_USER}`, '_blank'); }} style={{ color: '#58a6ff', fontSize: '11px', textDecoration: 'none' }}>View on GitHub ↗</a>
-                    </div>
-                    <div style={{ overflowX: 'auto' }}>
-                      <div style={{ display: 'flex', gap: '3px', position: 'relative' }}>
-                        {contribWeeks.map((week, wi) => (
-                          <div key={wi} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                            {week.map((day) => (
-                              <div
-                                key={day.date}
-                                title={`${day.count} contribution${day.count !== 1 ? 's' : ''} on ${day.date}`}
-                                style={{
-                                  width: 11, height: 11,
-                                  backgroundColor: levelColor(day.count),
-                                  borderRadius: '2px',
-                                  cursor: 'default',
-                                  outline: '1px solid rgba(255,255,255,0.04)'
-                                }}
-                              />
-                            ))}
-                          </div>
-                        ))}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '10px' }}>
+                {windows.length === 0 ? (
+                  <div style={{ color: '#888', fontStyle: 'italic', padding: '10px 0' }}>No other apps running.</div>
+                ) : (
+                  windows.map(win => (
+                    <div key={win.id} style={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'center', gap: '10px', padding: '12px', backgroundColor: '#252525', borderRadius: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        {win.icon ? <img src={win.icon} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} /> : <div style={{ width: 20, height: 20, backgroundColor: '#444', borderRadius: '2px' }} />}
+                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#fff' }}>{win.title}</span>
                       </div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '10px', fontSize: '10px', color: '#8b949e' }}>
-                      Less
-                      {[0, 2, 5, 9, 12].map(c => (
-                        <div key={c} style={{ width: 11, height: 11, backgroundColor: levelColor(c), borderRadius: '2px', outline: '1px solid rgba(255,255,255,0.04)' }} />
-                      ))}
-                      More
-                    </div>
-                  </div>
-                ) : !loading && (
-                  <div style={{ backgroundColor: '#fff', border: '1px solid #d0d8e4', borderRadius: '4px', padding: '12px 14px', marginBottom: '16px', color: '#888', fontSize: '12px' }}>
-                    Contribution data loading...
-                  </div>
-                )}
-
-                {/* Recent events */}
-                <div style={{ backgroundColor: '#fff', border: '1px solid #d0d8e4', borderRadius: '4px', padding: '12px 14px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#0a246a', marginBottom: '10px', fontSize: '12px' }}>Recent Activity</div>
-                  {events.slice(0, 8).map((ev, i) => {
-                    const label = ev.type === 'PushEvent' ? `Pushed to ${ev.repo?.name}` :
-                      ev.type === 'CreateEvent' ? `Created ${ev.payload?.ref_type} in ${ev.repo?.name}` :
-                      ev.type === 'WatchEvent' ? `Starred ${ev.repo?.name}` :
-                      ev.type === 'ForkEvent' ? `Forked ${ev.repo?.name}` :
-                      ev.type.replace('Event', '') + ' on ' + ev.repo?.name;
-                    const typeLabel = ev.type === 'PushEvent' ? 'PUSH' : ev.type === 'CreateEvent' ? 'NEW' : ev.type === 'WatchEvent' ? 'STAR' : ev.type === 'ForkEvent' ? 'FORK' : 'EVT';
-                    const date = ev.created_at ? new Date(ev.created_at).toLocaleDateString() : '';
-                    return (
-                      <div key={i} style={{ display: 'flex', gap: '10px', padding: '5px 0', borderBottom: i < 7 ? '1px solid #f0f2f4' : 'none', alignItems: 'flex-start' }}>
-                        <span style={{ fontSize: '9px', fontWeight: 'bold', color: '#fff', backgroundColor: '#1a6dbd', padding: '1px 4px', borderRadius: '2px', width: 30, textAlign: 'center', flexShrink: 0, letterSpacing: '0.3px' }}>{typeLabel}</span>
-                        <div style={{ flex: 1, fontSize: '11px' }}>
-                          <div style={{ color: '#1a2c4a' }}>{label}</div>
-                        </div>
-                        <span style={{ fontSize: '10px', color: '#999', whiteSpace: 'nowrap' }}>{date}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* ========== REPOSITORIES TAB ========== */}
-        {activeTab === 'Repositories' && (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '14px' }}>
-            {loading && <div style={{ textAlign: 'center', paddingTop: '40px', color: '#555' }}>Loading repositories...</div>}
-            {error && <div style={{ padding: '12px', backgroundColor: '#fff8e0', border: '1px solid #f0c020', borderRadius: '3px' }}>Error: {error}</div>}
-            {!loading && !error && repos.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {repos.filter(r => !r.fork).map(repo => (
-                  <div key={repo.id} style={{ backgroundColor: '#fff', border: '1px solid #d0d8e4', borderRadius: '4px', padding: '10px 14px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <a
-                          href={repo.html_url}
-                          onClick={(e) => { e.preventDefault(); window.open(repo.html_url, '_blank'); }}
-                          rel="noreferrer"
-                          style={{ color: '#1a6dbd', fontWeight: 'bold', fontSize: '13px', textDecoration: 'none' }}
-                          onMouseOver={e => e.target.style.textDecoration = 'underline'}
-                          onMouseOut={e => e.target.style.textDecoration = 'none'}
+                      <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                        <span style={{ fontSize: '13px', color: '#00cc00' }}>Running</span>
+                        <button 
+                          onClick={() => closeWindow(win.id)}
+                          style={{ backgroundColor: '#444', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', transition: 'background 0.2s' }}
+                          onMouseOver={e => e.target.style.backgroundColor = '#d32f2f'}
+                          onMouseOut={e => e.target.style.backgroundColor = '#444'}
                         >
-                          {repo.name}
-                        </a>
-                        {repo.language && (
-                          <span style={{ marginLeft: '8px', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#555' }}>
-                            <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: LANG_COLORS[repo.language] || LANG_COLORS.default, display: 'inline-block' }} />
-                            {repo.language}
-                          </span>
-                        )}
-                      </div>
-                      <div style={{ display: 'flex', gap: '10px', fontSize: '11px', color: '#666', flexShrink: 0 }}>
-                        <span>Stars: {repo.stargazers_count}</span>
-                        <span>Forks: {repo.forks_count}</span>
+                          End task
+                        </button>
                       </div>
                     </div>
-                    {repo.description && (
-                      <div style={{ marginTop: '5px', fontSize: '11px', color: '#555', lineHeight: '1.5' }}>{repo.description}</div>
-                    )}
-                    {repo.topics?.length > 0 && (
-                      <div style={{ marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
-                        {repo.topics.map(t => (
-                          <span key={t} style={{ padding: '1px 7px', backgroundColor: '#e0f0ff', border: '1px solid #9bc8f0', borderRadius: '10px', fontSize: '10px', color: '#1a3060' }}>{t}</span>
-                        ))}
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* PERFORMANCE TAB */}
+          {activeTab === 'Performance' && (
+            <div>
+              <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#fff' }}>Performance</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                {[{ label: 'CPU', val: Math.round(cpuUsage), history: cpuHistory, color: '#00a2ed', desc: '13th Gen Intel Core i7-13650HX' },
+                  { label: 'Memory', val: Math.round(ramUsage), history: ramHistory, color: '#9b59b6', desc: '16.0 GB DDR5' }
+                ].map(item => (
+                  <div key={item.label} style={{ backgroundColor: '#252525', borderRadius: '8px', padding: '20px' }}>
+                    <div style={{ fontSize: '16px', fontWeight: '600', color: '#fff', marginBottom: '4px' }}>{item.label}</div>
+                    <div style={{ fontSize: '12px', color: '#aaa', marginBottom: '16px' }}>{item.desc}</div>
+                    <div style={{ border: `1px solid ${item.color}40`, borderRadius: '4px', padding: '16px', backgroundColor: '#1a1a1a', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ width: '100%', height: '80px', overflow: 'hidden' }}>
+                         <SparkLine data={item.history} color={item.color} height={80} />
                       </div>
-                    )}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                        <div style={{ fontSize: '12px', color: '#888' }}>60 Seconds</div>
+                        <div style={{ fontSize: '24px', fontWeight: '300', color: '#fff' }}>{item.val}%</div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        )}
+              <div style={{ marginTop: '30px', backgroundColor: '#252525', borderRadius: '8px', padding: '20px' }}>
+                <div style={{ fontSize: '16px', fontWeight: '600', color: '#fff', marginBottom: '16px' }}>System Specifications</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: '12px', fontSize: '13px' }}>
+                  <div style={{ color: '#888' }}>OS</div><div style={{ color: '#ddd' }}>Arch Linux (Hyprland) / Windows 11 dual-boot</div>
+                  <div style={{ color: '#888' }}>Build</div><div style={{ color: '#ddd' }}>SpicyFalcon OS - Developer Edition (64-bit)</div>
+                  <div style={{ color: '#888' }}>Graphics</div><div style={{ color: '#ddd' }}>NVIDIA GeForce RTX 4050 Laptop GPU</div>
+                  <div style={{ color: '#888' }}>Storage</div><div style={{ color: '#ddd' }}>512 GB NVMe SSD</div>
+                </div>
+              </div>
+            </div>
+          )}
 
-        {/* ========== PERFORMANCE TAB ========== */}
-        {activeTab === 'Performance' && (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '16px', backgroundColor: '#fff', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              {[{ label: 'CPU Usage', val: Math.round(cpuUsage), history: cpuHistory, color: '#17fc03' },
-                { label: 'Memory', val: Math.round(ramUsage), history: ramHistory, color: '#17fc03' }
-              ].map(item => (
-                <div key={item.label} style={{ flex: 1 }}>
-                  <div style={{ marginBottom: '5px', fontWeight: 'bold' }}>{item.label}</div>
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <div style={{ width: '50px', textAlign: 'right', fontSize: '18px', fontFamily: 'monospace', color: '#00cc00', backgroundColor: '#000', padding: '5px 4px', border: '1px solid #888', borderRadius: '2px' }}>
-                      {item.val}%
-                    </div>
-                    <div style={{ flex: 1, backgroundColor: '#000', border: '1px solid #444', borderRadius: '2px', overflow: 'hidden', height: '70px', padding: '2px' }}>
-                      <SparkLine data={item.history} color={item.color} height={66} />
+          {/* GITHUB TAB */}
+          {activeTab === 'GitHub' && (
+            <div>
+              <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#fff' }}>GitHub Profile</div>
+              {loading && <div style={{ color: '#888' }}>Fetching GitHub data...</div>}
+              {error && <div style={{ color: '#ff4a4a' }}>Error: {error}</div>}
+              {!loading && !error && profile && (
+                <>
+                  <div style={{ display: 'flex', gap: '20px', backgroundColor: '#252525', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+                    <img src={profile.avatar_url} alt="avatar" style={{ width: 80, height: 80, borderRadius: '50%', border: '2px solid #444' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff' }}>{profile.name || profile.login}</div>
+                      <div style={{ color: '#888', fontSize: '14px', marginBottom: '8px' }}>@{profile.login}</div>
+                      {profile.bio && <div style={{ color: '#ccc', fontSize: '14px' }}>{profile.bio}</div>}
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
 
-            <div style={{ borderTop: '1px solid #ddd', paddingTop: '14px' }}>
-              <div style={{ fontWeight: 'bold', marginBottom: '10px', fontSize: '13px' }}>Rig Specifications</div>
-              <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-                <tbody>
-                  {[
-                    ['Processor', '13th Gen Intel® Core™ i7-13650HX (14 Cores)'],
-                    ['Memory (RAM)', '16.0 GB DDR5'],
-                    ['Graphics', 'NVIDIA GeForce RTX 4050 Laptop GPU'],
-                    ['Storage', '512 GB NVMe SSD'],
-                    ['OS', 'Arch Linux (Hyprland) / Windows 11 dual-boot'],
-                    ['Build', 'SpicyFalcon OS - Developer Edition (64-bit)']
-                  ].map(([k, v]) => (
-                    <tr key={k} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                      <td style={{ padding: '5px 4px', fontWeight: 'bold', width: '130px', color: '#333' }}>{k}:</td>
-                      <td style={{ padding: '5px 4px', color: '#555' }}>{v}</td>
-                    </tr>
+                  <div style={{ backgroundColor: '#252525', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+                      <div style={{ fontSize: '14px', color: '#fff' }}>{totalContribs} contributions in the last year</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '3px', overflowX: 'auto', paddingBottom: '10px' }}>
+                      {contribWeeks.map((week, wi) => (
+                        <div key={wi} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                          {week.map(day => (
+                            <div key={day.date} title={`${day.count} contributions on ${day.date}`} style={{ width: 12, height: 12, backgroundColor: levelColor(day.count), borderRadius: '2px' }} />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ backgroundColor: '#252525', padding: '20px', borderRadius: '8px' }}>
+                    <div style={{ fontSize: '16px', fontWeight: '600', color: '#fff', marginBottom: '16px' }}>Recent Activity</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {events.slice(0, 6).map((ev, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                          <div style={{ width: 40, height: 24, backgroundColor: '#333', color: '#aaa', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 'bold' }}>
+                            {ev.type.replace('Event', '').substring(0, 4).toUpperCase()}
+                          </div>
+                          <div style={{ flex: 1, color: '#ccc', fontSize: '13px' }}>{ev.repo?.name}</div>
+                          <div style={{ color: '#777', fontSize: '12px' }}>{new Date(ev.created_at).toLocaleDateString()}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* REPOSITORIES TAB */}
+          {activeTab === 'Repositories' && (
+            <div>
+              <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#fff' }}>Repositories</div>
+              {loading && <div style={{ color: '#888' }}>Loading repositories...</div>}
+              {error && <div style={{ color: '#ff4a4a' }}>Error: {error}</div>}
+              {!loading && !error && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+                  {repos.filter(r => !r.fork).map(repo => (
+                    <div key={repo.id} style={{ backgroundColor: '#252525', border: '1px solid #333', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column' }}>
+                      <a href={repo.html_url} target="_blank" rel="noreferrer" style={{ fontSize: '16px', fontWeight: '600', color: '#58a6ff', textDecoration: 'none', marginBottom: '8px' }}>{repo.name}</a>
+                      <div style={{ color: '#aaa', fontSize: '13px', flex: 1, marginBottom: '12px', lineHeight: '1.4' }}>{repo.description}</div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', color: '#888' }}>
+                        {repo.language && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: LANG_COLORS[repo.language] || LANG_COLORS.default }} />
+                            {repo.language}
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                          <span>★ {repo.stargazers_count}</span>
+                          <span>⑂ {repo.forks_count}</span>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div style={{ display: 'flex', gap: '20px', padding: '3px 12px', borderTop: '1px solid #dfdfdf', backgroundColor: '#fafafa', color: '#444', flexShrink: 0 }}>
-        <span>CPU: {Math.round(cpuUsage)}%</span>
-        <span>Memory: {Math.round(ramUsage)}%</span>
-        {!loading && !error && profile && <span>Repos: {profile.public_repos}</span>}
+          )}
+        </div>
       </div>
     </div>
   );
