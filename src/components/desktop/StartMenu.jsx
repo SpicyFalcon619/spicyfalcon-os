@@ -61,12 +61,12 @@ const StartMenu = () => {
     { id: 'portfolio', title: 'About Me', icon: '/assets/icons/notepad.png', fallbackIcon: <IconFileText size={24} color="#3b82f6" /> },
     { id: 'my-computer', title: 'My Computer', icon: '/assets/icons/computer.png', fallbackIcon: <IconInfoCircle size={24} color="#2c89f0" /> },
     { id: 'task-manager', title: 'GitHub Activity', icon: '/assets/icons/task-manager.svg', fallbackIcon: <IconCalculator size={24} color="#64748b" /> },
-    { id: 'spicetify', title: 'Spicetify', icon: '/assets/icons/spicetify.svg', fallbackIcon: <IconMusic size={24} color="#22c55e" /> },
+    { id: 'spicetify', title: 'Spicetify', icon: '/assets/icons/spicetify.png', fallbackIcon: <IconMusic size={24} color="#22c55e" /> },
     { id: 'minesweeper', title: 'Minesweeper', icon: '/assets/icons/minesweeper.png', fallbackIcon: <IconBomb size={24} color="#ef4444" /> },
     { id: 'cmd', title: 'Command Prompt', icon: '/assets/icons/cmd.png', fallbackIcon: <IconTerminal2 size={24} color="#333" /> },
     { id: 'paint', title: 'MS Paint', icon: '/assets/icons/paint.png', fallbackIcon: <IconPalette size={24} color="#f97316" /> },
     { id: 'device-manager', title: 'Device Manager', icon: '/assets/icons/device-manager.png', fallbackIcon: <IconInfoCircle size={24} color="#64748b" /> },
-    { id: 'soundboard', title: 'Soundboard.exe', icon: '/assets/icons/spicetify.png', fallbackIcon: <IconMusic size={24} color="#eab308" /> },
+    { id: 'soundboard', title: 'Soundboard.exe', icon: '/assets/icons/volume.png', fallbackIcon: <IconMusic size={24} color="#eab308" /> },
   ];
 
   return (

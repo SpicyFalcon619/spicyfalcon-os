@@ -337,7 +337,7 @@ const Spicetify = ({ windowData }) => {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ width: 210, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '18px 18px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src="/assets/icons/spicetify.svg" width="24" height="24" alt="Spicetify" />
+            <img src="/assets/icons/spicetify.png" width="24" height="24" alt="Spicetify" />
             <span style={{ color: '#fff', fontWeight: 700, fontSize: 14 }}>Spicetify</span>
           </div>
 
