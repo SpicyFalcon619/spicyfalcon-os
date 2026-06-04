@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 
 const VFS = {
-  'C:\\Users\\Guest': ['Desktop', 'Documents', 'Downloads', 'Pictures', 'secret.txt'],
-  'C:\\Users\\Guest\\Desktop': ['portfolio.exe', 'wastopia.lnk'],
-  'C:\\Users\\Guest\\Documents': ['resume.pdf', 'notes.txt'],
-  'C:\\Users\\Guest\\Downloads': [],
-  'C:\\Users\\Guest\\Pictures': [],
+  'C:\\Users\\User': ['Desktop', 'Documents', 'Downloads', 'Pictures', 'secret.txt'],
+  'C:\\Users\\User\\Desktop': ['portfolio.exe', 'wastopia.lnk'],
+  'C:\\Users\\User\\Documents': ['resume.pdf', 'notes.txt'],
+  'C:\\Users\\User\\Downloads': [],
+  'C:\\Users\\User\\Pictures': [],
 };
 
 const SnakeGame = ({ onGameOver, isFocused }) => {
@@ -122,7 +122,7 @@ const CommandPrompt = ({ windowData }) => {
     'Type "help" to see available commands.',
   ]);
   const [input, setInput] = useState('');
-  const [cwd, setCwd] = useState('C:\\Users\\Guest');
+  const [cwd, setCwd] = useState('C:\\Users\\User');
   const [textColor, setTextColor] = useState('#ccc');
   
   const [snakeMode, setSnakeMode] = useState(false);
@@ -151,7 +151,7 @@ const CommandPrompt = ({ windowData }) => {
         setInput('');
         return;
       } else if (command === 'whoami') {
-        response = 'SpicyFalcon\\Guest\nPrivilege Level: Administrator';
+        response = 'spicyfalcon\\user';
       } else if (command === 'date') {
         response = new Date().toString();
       } else if (command === 'dir' || command === 'ls') {
@@ -173,7 +173,7 @@ const CommandPrompt = ({ windowData }) => {
         if (!target) {
           response = cwd;
         } else if (target === '..') {
-          if (cwd !== 'C:\\Users\\Guest') {
+          if (cwd !== 'C:\\Users\\User') {
             const parts = cwd.split('\\');
             parts.pop();
             setCwd(parts.join('\\'));
