@@ -45,7 +45,8 @@ const StartMenu = () => {
       'task-manager': { width: 720, height: 540 },
       'minesweeper': { width: 340, height: 440 },
       'calculator': { width: 280, height: 380 },
-      'spicyver': { width: 450, height: 580 }
+      'spicyver': { width: 450, height: 580 },
+      'soundboard': { width: 420, height: 360 }
     };
     const size = sizeMap[appId] || { width: 600, height: 450 };
     openWindow({
@@ -65,6 +66,7 @@ const StartMenu = () => {
     { id: 'cmd', title: 'Command Prompt', icon: '/assets/icons/cmd.png', fallbackIcon: <IconTerminal2 size={24} color="#333" /> },
     { id: 'paint', title: 'MS Paint', icon: '/assets/icons/paint.png', fallbackIcon: <IconPalette size={24} color="#f97316" /> },
     { id: 'device-manager', title: 'Device Manager', icon: '/assets/icons/device-manager.png', fallbackIcon: <IconInfoCircle size={24} color="#64748b" /> },
+    { id: 'soundboard', title: 'Soundboard.exe', icon: '/assets/icons/spicetify.png', fallbackIcon: <IconMusic size={24} color="#eab308" /> },
   ];
 
   return (

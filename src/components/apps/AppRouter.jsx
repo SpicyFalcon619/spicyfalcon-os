@@ -14,6 +14,7 @@ const SystemProperties = lazy(() => import('./SystemProperties'));
 const TaskManager = lazy(() => import('./TaskManager'));
 const DeviceManager = lazy(() => import('./DeviceManager'));
 const PhotoViewer = lazy(() => import('./PhotoViewer'));
+const Soundboard = lazy(() => import('./Soundboard'));
 const Portfolio = lazy(() => import('./Portfolio'));
 const MyComputer = lazy(() => import('./MyComputer'));
 const RecycleBin = lazy(() => import('./RecycleBin'));
@@ -36,6 +37,7 @@ const AppRouter = ({ windowData }) => {
       case 'task-manager': return <TaskManager windowData={windowData} />;
       case 'device-manager': return <DeviceManager windowData={windowData} />;
       case 'photo-viewer': return <PhotoViewer windowData={windowData} />;
+      case 'soundboard': return <Soundboard windowData={windowData} />;
       case 'portfolio': return <Portfolio windowData={windowData} />;
       case 'my-computer': return <MyComputer windowData={windowData} />;
       case 'recycle-bin': return <RecycleBin windowData={windowData} />;
