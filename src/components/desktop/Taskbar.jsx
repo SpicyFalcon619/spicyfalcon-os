@@ -2,19 +2,39 @@ import React, { useState, useEffect } from 'react';
 import useWindowStore from '../../store/useWindowStore';
 import useDesktopStore from '../../store/useDesktopStore';
 import { CalendarPopup, VolumePopup, BatteryIcon } from './SystemTrayPopups';
-import { IconVolume } from '@tabler/icons-react';
 
-// Small SVG icon helper — renders a simple app icon from the /assets/icons/ folder
-const AppIcon = ({ src, size = 16 }) => (
-  <img
-    src={src}
-    alt=""
-    width={size}
-    height={size}
-    style={{ objectFit: 'contain', flexShrink: 0 }}
-    onError={(e) => { e.target.style.display = 'none'; }}
-  />
-);
+// Map component names to icon paths
+const ICON_MAP = {
+  'portfolio': '/assets/icons/notepad.png',
+  'notepad': '/assets/icons/notepad.png',
+  'my-computer': '/assets/icons/computer.png',
+  'task-manager': '/assets/icons/task-manager.svg',
+  'spicetify': '/assets/icons/spicetify.png',
+  'minesweeper': '/assets/icons/minesweeper.png',
+  'cmd': '/assets/icons/cmd.png',
+  'paint': '/assets/icons/paint.png',
+  'device-manager': '/assets/icons/device-manager.png',
+  'soundboard': '/assets/icons/volume.png',
+  'ie': '/assets/icons/ie.png',
+  'spicyver': '/assets/icons/winver.png',
+  'calculator': '/assets/icons/calculator.png',
+  'photo-viewer': '/assets/icons/photo-viewer.png',
+  'explorer': '/assets/icons/explorer.png',
+  'recycle-bin': '/assets/icons/recycle-bin.png',
+  'control-panel': '/assets/icons/control-panel.png',
+};
+
+const getIconForWindow = (win) => {
+  // Check explicit icon first
+  if (win.icon) return win.icon;
+  // Try component name
+  if (win.component && ICON_MAP[win.component]) return ICON_MAP[win.component];
+  // Try parsing from id
+  const idParts = win.id.replace('app-', '');
+  if (ICON_MAP[idParts]) return ICON_MAP[idParts];
+  // Fallback
+  return '/assets/icons/notepad.png';
+};
 
 const Clock = () => {
   const [time, setTime] = useState(new Date());
@@ -36,6 +56,7 @@ const Clock = () => {
 
 const Taskbar = () => {
   const [taskbarMenu, setTaskbarMenu] = useState({ visible: false, x: 0, winId: null });
+  const [hoveredId, setHoveredId] = useState(null);
   const windows = useWindowStore(s => s.windows);
   const activeWindowId = useWindowStore(s => s.activeWindowId);
   const focusWindow = useWindowStore(s => s.focusWindow);
@@ -78,14 +99,14 @@ const Taskbar = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: 'var(--taskbar-height, 40px)',
+          height: 'var(--taskbar-height, 48px)',
           zIndex: 'var(--z-taskbar, 9000)',
-          /* Win7 Aero glass */
-          background: 'linear-gradient(180deg, rgba(70,120,160,0.82) 0%, rgba(30,70,110,0.92) 48%, rgba(20,55,90,0.96) 49%, rgba(10,40,75,0.98) 100%)',
+          /* Win7 Aero glass — darker, more saturated */
+          background: 'linear-gradient(180deg, rgba(55,110,155,0.80) 0%, rgba(30,75,120,0.90) 40%, rgba(18,55,95,0.95) 41%, rgba(10,40,75,0.97) 100%)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderTop: '1px solid rgba(255,255,255,0.30)',
-          boxShadow: '0 -1px 0 rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25)',
+          boxShadow: '0 -1px 0 rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.18)',
           display: 'flex',
           alignItems: 'center',
           padding: '0',
@@ -120,61 +141,85 @@ const Taskbar = () => {
           />
         </button>
 
-        {/* ── WINDOW BUTTONS ── */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', height: '100%', gap: '2px', padding: '3px 4px', overflowX: 'hidden' }}>
+        {/* ── WINDOW ICON BUTTONS (Superbar style — icons only) ── */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', height: '100%', gap: '1px', padding: '3px 2px', overflowX: 'hidden' }}>
           {windows.map(win => {
             const isActive = activeWindowId === win.id && !win.isMinimized;
+            const isHovered = hoveredId === win.id;
+            const iconSrc = getIconForWindow(win);
+
+            // Background styling based on state
+            let bgStyle, boxShadowStyle;
+            if (isActive) {
+              bgStyle = 'linear-gradient(180deg, rgba(130,185,235,0.55) 0%, rgba(90,150,210,0.60) 40%, rgba(55,115,180,0.65) 41%, rgba(40,90,150,0.70) 100%)';
+              boxShadowStyle = 'inset 0 0 0 1px rgba(255,255,255,0.35), inset 0 1px 0 rgba(255,255,255,0.4), 0 0 4px rgba(100,170,240,0.3)';
+            } else if (isHovered) {
+              bgStyle = 'linear-gradient(180deg, rgba(120,175,225,0.45) 0%, rgba(80,140,200,0.50) 40%, rgba(50,110,175,0.55) 41%, rgba(35,85,145,0.60) 100%)';
+              boxShadowStyle = 'inset 0 0 0 1px rgba(255,255,255,0.25), inset 0 1px 0 rgba(255,255,255,0.3)';
+            } else {
+              bgStyle = 'linear-gradient(180deg, rgba(80,130,180,0.20) 0%, rgba(50,100,155,0.25) 100%)';
+              boxShadowStyle = 'inset 0 0 0 1px rgba(255,255,255,0.08)';
+            }
+
             return (
               <button
                 key={win.id}
                 onPointerDown={(e) => { if (e.button !== 0) return; e.stopPropagation(); handleTaskbarItemClick(win); }}
                 onContextMenu={(e) => handleContextMenu(e, win.id)}
+                onMouseEnter={() => setHoveredId(win.id)}
+                onMouseLeave={() => setHoveredId(null)}
                 title={win.title}
                 style={{
-                  minWidth: 120,
-                  maxWidth: 200,
-                  height: '100%',
+                  width: 42,
+                  height: 40,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 6,
-                  padding: '0 8px',
+                  justifyContent: 'center',
                   border: 'none',
                   borderRadius: '3px',
                   cursor: 'pointer',
                   outline: 'none',
-                  overflow: 'hidden',
-                  // Active: brighter, inset glow
-                  background: isActive
-                    ? 'linear-gradient(180deg, rgba(140,190,230,0.55) 0%, rgba(80,140,200,0.65) 45%, rgba(50,110,170,0.7) 50%, rgba(30,80,140,0.75) 100%)'
-                    : 'linear-gradient(180deg, rgba(100,150,200,0.25) 0%, rgba(60,110,170,0.3) 100%)',
-                  boxShadow: isActive
-                    ? 'inset 0 0 0 1px rgba(255,255,255,0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
-                    : 'inset 0 0 0 1px rgba(255,255,255,0.10)',
-                  color: '#fff',
-                  fontSize: '12px',
-                  fontFamily: '"Segoe UI", Tahoma, sans-serif',
-                  fontWeight: isActive ? '600' : '400',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.9)',
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis',
-                  transition: 'background 0.1s',
+                  background: bgStyle,
+                  boxShadow: boxShadowStyle,
+                  transition: 'background 0.15s, box-shadow 0.15s',
                   flexShrink: 0,
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.background = 'linear-gradient(180deg,rgba(130,180,230,0.45) 0%,rgba(80,140,200,0.5) 100%)';
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) e.currentTarget.style.background = 'linear-gradient(180deg,rgba(100,150,200,0.25) 0%,rgba(60,110,170,0.3) 100%)';
+                  position: 'relative',
+                  padding: 0,
                 }}
               >
-                {/* App icon from assets */}
-                <AppIcon
-                  src={`/assets/icons/${win.component || win.id.split('-')[1] || 'notepad'}.png`}
-                  size={16}
+                <img
+                  src={iconSrc}
+                  alt=""
+                  style={{ width: 24, height: 24, objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))' }}
+                  onError={(e) => { e.target.style.display = 'none'; }}
                 />
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, textAlign: 'left' }}>
-                  {win.title}
-                </span>
+                {/* Active indicator line at the bottom */}
+                {isActive && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 1,
+                    left: '20%',
+                    right: '20%',
+                    height: 2,
+                    borderRadius: 1,
+                    background: 'rgba(180,220,255,0.9)',
+                    boxShadow: '0 0 4px rgba(120,180,255,0.8)',
+                  }} />
+                )}
+                {/* Running but not active — small dot indicator */}
+                {!isActive && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 2,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 4,
+                    height: 4,
+                    borderRadius: '50%',
+                    background: 'rgba(180,220,255,0.6)',
+                    boxShadow: '0 0 2px rgba(120,180,255,0.5)',
+                  }} />
+                )}
               </button>
             );
           })}
@@ -186,14 +231,26 @@ const Taskbar = () => {
             display: 'flex',
             alignItems: 'center',
             height: '100%',
-            borderLeft: '1px solid rgba(255,255,255,0.15)',
+            borderLeft: '1px solid rgba(255,255,255,0.12)',
             gap: 0,
             flexShrink: 0,
           }}
           onPointerDown={(e) => e.stopPropagation()}
         >
+          {/* Tray notification area arrow */}
+          <div style={{ 
+            padding: '0 4px', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center',
+            color: 'rgba(255,255,255,0.6)',
+            fontSize: '10px',
+          }}>
+            ▲
+          </div>
+
           {/* Network / battery / volume icons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 10px', color: '#fff', fontSize: '11px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', color: '#fff', fontSize: '11px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
             <BatteryIcon />
             <div
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
@@ -221,6 +278,7 @@ const Taskbar = () => {
               textShadow: '0 1px 2px rgba(0,0,0,0.9)',
               fontSize: '12px',
               fontFamily: '"Segoe UI", Tahoma, sans-serif',
+              borderLeft: '1px solid rgba(255,255,255,0.08)',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
@@ -232,9 +290,9 @@ const Taskbar = () => {
           <div
             title="Show Desktop"
             style={{
-              width: 10,
+              width: 12,
               height: '100%',
-              borderLeft: '1px solid rgba(255,255,255,0.2)',
+              borderLeft: '1px solid rgba(170,200,230,0.25)',
               background: 'rgba(255,255,255,0.04)',
               cursor: 'pointer',
               flexShrink: 0,
@@ -256,7 +314,7 @@ const Taskbar = () => {
           style={{
             position: 'fixed',
             left: taskbarMenu.x,
-            bottom: 42,
+            bottom: 50,
             width: 160,
             backgroundColor: '#f0f0f0',
             border: '1px solid #999',
