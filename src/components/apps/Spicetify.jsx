@@ -205,7 +205,7 @@ const Spicetify = ({ windowData }) => {
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current;
-    if (!audio.src) {
+    if (!audio.src || audio.src === window.location.href || !audio.src.includes('/audio/')) {
       if (tracks.length > 0) playTrack(idx);
       return;
     }
