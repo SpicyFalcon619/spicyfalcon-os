@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
+import useWindowStore from '../../store/useWindowStore';
 import {
   IconSearch, IconClock,
   IconPlayerPlayFilled, IconPlayerPauseFilled,
@@ -14,14 +15,16 @@ const fmtMs = (ms) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 };
 
-const Spicetify = () => {
+const Spicetify = ({ windowData }) => {
   const globalVolume = useDesktopStore(s => s.globalVolume);
   const setGlobalVolume = useDesktopStore(s => s.setGlobalVolume);
+  const updateWindowSize = useWindowStore(s => s.updateWindowSize);
 
-  const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const [error, setError] = useState('');
+  const [tracks, setTracks] = useState([]);
+  
+  const [isMiniMode, setIsMiniMode] = useState(false);
   const [idx, setIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [posMs, setPosMs] = useState(0);
@@ -29,6 +32,7 @@ const Spicetify = () => {
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const [search, setSearch] = useState('');
+  const [hoveredIdx, setHoveredIdx] = useState(null);
 
   const audioRef = useRef(new Audio());
 
@@ -123,7 +127,7 @@ const Spicetify = () => {
   useEffect(() => { repeatRef.current = repeat; }, [repeat]);
   useEffect(() => { tracksRef.current = tracks; }, [tracks]);
 
-  const playTrack = useCallback((index) => {
+  const playTrack = useCallback(function pt(index) {
     const t = tracksRef.current[index];
     if (!t) return;
 
@@ -133,7 +137,7 @@ const Spicetify = () => {
           ? Math.floor(Math.random() * tracksRef.current.length)
           : (idxRef.current + 1) % tracksRef.current.length;
         setIdx(nextIdx);
-        playTrack(nextIdx);
+        pt(nextIdx);
       }, 500);
       return;
     }
@@ -263,13 +267,55 @@ const Spicetify = () => {
     );
   }
 
+  const toggleMiniMode = () => {
+    if (isMiniMode) {
+      updateWindowSize(windowData.id, 800, 500);
+      setIsMiniMode(false);
+    } else {
+      updateWindowSize(windowData.id, 300, 120);
+      setIsMiniMode(true);
+    }
+  };
+
+  if (isMiniMode) {
+    return (
+      <div style={{ display: 'flex', height: '100%', backgroundColor: '#121212', color: '#fff', alignItems: 'center', padding: '0 12px', userSelect: 'none', position: 'relative' }}>
+         <button onClick={toggleMiniMode} style={{ position: 'absolute', top: 6, right: 6, background: 'none', border: 'none', color: '#b3b3b3', cursor: 'pointer', padding: 4 }} title="Restore">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+         </button>
+         
+         {currentTrack?.albumArt ? (
+           <img src={currentTrack.albumArt} style={{ width: 64, height: 64, borderRadius: 4, objectFit: 'cover', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }} />
+         ) : (
+           <div style={{ width: 64, height: 64, borderRadius: 4, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={24} color="#b3b3b3"/></div>
+         )}
+         
+         <div style={{ flex: 1, padding: '0 14px', overflow: 'hidden' }}>
+           <div style={{ fontSize: 13, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTrack?.title || 'No Track'}</div>
+           <div style={{ fontSize: 11, color: '#b3b3b3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>{currentTrack?.artist || 'Unknown Artist'}</div>
+           
+           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
+              <button onClick={() => playTrack(idx === 0 ? tracks.length - 1 : idx - 1)} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipBackFilled size={14}/></button>
+              <button onClick={togglePlay} style={{ background: '#fff', border: 'none', color: '#000', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                 {isPlaying ? <IconPlayerPauseFilled size={12}/> : <IconPlayerPlayFilled size={12}/>}
+              </button>
+              <button onClick={goToNext} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer' }}><IconPlayerSkipForwardFilled size={14}/></button>
+           </div>
+         </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', height: '100%',
       backgroundColor: '#121212', color: '#b3b3b3',
       fontFamily: '"Circular","Helvetica Neue",Helvetica,Arial,sans-serif',
-      userSelect: 'none', overflow: 'hidden',
+      userSelect: 'none', overflow: 'hidden', position: 'relative'
     }}>
+      <button onClick={toggleMiniMode} style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', cursor: 'pointer', padding: 6, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Mini Player">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M11 3v8H3M21 11h-8v10"/></svg>
+      </button>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ width: 210, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '18px 18px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -324,8 +370,8 @@ const Spicetify = () => {
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#fff', marginBottom: 6 }}>Playlist</div>
-              <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 12, letterSpacing: '-1px' }}>Spicetify Beats</div>
-              <div style={{ fontSize: 12, color: '#b3b3b3', marginTop: 2 }}>{tracks.length} songs</div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 12, letterSpacing: '-1px' }}>HEHEHE</div>
+              <div style={{ fontSize: 12, color: '#b3b3b3', marginTop: 2 }}>{tracks.length} songs, perfectly curated for SpicyFalcon OS</div>
             </div>
           </div>
           <div style={{ padding: '0 18px' }}>
@@ -350,14 +396,36 @@ const Spicetify = () => {
               const ri = tracks.indexOf(t);
               const cur = ri === idx;
               const hasPreview = !!t.previewUrl;
+              const isHovered = hoveredIdx === ri;
+              
+              let rowIcon = (ri + 1);
+              if (isHovered && hasPreview) {
+                rowIcon = cur && isPlaying ? <IconPlayerPauseFilled size={11} color="#fff" /> : <IconPlayerPlayFilled size={11} color="#fff" />;
+              } else if (cur && isPlaying) {
+                rowIcon = (
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 12 }}>
+                    {[1, 2, 3].map(i => (
+                      <div key={i} style={{ width: 2, borderRadius: 1, backgroundColor: '#1DB954',
+                        animationName: `sfEq${i}`, animationDuration: '0.7s',
+                        animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite',
+                        animationDirection: 'alternate', animationDelay: `${i * 0.13}s`,
+                      }} />
+                    ))}
+                  </div>
+                );
+              } else if (cur) {
+                rowIcon = <span style={{ color: '#1DB954' }}>{ri + 1}</span>;
+              }
+
               return (
                 <div key={t.id} onDoubleClick={() => { if (hasPreview) playTrack(ri); }}
-                  style={{ display: 'flex', alignItems: 'center', padding: '4px 18px', backgroundColor: cur ? 'rgba(29,185,84,0.1)' : 'transparent', cursor: hasPreview ? 'pointer' : 'default', borderRadius: 3, margin: '1px 5px', transition: 'background 0.1s' }}
-                  onMouseEnter={e => { if (!cur && hasPreview) e.currentTarget.style.backgroundColor = '#1a1a1a'; }}
-                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = cur ? 'rgba(29,185,84,0.1)' : 'transparent'; }}
+                  style={{ display: 'flex', alignItems: 'center', padding: '4px 18px', backgroundColor: cur ? 'rgba(29,185,84,0.1)' : (isHovered && hasPreview ? '#2a2a2a' : 'transparent'), cursor: hasPreview ? 'pointer' : 'default', borderRadius: 3, margin: '1px 5px', transition: 'background 0.1s' }}
+                  onMouseEnter={() => setHoveredIdx(ri)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  onClick={() => { if (hasPreview && isHovered) { if (cur) togglePlay(); else playTrack(ri); } }}
                 >
                   <div style={{ width: 34, display: 'flex', justifyContent: 'center', color: cur ? '#1DB954' : '#b3b3b3', flexShrink: 0, fontSize: 11 }}>
-                    {cur && isPlaying ? <IconPlayerPlayFilled size={11} color="#1DB954" /> : (ri + 1)}
+                    {rowIcon}
                   </div>
                   <div style={{ flex: 2, overflow: 'hidden', paddingLeft: 5 }}>
                     <div style={{ fontSize: 12, color: hasPreview ? (cur ? '#1DB954' : '#fff') : '#555', fontWeight: cur ? 600 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -415,12 +483,12 @@ const Spicetify = () => {
             <div style={{ flex: 1, position: 'relative', height: 4 }}>
               <div style={{ position: 'absolute', inset: 0, backgroundColor: '#535353', borderRadius: 2 }} />
               <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progressPct}%`, backgroundColor: '#1DB954', borderRadius: 2 }} />
-              <input type="range" min={0} max={previewDurationMs} value={posMs}
+              <input type="range" min={0} max={activeDurationMs} value={posMs}
                 onChange={handleSeek}
                 style={{ position: 'absolute', inset: '-8px 0', width: '100%', opacity: 0, cursor: 'pointer', height: 20 }}
               />
             </div>
-            <span style={{ fontSize: 10, color: '#b3b3b3', width: 34, flexShrink: 0 }}>0:30</span>
+            <span style={{ fontSize: 10, color: '#b3b3b3', width: 34, flexShrink: 0 }}>{fmtMs(activeDurationMs)}</span>
           </div>
         </div>
 

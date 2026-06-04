@@ -17,8 +17,6 @@ const Window = ({ windowData }) => {
   
   const isActive = activeWindowId === id;
 
-  if (isMinimized) return null; 
-
   const windowStyle = {
     position: 'absolute',
     zIndex,
@@ -28,7 +26,7 @@ const Window = ({ windowData }) => {
     border: '1px solid rgba(0, 0, 0, 0.4)',
     borderRadius: isMaximized ? 0 : '8px',
     boxShadow: isActive ? 'inset 0 1px 1px rgba(255,255,255,0.7), 0 5px 25px rgba(0,0,0,0.5)' : 'inset 0 1px 1px rgba(255,255,255,0.4), 0 2px 10px rgba(0,0,0,0.3)',
-    display: 'flex',
+    display: isMinimized ? 'none' : 'flex',
     flexDirection: 'column',
     transition: 'opacity 0.2s', 
   };
