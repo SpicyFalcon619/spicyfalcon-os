@@ -12,6 +12,13 @@ const StartMenu = () => {
   
   const username = portfolioData.personal.name;
 
+  const [searchTerm, setSearchTerm] = React.useState('');
+  
+  // Reset search term when menu closes
+  React.useEffect(() => {
+    if (!visible) setSearchTerm('');
+  }, [visible]);
+
   if (!visible) return null;
 
   const menuStyle = {
@@ -56,13 +63,6 @@ const StartMenu = () => {
       ...size
     });
   };
-
-  const [searchTerm, setSearchTerm] = React.useState('');
-  
-  // Reset search term when menu closes
-  React.useEffect(() => {
-    if (!visible) setSearchTerm('');
-  }, [visible]);
 
   const apps = [
     { id: 'portfolio', title: 'About Me', icon: '/assets/icons/notepad.png', fallbackIcon: <IconFileText size={24} color="#3b82f6" /> },
