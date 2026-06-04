@@ -5,7 +5,9 @@ const Notepad = ({ windowData }) => {
   const [text, setText] = useState('');
 
   useEffect(() => {
-    if (windowData?.appData?.file === 'about-me') {
+    if (windowData?.appData?.initialContent) {
+      setText(windowData.appData.initialContent);
+    } else if (windowData?.appData?.file === 'about-me') {
       setText(aboutMeText);
     } else {
       setText('Hi! I am SpicyFalcon.\n\nWelcome to my 2010s Windows 7 inspired web portfolio.\nI built this to showcase my skills in React, complex state management, and interaction design.\n\nFeel free to explore!');

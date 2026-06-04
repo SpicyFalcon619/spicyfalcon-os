@@ -194,6 +194,9 @@ const CommandPrompt = ({ windowData }) => {
         } else {
           setTextColor('#ccc');
         }
+      } else if (cmd === 'format c:') {
+        if (triggerBSOD) triggerBSOD();
+        response = 'Nice try. C:\\ is intact.';
       } else if (command === 'matrix') {
         if (triggerMatrix) triggerMatrix();
         setInput('');

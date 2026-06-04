@@ -8,6 +8,7 @@ const useWindowStore = create((set) => ({
   showBSOD: false,
   showMatrix: false,
   triggerBSOD: () => set({ showBSOD: true }),
+  hideBSOD: () => set({ showBSOD: false }),
   triggerMatrix: () => set({ showMatrix: true }),
   hideMatrix: () => set({ showMatrix: false }),
   updateWindowTitle: (id, title) => set((state) => ({
