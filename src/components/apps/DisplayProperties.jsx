@@ -12,32 +12,32 @@ const WALLPAPERS = [
   {
     id: 'architecture',
     name: 'Architecture',
-    value: 'https://images.unsplash.com/photo-1511818966892-d7d671e67287?w=1920&q=80',
-    preview: 'url("https://images.unsplash.com/photo-1511818966892-d7d671e67287?w=1920&q=80")'
+    value: '/assets/wallpapers/architecture.jpg',
+    preview: 'url("/assets/wallpapers/architecture.jpg")'
   },
   {
     id: 'characters',
     name: 'Characters',
-    value: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80',
-    preview: 'url("https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80")'
+    value: '/assets/wallpapers/characters.jpg',
+    preview: 'url("/assets/wallpapers/characters.jpg")'
   },
   {
     id: 'landscapes',
     name: 'Landscapes',
-    value: 'https://images.unsplash.com/photo-1506744626753-eda814117282?w=1920&q=80',
-    preview: 'url("https://images.unsplash.com/photo-1506744626753-eda814117282?w=1920&q=80")'
+    value: '/assets/wallpapers/landscapes.jpg',
+    preview: 'url("/assets/wallpapers/landscapes.jpg")'
   },
   {
     id: 'nature',
     name: 'Nature',
-    value: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80',
-    preview: 'url("https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80")'
+    value: '/assets/wallpapers/nature.jpg',
+    preview: 'url("/assets/wallpapers/nature.jpg")'
   },
   {
     id: 'scenes',
     name: 'Scenes',
-    value: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80',
-    preview: 'url("https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80")'
+    value: '/assets/wallpapers/scenes.jpg',
+    preview: 'url("/assets/wallpapers/scenes.jpg")'
   },
   {
     id: 'dark',
