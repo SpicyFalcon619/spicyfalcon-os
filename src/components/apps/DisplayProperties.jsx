@@ -7,31 +7,37 @@ const WALLPAPERS = [
     id: 'default',
     name: 'Windows 7 Default',
     value: '/assets/wallpapers/windows7-bg.jpg',
-    preview: 'linear-gradient(to bottom, #0a4f9d, #25a4d6)'
+    preview: 'url("/assets/wallpapers/windows7-bg.jpg")'
   },
   {
-    id: 'bliss',
-    name: 'Bliss (Classic)',
-    value: 'linear-gradient(to bottom, #3982e5 0%, #3982e5 50%, #4ea825 50%, #4ea825 100%)',
-    preview: 'linear-gradient(to bottom, #3982e5 0%, #3982e5 50%, #4ea825 50%, #4ea825 100%)'
+    id: 'architecture',
+    name: 'Architecture',
+    value: 'https://images.unsplash.com/photo-1511818966892-d7d671e67287?w=1920&q=80',
+    preview: 'url("https://images.unsplash.com/photo-1511818966892-d7d671e67287?w=1920&q=80")'
   },
   {
-    id: 'azul',
-    name: 'Azul',
-    value: 'radial-gradient(circle, #2d5db0 0%, #082d6b 100%)',
-    preview: 'radial-gradient(circle, #2d5db0 0%, #082d6b 100%)'
+    id: 'characters',
+    name: 'Characters',
+    value: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80',
+    preview: 'url("https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80")'
   },
   {
-    id: 'teal',
-    name: 'Windows 95 Teal',
-    value: '#008080',
-    preview: '#008080'
+    id: 'landscapes',
+    name: 'Landscapes',
+    value: 'https://images.unsplash.com/photo-1506744626753-eda814117282?w=1920&q=80',
+    preview: 'url("https://images.unsplash.com/photo-1506744626753-eda814117282?w=1920&q=80")'
   },
   {
-    id: 'aurora',
-    name: 'Aurora',
-    value: 'linear-gradient(135deg, #093028 0%, #237a57 100%)',
-    preview: 'linear-gradient(135deg, #093028 0%, #237a57 100%)'
+    id: 'nature',
+    name: 'Nature',
+    value: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80',
+    preview: 'url("https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80")'
+  },
+  {
+    id: 'scenes',
+    name: 'Scenes',
+    value: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80',
+    preview: 'url("https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80")'
   },
   {
     id: 'dark',
