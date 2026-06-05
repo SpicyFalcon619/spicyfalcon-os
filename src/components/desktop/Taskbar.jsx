@@ -256,7 +256,11 @@ const Taskbar = () => {
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
               onPointerDown={(e) => { e.stopPropagation(); setSystemTrayPopup(systemTrayPopup === 'volume' ? null : 'volume'); }}
             >
-              <img src="/assets/icons/volume-windows.png" alt="Volume" style={{ width: 16, height: 16, filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.8))' }} />
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.5))' }}>
+                <path d="M2 6h2.5L8 3v10L4.5 10H2a1 1 0 01-1-1V7a1 1 0 011-1z" fill="white" />
+                <path d="M10 5.5c.8.8 1.2 1.8 1.2 2.5s-.4 1.7-1.2 2.5" stroke="white" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+                <path d="M12 3.5c1.3 1.3 2 3 2 4.5s-.7 3.2-2 4.5" stroke="white" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+              </svg>
             </div>
           </div>
 

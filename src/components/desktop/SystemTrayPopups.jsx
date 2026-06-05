@@ -27,7 +27,17 @@ export const BatteryIcon = () => {
   }, []);
 
   const getBatteryIcon = () => {
-    return <img src="/assets/icons/battery-windows.png" alt="Battery" style={{ width: 16, height: 16, filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.8))' }} />;
+    // White battery SVG matching Windows 7 system tray style
+    return (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.5))' }}>
+        <rect x="1" y="4" width="12" height="9" rx="1" stroke="white" strokeWidth="1.2" fill="none" />
+        <rect x="13" y="6" width="2" height="5" rx="0.5" fill="white" />
+        {level > 75 && <rect x="2.5" y="5.5" width="9.5" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
+        {level > 50 && level <= 75 && <rect x="2.5" y="5.5" width="7" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
+        {level > 25 && level <= 50 && <rect x="2.5" y="5.5" width="4.5" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
+        {level <= 25 && <rect x="2.5" y="5.5" width="2.5" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
+      </svg>
+    );
   };
 
   return (
