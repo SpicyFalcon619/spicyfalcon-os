@@ -105,7 +105,14 @@ const ContextMenu = () => {
         onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
       >Gadgets</div>
       <div 
-        style={{...itemStyle, color: '#999'}} 
+        style={itemStyle}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          hideContextMenu();
+          openWindow({ id: 'app-display-properties', title: 'Control Panel', component: 'display-properties', width: 420, height: 360 });
+        }}
+        onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'rgba(51, 153, 255, 0.2)'; e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(51, 153, 255, 0.6)'}} 
+        onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
       >Personalize</div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
+import useConfigStore from '../../store/useConfigStore';
 import DesktopIcon from './DesktopIcon';
 import Taskbar from './Taskbar';
 import StartMenu from './StartMenu';
@@ -108,6 +109,8 @@ const Desktop = ({ children }) => {
     );
   }
 
+  const wallpaper = useConfigStore(state => state.wallpaper);
+
   return (
     <div 
       id="desktop-bg"
@@ -115,11 +118,11 @@ const Desktop = ({ children }) => {
         width: '100%', 
         height: '100%', 
         position: 'relative',
-        backgroundImage: "url('/assets/wallpapers/windows7-bg.jpg')",
+        backgroundImage: wallpaper.startsWith('#') || wallpaper.startsWith('rgb') ? 'none' : `url('${wallpaper}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundColor: '#00539c',
+        backgroundColor: wallpaper.startsWith('#') || wallpaper.startsWith('rgb') ? wallpaper : '#00539c',
         overflow: 'hidden'
       }}
       onPointerDown={handlePointerDown}
