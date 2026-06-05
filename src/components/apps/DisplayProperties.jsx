@@ -114,7 +114,9 @@ const DisplayProperties = ({ windowData }) => {
                   height: '24px',
                   marginRight: '8px',
                   border: '1px solid #ccc',
-                  background: wp.value.includes('url') ? wp.preview : wp.value
+                  background: wp.preview,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
                 }} />
                 <span>{wp.name}</span>
               </div>
@@ -131,7 +133,9 @@ const DisplayProperties = ({ windowData }) => {
             border: '1px solid #666',
             borderRadius: '4px',
             position: 'relative',
-            background: selectedWallpaper.value.includes('url') ? selectedWallpaper.preview : selectedWallpaper.value,
+            background: selectedWallpaper.preview,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
             boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
             display: 'flex',
             flexDirection: 'column',
