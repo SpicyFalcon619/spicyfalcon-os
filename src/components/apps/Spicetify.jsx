@@ -294,108 +294,100 @@ const Spicetify = ({ windowData }) => {
     }
   }, [posMs, activeDurationMs]);
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: '#121212', color: '#fff' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1DB954" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'sfSpin 1s linear infinite' }}>
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 2a10 10 0 0 1 10 10"></path>
-          </svg>
-          <div style={{ fontSize: 13, fontFamily: '"Circular", sans-serif' }}>Loading Playlist...</div>
-          <style>{`@keyframes sfSpin { 100% { transform: rotate(360deg); } }`}</style>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ padding: '20px', backgroundColor: '#e8edf2', height: '100%', color: '#000', display: 'flex', flexDirection: 'column', fontFamily: '"Tahoma", sans-serif' }}>
-        <div style={{ border: '1px solid #0055ea', backgroundColor: '#fff', padding: '15px', display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
-          <div style={{ 
-            width: 32, height: 32, borderRadius: '50%', backgroundColor: '#cc0000', 
-            color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', 
-            fontWeight: 'bold', fontSize: 20, flexShrink: 0
-          }}>×</div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: '8px' }}>Spotify API Error</div>
-            <div style={{ fontSize: 12 }}>{error}</div>
-            <div style={{ fontSize: 11, color: '#666', marginTop: '10px' }}>Make sure your .env file is properly configured with your Spotify credentials.</div>
+  return (
+    <>
+      <audio ref={audioRef} style={{ display: 'none' }} />
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: '#121212', color: '#fff' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1DB954" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'sfSpin 1s linear infinite' }}>
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a10 10 0 0 1 10 10"></path>
+            </svg>
+            <div style={{ fontSize: 13, fontFamily: '"Circular", sans-serif' }}>Loading Playlist...</div>
+            <style>{`@keyframes sfSpin { 100% { transform: rotate(360deg); } }`}</style>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  if (windowData?.isMinimized && currentTrack) {
-    return createPortal(
-      <motion.div
-        drag
-        dragMomentum={false}
-        initial={{ opacity: 0, scale: 0.9, y: 50 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        style={{
-          position: 'fixed',
-          bottom: 60,
-          right: 20,
-          width: 320,
-          backgroundColor: '#181818',
-          color: '#fff',
-          borderRadius: 8,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
-          overflow: 'hidden',
-          zIndex: 99999,
-          display: 'flex',
-          flexDirection: 'column',
-          cursor: 'grab',
-          userSelect: 'none'
-        }}
-        whileDrag={{ cursor: 'grabbing' }}
-      >
-        <div style={{ display: 'flex', padding: 12, alignItems: 'center' }}>
-          {currentTrack.albumArt ? (
-            <img src={currentTrack.albumArt} style={{ width: 56, height: 56, borderRadius: 4, objectFit: 'cover', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.5)', pointerEvents: 'none' }} />
-          ) : (
-            <div style={{ width: 56, height: 56, borderRadius: 4, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={24} color="#b3b3b3"/></div>
-          )}
-          
-          <div style={{ flex: 1, padding: '0 14px', overflow: 'hidden' }}>
-            <div style={{ fontSize: 13, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTrack.title}</div>
-            <div style={{ fontSize: 11, color: '#b3b3b3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>{currentTrack.artist}</div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 10 }}>
-               <button onClick={(e) => { e.stopPropagation(); playTrack(idx === 0 ? tracks.length - 1 : idx - 1); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer', display: 'flex' }}><IconPlayerSkipBackFilled size={16}/></button>
-               <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} style={{ background: '#fff', border: 'none', color: '#000', width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-                  {isPlaying ? <IconPlayerPauseFilled size={14}/> : <IconPlayerPlayFilled size={14}/>}
-               </button>
-               <button onClick={(e) => { e.stopPropagation(); goToNext(); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer', display: 'flex' }}><IconPlayerSkipForwardFilled size={16}/></button>
+      ) : error ? (
+        <div style={{ padding: '20px', backgroundColor: '#e8edf2', height: '100%', color: '#000', display: 'flex', flexDirection: 'column', fontFamily: '"Tahoma", sans-serif' }}>
+          <div style={{ border: '1px solid #0055ea', backgroundColor: '#fff', padding: '15px', display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+            <div style={{ 
+              width: 32, height: 32, borderRadius: '50%', backgroundColor: '#cc0000', 
+              color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              fontWeight: 'bold', fontSize: 20, flexShrink: 0
+            }}>×</div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: '8px' }}>Spotify API Error</div>
+              <div style={{ fontSize: 12 }}>{error}</div>
+              <div style={{ fontSize: 11, color: '#666', marginTop: '10px' }}>Make sure your .env file is properly configured with your Spotify credentials.</div>
             </div>
           </div>
         </div>
+      ) : windowData?.isMinimized && currentTrack ? (
+        createPortal(
+          <motion.div
+            drag
+            dragMomentum={false}
+            initial={{ opacity: 0, scale: 0.9, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            style={{
+              position: 'fixed',
+              bottom: 60,
+              right: 20,
+              width: 320,
+              backgroundColor: '#181818',
+              color: '#fff',
+              borderRadius: 8,
+              boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
+              overflow: 'hidden',
+              zIndex: 99999,
+              display: 'flex',
+              flexDirection: 'column',
+              cursor: 'grab',
+              userSelect: 'none'
+            }}
+            whileDrag={{ cursor: 'grabbing' }}
+          >
+            <div style={{ display: 'flex', padding: 12, alignItems: 'center' }}>
+              {currentTrack.albumArt ? (
+                <img src={currentTrack.albumArt} style={{ width: 56, height: 56, borderRadius: 4, objectFit: 'cover', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.5)', pointerEvents: 'none' }} />
+              ) : (
+                <div style={{ width: 56, height: 56, borderRadius: 4, backgroundColor: '#282828', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMusic size={24} color="#b3b3b3"/></div>
+              )}
+              
+              <div style={{ flex: 1, padding: '0 14px', overflow: 'hidden' }}>
+                <div style={{ fontSize: 13, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTrack.title}</div>
+                <div style={{ fontSize: 11, color: '#b3b3b3', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>{currentTrack.artist}</div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 10 }}>
+                   <button onClick={(e) => { e.stopPropagation(); playTrack(idx === 0 ? tracks.length - 1 : idx - 1); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer', display: 'flex' }}><IconPlayerSkipBackFilled size={16}/></button>
+                   <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} style={{ background: '#fff', border: 'none', color: '#000', width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+                      {isPlaying ? <IconPlayerPauseFilled size={14}/> : <IconPlayerPlayFilled size={14}/>}
+                   </button>
+                   <button onClick={(e) => { e.stopPropagation(); goToNext(); }} style={{ background: 'none', border: 'none', color: '#b3b3b3', padding: 0, cursor: 'pointer', display: 'flex' }}><IconPlayerSkipForwardFilled size={16}/></button>
+                </div>
+              </div>
+            </div>
 
-        {/* Mini Player Progress Bar */}
-        <div style={{ position: 'relative', height: 4, width: '100%', backgroundColor: '#535353' }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progressPct}%`, backgroundColor: '#1DB954' }} />
-          <input type="range" min={0} max={activeDurationMs} value={posMs}
-            onChange={(e) => { e.stopPropagation(); handleSeek(e); }}
-            style={{ position: 'absolute', inset: '-8px 0', width: '100%', opacity: 0, cursor: 'pointer', height: 20 }}
-          />
-        </div>
-      </motion.div>,
-      document.body
-    );
-  }
-
-  return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', height: '100%',
-      backgroundColor: '#121212', color: '#b3b3b3',
-      fontFamily: '"Circular","Helvetica Neue",Helvetica,Arial,sans-serif',
-      userSelect: 'none', overflow: 'hidden', position: 'relative'
-    }}>
-      <audio ref={audioRef} style={{ display: 'none' }} />
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+            {/* Mini Player Progress Bar */}
+            <div style={{ position: 'relative', height: 4, width: '100%', backgroundColor: '#535353' }}>
+              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progressPct}%`, backgroundColor: '#1DB954' }} />
+              <input type="range" min={0} max={activeDurationMs} value={posMs}
+                onChange={(e) => { e.stopPropagation(); handleSeek(e); }}
+                style={{ position: 'absolute', inset: '-8px 0', width: '100%', opacity: 0, cursor: 'pointer', height: 20 }}
+              />
+            </div>
+          </motion.div>,
+          document.body
+        )
+      ) : (
+        <div style={{
+          display: 'flex', flexDirection: 'column', height: '100%',
+          backgroundColor: '#121212', color: '#b3b3b3',
+          fontFamily: '"Circular","Helvetica Neue",Helvetica,Arial,sans-serif',
+          userSelect: 'none', overflow: 'hidden', position: 'relative'
+        }}>
+          <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ width: 210, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '18px 18px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
             <img src="/assets/icons/spicetify.png" width="24" height="24" alt="Spicetify" />
@@ -595,6 +587,8 @@ const Spicetify = ({ windowData }) => {
         .spicetify-scrollbar::-webkit-scrollbar-thumb:hover { background: #b3b3b3; }
       `}</style>
     </div>
+  )}
+  </>
   );
 };
 
