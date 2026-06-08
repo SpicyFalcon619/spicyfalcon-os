@@ -24,6 +24,7 @@ const TaskManager = () => {
   const [totalContribs, setTotalContribs] = useState(0);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedAppId, setSelectedAppId] = useState(null);
 
   const windows = useWindowStore(state => state.windows);
   const closeWindow = useWindowStore(state => state.closeWindow);
@@ -155,7 +156,18 @@ const TaskManager = () => {
               <div style={{ padding: '8px', color: '#666' }}>No applications are running.</div>
             ) : (
               windows.map(w => (
-                <div key={w.id} style={{ display: 'grid', gridTemplateColumns: '1fr 100px', padding: '4px 8px', borderBottom: '1px solid #f0f0f0' }}>
+                <div 
+                  key={w.id} 
+                  onClick={() => setSelectedAppId(w.id)}
+                  style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr 100px', 
+                    padding: '4px 8px', 
+                    borderBottom: '1px solid #f0f0f0',
+                    backgroundColor: selectedAppId === w.id ? '#3399ff' : 'transparent',
+                    color: selectedAppId === w.id ? '#fff' : 'inherit',
+                    cursor: 'pointer'
+                  }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {w.icon ? <img src={w.icon} alt="" width={16} height={16} /> : <div style={{ width: 16, height: 16, backgroundColor: '#ccc' }}/>}
                     {w.title}
@@ -165,7 +177,17 @@ const TaskManager = () => {
               ))
             )}
             <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', padding: '0 8px' }}>
-               <button style={{ padding: '4px 12px', cursor: 'default' }}>End Task</button>
+               <button 
+                 onClick={() => {
+                   if (selectedAppId) {
+                     closeWindow(selectedAppId);
+                     setSelectedAppId(null);
+                   }
+                 }}
+                 disabled={!selectedAppId}
+                 style={{ padding: '4px 12px', cursor: selectedAppId ? 'pointer' : 'default', opacity: selectedAppId ? 1 : 0.5 }}>
+                 End Task
+               </button>
             </div>
           </div>
         )}
@@ -177,13 +199,32 @@ const TaskManager = () => {
             </div>
             <div style={{ flex: 1, overflowY: 'auto' }}>
               {windows.map(w => (
-                <div key={w.id} style={{ display: 'grid', gridTemplateColumns: '1fr 100px 100px', padding: '4px 8px' }}>
+                <div 
+                  key={w.id} 
+                  onClick={() => setSelectedAppId(w.id)}
+                  style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr 100px 100px', 
+                    padding: '4px 8px',
+                    backgroundColor: selectedAppId === w.id ? '#3399ff' : 'transparent',
+                    color: selectedAppId === w.id ? '#fff' : 'inherit',
+                    cursor: 'pointer'
+                  }}>
                   <div>{w.component}.exe</div>
                   <div>00</div>
                   <div>{Math.floor(Math.random() * 50000 + 10000).toLocaleString()} K</div>
                 </div>
               ))}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px 100px', padding: '4px 8px' }}>
+              <div 
+                onClick={() => setSelectedAppId('idle')}
+                style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr 100px 100px', 
+                  padding: '4px 8px',
+                  backgroundColor: selectedAppId === 'idle' ? '#3399ff' : 'transparent',
+                  color: selectedAppId === 'idle' ? '#fff' : 'inherit',
+                  cursor: 'pointer'
+                }}>
                 <div>System Idle Process</div>
                 <div>{100 - Math.round(cpuUsage)}</div>
                 <div>24 K</div>
@@ -192,10 +233,13 @@ const TaskManager = () => {
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px' }}>
               <button 
                 onClick={() => {
-                  const toKill = windows[windows.length - 1];
-                  if (toKill) closeWindow(toKill.id);
+                  if (selectedAppId && selectedAppId !== 'idle') {
+                    closeWindow(selectedAppId);
+                    setSelectedAppId(null);
+                  }
                 }}
-                style={{ padding: '4px 12px', cursor: 'default' }}
+                disabled={!selectedAppId || selectedAppId === 'idle'}
+                style={{ padding: '4px 12px', cursor: (selectedAppId && selectedAppId !== 'idle') ? 'pointer' : 'default', opacity: (selectedAppId && selectedAppId !== 'idle') ? 1 : 0.5 }}
               >
                 End Process
               </button>

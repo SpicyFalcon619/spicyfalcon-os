@@ -35,17 +35,7 @@ const Spicetify = ({ windowData }) => {
   const [search, setSearch] = useState('');
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
-  const audioRef = useRef(new Audio());
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    document.body.appendChild(audio);
-    return () => {
-      if (document.body.contains(audio)) {
-        document.body.removeChild(audio);
-      }
-    };
-  }, []);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (isPlaying && tracks[idx]) {
@@ -257,21 +247,32 @@ const Spicetify = ({ windowData }) => {
 
   useEffect(() => {
     if ('mediaSession' in navigator && currentTrack) {
+      const fallbackUrl = new URL('/assets/icons/spicetify.png', window.location.origin).href;
+      const artUrl = currentTrack.albumArt || fallbackUrl;
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentTrack.title || 'Unknown Title',
         artist: currentTrack.artist || 'Unknown Artist',
         album: currentTrack.album || 'Unknown Album',
         artwork: [
-          { src: currentTrack.albumArt || '/assets/icons/spicetify.png', sizes: '512x512', type: 'image/jpeg' }
+          { src: artUrl, sizes: '96x96', type: 'image/jpeg' },
+          { src: artUrl, sizes: '128x128', type: 'image/jpeg' },
+          { src: artUrl, sizes: '192x192', type: 'image/jpeg' },
+          { src: artUrl, sizes: '256x256', type: 'image/jpeg' },
+          { src: artUrl, sizes: '384x384', type: 'image/jpeg' },
+          { src: artUrl, sizes: '512x512', type: 'image/jpeg' }
         ]
       });
 
-      navigator.mediaSession.setActionHandler('play', togglePlay);
-      navigator.mediaSession.setActionHandler('pause', togglePlay);
+      navigator.mediaSession.setActionHandler('play', () => {
+        if (audioRef.current) audioRef.current.play().then(() => setIsPlaying(true));
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        if (audioRef.current) { audioRef.current.pause(); setIsPlaying(false); }
+      });
       navigator.mediaSession.setActionHandler('previoustrack', goToPrev);
       navigator.mediaSession.setActionHandler('nexttrack', goToNext);
     }
-  }, [currentTrack, togglePlay, goToPrev, goToNext]);
+  }, [currentTrack, goToPrev, goToNext]);
 
   useEffect(() => {
     if ('mediaSession' in navigator) {
@@ -393,6 +394,7 @@ const Spicetify = ({ windowData }) => {
       fontFamily: '"Circular","Helvetica Neue",Helvetica,Arial,sans-serif',
       userSelect: 'none', overflow: 'hidden', position: 'relative'
     }}>
+      <audio ref={audioRef} style={{ display: 'none' }} />
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ width: 210, backgroundColor: '#000', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '18px 18px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
