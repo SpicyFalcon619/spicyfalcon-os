@@ -130,19 +130,7 @@ const Spicetify = ({ windowData }) => {
   useEffect(() => { repeatRef.current = repeat; }, [repeat]);
   useEffect(() => { tracksRef.current = tracks; }, [tracks]);
 
-  const updateMediaSession = useCallback((t) => {
-    if ('mediaSession' in navigator && t) {
-      const artUrl = t.albumArt || new URL('/assets/icons/spicetify.png', window.location.origin).href;
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: t.title || 'Unknown Title',
-        artist: t.artist || 'Unknown Artist',
-        album: t.album || 'SpicyFalcon OS',
-        artwork: [{ src: artUrl, sizes: '512x512' }]
-      });
-    }
-  }, []);
-
-  const playTrack = useCallback(function pt(index) {
+  const playTrack = useCallback(async function pt(index) {
     const t = tracksRef.current[index];
     if (!t) return;
 
@@ -159,14 +147,34 @@ const Spicetify = ({ windowData }) => {
 
     setIdx(index);
     setPosMs(0);
-    audioRef.current.src = t.previewUrl;
     
-    updateMediaSession(t);
-
-    audioRef.current.play()
-      .then(() => setIsPlaying(true))
-      .catch(() => setIsPlaying(false));
-  }, [updateMediaSession]);
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    audio.pause();
+    audio.src = t.previewUrl;
+    audio.volume = 1.0;
+    
+    try {
+      await audio.play();
+      setIsPlaying(true);
+      
+      if ('mediaSession' in navigator) {
+        const artUrl = t.albumArt || new URL('/assets/icons/spicetify.png', window.location.origin).href;
+        const artworkUrl = await fetchArtworkAsBlob(artUrl);
+        
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: t.title || 'Unknown Title',
+          artist: t.artist || 'Unknown Artist',
+          album: t.album || 'SpicyFalcon OS',
+          artwork: [{ src: artworkUrl, sizes: '512x512', type: 'image/jpeg' }]
+        });
+        navigator.mediaSession.playbackState = 'playing';
+      }
+    } catch (e) {
+      setIsPlaying(false);
+    }
+  }, []);
 
   const goToNext = useCallback(() => {
     if (tracksRef.current.length === 0) return;
@@ -229,8 +237,12 @@ const Spicetify = ({ windowData }) => {
     if (isPlaying) {
       audio.pause();
       setIsPlaying(false);
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
     } else {
-      audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+      audio.play().then(() => {
+        setIsPlaying(true);
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+      }).catch(() => setIsPlaying(false));
     }
   }, [isPlaying, tracks, idx, playTrack]);
 
@@ -286,7 +298,7 @@ const Spicetify = ({ windowData }) => {
 
   return (
     <>
-      <audio ref={audioRef} controls style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0.01 }} />
+      <audio ref={audioRef} controls crossOrigin="anonymous" preload="metadata" style={{ position: 'absolute', left: '-9999px', top: '-9999px' }} />
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: '#121212', color: '#fff' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
@@ -581,5 +593,17 @@ const Spicetify = ({ windowData }) => {
   </>
   );
 };
+
+async function fetchArtworkAsBlob(url) {
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    if (!response.ok) throw new Error(`Artwork fetch failed: ${response.status}`);
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (err) {
+    console.warn('[MediaSession] Artwork fetch failed, using original URL:', err);
+    return url;
+  }
+}
 
 export default Spicetify;
