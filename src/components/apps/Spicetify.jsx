@@ -130,6 +130,18 @@ const Spicetify = ({ windowData }) => {
   useEffect(() => { repeatRef.current = repeat; }, [repeat]);
   useEffect(() => { tracksRef.current = tracks; }, [tracks]);
 
+  const updateMediaSession = useCallback((t) => {
+    if ('mediaSession' in navigator && t) {
+      const artUrl = t.albumArt || new URL('/assets/icons/spicetify.png', window.location.origin).href;
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: t.title || 'Unknown Title',
+        artist: t.artist || 'Unknown Artist',
+        album: t.album || 'SpicyFalcon OS',
+        artwork: [{ src: artUrl, sizes: '512x512' }]
+      });
+    }
+  }, []);
+
   const playTrack = useCallback(function pt(index) {
     const t = tracksRef.current[index];
     if (!t) return;
@@ -148,10 +160,13 @@ const Spicetify = ({ windowData }) => {
     setIdx(index);
     setPosMs(0);
     audioRef.current.src = t.previewUrl;
+    
+    updateMediaSession(t);
+
     audioRef.current.play()
       .then(() => setIsPlaying(true))
       .catch(() => setIsPlaying(false));
-  }, []);
+  }, [updateMediaSession]);
 
   const goToNext = useCallback(() => {
     if (tracksRef.current.length === 0) return;
@@ -237,23 +252,7 @@ const Spicetify = ({ windowData }) => {
   const progressPct = Math.min((posMs / activeDurationMs) * 100, 100) || 0;
 
   useEffect(() => {
-    if ('mediaSession' in navigator && currentTrack) {
-      const fallbackUrl = new URL('/assets/icons/spicetify.png', window.location.origin).href;
-      const artUrl = currentTrack.albumArt || fallbackUrl;
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: currentTrack.title || 'Unknown Title',
-        artist: currentTrack.artist || 'Unknown Artist',
-        album: currentTrack.album || 'Unknown Album',
-        artwork: [
-          { src: artUrl, sizes: '96x96', type: 'image/jpeg' },
-          { src: artUrl, sizes: '128x128', type: 'image/jpeg' },
-          { src: artUrl, sizes: '192x192', type: 'image/jpeg' },
-          { src: artUrl, sizes: '256x256', type: 'image/jpeg' },
-          { src: artUrl, sizes: '384x384', type: 'image/jpeg' },
-          { src: artUrl, sizes: '512x512', type: 'image/jpeg' }
-        ]
-      });
-
+    if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => {
         if (audioRef.current) audioRef.current.play().then(() => setIsPlaying(true));
       });
@@ -263,7 +262,7 @@ const Spicetify = ({ windowData }) => {
       navigator.mediaSession.setActionHandler('previoustrack', goToPrev);
       navigator.mediaSession.setActionHandler('nexttrack', goToNext);
     }
-  }, [currentTrack, goToPrev, goToNext]);
+  }, [goToPrev, goToNext]);
 
   useEffect(() => {
     if ('mediaSession' in navigator) {
@@ -287,7 +286,7 @@ const Spicetify = ({ windowData }) => {
 
   return (
     <>
-      <audio ref={audioRef} controls style={{ position: 'absolute', width: 0, height: 0, opacity: 0, pointerEvents: 'none', zIndex: -1 }} />
+      <audio ref={audioRef} controls style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0.01 }} />
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: '#121212', color: '#fff' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
