@@ -234,6 +234,44 @@ const Spicetify = ({ windowData }) => {
   const activeDurationMs = currentTrack?.duration && currentTrack?.previewUrl?.includes('spotdown') === false ? currentTrack.duration : durationMs;
   const progressPct = Math.min((posMs / activeDurationMs) * 100, 100) || 0;
 
+  useEffect(() => {
+    if ('mediaSession' in navigator && currentTrack) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title || 'Unknown Title',
+        artist: currentTrack.artist || 'Unknown Artist',
+        album: currentTrack.album || 'Unknown Album',
+        artwork: [
+          { src: currentTrack.albumArt || '/assets/icons/spicetify.png', sizes: '512x512', type: 'image/jpeg' }
+        ]
+      });
+
+      navigator.mediaSession.setActionHandler('play', togglePlay);
+      navigator.mediaSession.setActionHandler('pause', togglePlay);
+      navigator.mediaSession.setActionHandler('previoustrack', goToPrev);
+      navigator.mediaSession.setActionHandler('nexttrack', goToNext);
+    }
+  }, [currentTrack, togglePlay, goToPrev, goToNext]);
+
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if ('mediaSession' in navigator && navigator.mediaSession.setPositionState) {
+      if (activeDurationMs > 0 && posMs >= 0 && posMs <= activeDurationMs) {
+        try {
+          navigator.mediaSession.setPositionState({
+            duration: activeDurationMs / 1000,
+            playbackRate: 1,
+            position: posMs / 1000
+          });
+        } catch (e) {}
+      }
+    }
+  }, [posMs, activeDurationMs]);
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: '#121212', color: '#fff' }}>

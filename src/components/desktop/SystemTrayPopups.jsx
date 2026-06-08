@@ -11,8 +11,13 @@ export const BatteryIcon = () => {
     if ('getBattery' in navigator) {
       batteryPromise = navigator.getBattery().then(battery => {
         const updateBattery = () => {
-          setLevel(Math.round(battery.level * 100));
-          setIsCharging(battery.charging);
+          let lv = battery.level;
+          if (lv === undefined || lv === null || isNaN(lv)) {
+            setLevel(100);
+          } else {
+            setLevel(Math.round(lv * 100));
+          }
+          setIsCharging(battery.charging || false);
         };
         updateBattery();
         battery.addEventListener('levelchange', updateBattery);
