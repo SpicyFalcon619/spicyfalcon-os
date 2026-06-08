@@ -38,6 +38,27 @@ const Spicetify = ({ windowData }) => {
   const audioRef = useRef(new Audio());
 
   useEffect(() => {
+    const audio = audioRef.current;
+    document.body.appendChild(audio);
+    return () => {
+      if (document.body.contains(audio)) {
+        document.body.removeChild(audio);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isPlaying && tracks[idx]) {
+      document.title = `${tracks[idx].title} - ${tracks[idx].artist}`;
+    } else {
+      document.title = 'SpicyFalcon OS';
+    }
+    return () => {
+      document.title = 'SpicyFalcon OS';
+    };
+  }, [isPlaying, tracks, idx]);
+
+  useEffect(() => {
     // Initial fetch
     let mounted = true;
 
