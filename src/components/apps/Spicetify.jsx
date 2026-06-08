@@ -37,16 +37,7 @@ const Spicetify = ({ windowData }) => {
 
   const audioRef = useRef(null);
 
-  useEffect(() => {
-    if (isPlaying && tracks[idx]) {
-      document.title = `${tracks[idx].title} - ${tracks[idx].artist}`;
-    } else {
-      document.title = 'SpicyFalcon OS';
-    }
-    return () => {
-      document.title = 'SpicyFalcon OS';
-    };
-  }, [isPlaying, tracks, idx]);
+
 
   useEffect(() => {
     // Initial fetch
@@ -296,7 +287,7 @@ const Spicetify = ({ windowData }) => {
 
   return (
     <>
-      <audio ref={audioRef} style={{ display: 'none' }} />
+      <audio ref={audioRef} controls style={{ position: 'absolute', width: 0, height: 0, opacity: 0, pointerEvents: 'none', zIndex: -1 }} />
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: '#121212', color: '#fff' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
