@@ -130,7 +130,7 @@ const Spicetify = ({ windowData }) => {
   useEffect(() => { repeatRef.current = repeat; }, [repeat]);
   useEffect(() => { tracksRef.current = tracks; }, [tracks]);
 
-  const playTrack = useCallback(async function pt(index) {
+  const playTrack = useCallback(function pt(index) {
     const t = tracksRef.current[index];
     if (!t) return;
 
@@ -155,25 +155,21 @@ const Spicetify = ({ windowData }) => {
     audio.src = t.previewUrl;
     audio.volume = 1.0;
     
-    try {
-      await audio.play();
-      setIsPlaying(true);
+    if ('mediaSession' in navigator) {
+      const artUrl = t.albumArt || new URL('/assets/icons/spicetify.png', window.location.origin).href;
       
-      if ('mediaSession' in navigator) {
-        const artUrl = t.albumArt || new URL('/assets/icons/spicetify.png', window.location.origin).href;
-        const artworkUrl = await fetchArtworkAsBlob(artUrl);
-        
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: t.title || 'Unknown Title',
-          artist: t.artist || 'Unknown Artist',
-          album: t.album || 'SpicyFalcon OS',
-          artwork: [{ src: artworkUrl, sizes: '512x512', type: 'image/jpeg' }]
-        });
-        navigator.mediaSession.playbackState = 'playing';
-      }
-    } catch (e) {
-      setIsPlaying(false);
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: t.title || 'Unknown Title',
+        artist: t.artist || 'Unknown Artist',
+        album: t.album || 'SpicyFalcon OS',
+        artwork: [{ src: artUrl, sizes: '512x512' }]
+      });
+      navigator.mediaSession.playbackState = 'playing';
     }
+
+    audio.play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false));
   }, []);
 
   const goToNext = useCallback(() => {
@@ -593,17 +589,5 @@ const Spicetify = ({ windowData }) => {
   </>
   );
 };
-
-async function fetchArtworkAsBlob(url) {
-  try {
-    const response = await fetch(url, { mode: 'cors' });
-    if (!response.ok) throw new Error(`Artwork fetch failed: ${response.status}`);
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
-  } catch (err) {
-    console.warn('[MediaSession] Artwork fetch failed, using original URL:', err);
-    return url;
-  }
-}
 
 export default Spicetify;
