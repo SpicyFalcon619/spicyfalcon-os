@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { portfolioData } from '../../data/portfolioData';
-import useWindowStore from '../../store/useWindowStore';
 
 // Inline SVG icon components — no emoji, no external dep
 const IconGitHub = ({ size = 14, color = 'currentColor' }) => (
@@ -67,18 +66,10 @@ const IconBarChart = ({ size = 14, color = 'currentColor' }) => (
 const Portfolio = ({ windowData }) => {
   const [activeTab, setActiveTab] = useState(windowData?.appData?.section || 'about');
   const { personal, education, skills, projects } = portfolioData;
-  const openWindow = useWindowStore(state => state.openWindow);
 
   const openInBrowser = (e, url) => {
     e.preventDefault();
-    openWindow({
-      id: `app-ie-${Date.now()}`,
-      title: 'Internet Explorer',
-      component: 'ie',
-      width: 800,
-      height: 600,
-      appData: { url }
-    });
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const tabStyle = (id) => ({

@@ -66,14 +66,7 @@ const DesktopIcon = ({ iconData }) => {
   const handleDoubleClick = (e) => {
     e.stopPropagation();
     if (iconData.component === 'external-link') {
-      openWindow({
-        id: `app-ie-${id}`,
-        title: title || 'Internet Explorer',
-        component: 'ie',
-        width: 800,
-        height: 600,
-        appData: { url: iconData.appData.url }
-      });
+      window.open(iconData.appData.url, '_blank', 'noopener,noreferrer');
       return;
     }
     openWindow({

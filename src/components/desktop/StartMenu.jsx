@@ -191,10 +191,10 @@ const StartMenu = () => {
 
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.3)', margin: '4px 6px', borderBottom: '1px solid rgba(255,255,255,0.2)' }}></div>
         
-        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => { 
-          e.stopPropagation(); 
-          hideStartMenu(); 
-          openWindow({ id: `app-ie-wastopia`, title: 'Wastopia', component: 'ie', width: 800, height: 600, appData: { url: portfolioData.projects[0].link } }); 
+        <div style={{ fontSize: '13px', cursor: 'pointer', padding: '6px 8px', color: '#fff', fontWeight: '500', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }} onPointerDown={(e) => {
+          e.stopPropagation();
+          hideStartMenu();
+          window.open(portfolioData.projects.find(p => p.id === 'wastopia').link, '_blank', 'noopener,noreferrer');
         }} onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>View Wastopia ↗</div>
       </div>
     </div>
