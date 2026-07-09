@@ -3,9 +3,9 @@ export const portfolioData = {
     name: 'Ahmad Maruf Hossain',
     gamertag: 'spicyfalcon619',
     tagline: 'CSE Undergrad • UIU',
-    bio: `I'm a passionate CSE undergrad at United International University, currently in my 2nd year. My journey in tech started with curiosity about how things work under the hood, leading me to explore system-level programming, blockchain technology, and software development.
+    bio: `I'm a self-taught CSE undergrad at United International University, currently in my 2nd year, splitting my focus between machine learning/AI and systems programming. My journey in tech started with curiosity about how things work under the hood, and that's since grown into documenting a full ML/AI learning path from Python fundamentals through Classical ML.
 
-When I'm not coding, you'll find me competing in esports, solving Rubik's cubes, or tinkering with my Arch Linux with Hyprland setup. I believe in learning by building, which is why I work on projects like Wastopia and various cipher implementations to deepen my understanding of technology.`,
+When I'm not coding, you'll find me competing in esports, solving Rubik's cubes, or tinkering with my Arch Linux + Hyprland setup. I believe in learning by building, which is why UIUNest — a fully original housing platform for UIU students — is the project I'm proudest of.`,
     email: 'a.marufhossain619@gmail.com',
     github: 'https://github.com/SpicyFalcon619',
     linkedin: 'https://www.linkedin.com/in/ahmad-maruf-hossain/',
@@ -29,29 +29,39 @@ When I'm not coding, you'll find me competing in esports, solving Rubik's cubes,
     }
   ],
   skills: {
-    languages: ['C', 'C++', 'Java', 'HTML/CSS/JS', 'Python (Basic)'],
-    technologies: ['Linux (Arch)', 'Hyprland', 'Git', 'Notion API', 'Blockchain', 'IoT Concepts'],
+    languages: ['C', 'C++', 'Java', 'Python', 'TypeScript', 'HTML/CSS/JS', 'PHP'],
+    technologies: ['React', 'Next.js', 'NumPy', 'Pandas', 'MySQL', 'Solidity', 'Linux (Arch)', 'Hyprland', 'Git', 'Notion API'],
     soft: ['Problem Solving', 'Research', 'Team Collaboration', 'Quick Learning']
   },
   projects: [
+    {
+      id: 'uiunest',
+      name: 'UIUNest',
+      type: 'Marketplace',
+      description: 'My proudest, fully original build — a housing & flatmate-matching platform for UIU students, with transparent all-in billing, an 8-dimension compatibility matching algorithm, and a dorm-essentials marketplace.',
+      tags: ['Next.js', 'TypeScript', 'Marketplace', 'Full-Stack'],
+      link: 'https://uiu-nest-core.vercel.app',
+      extra: 'A fully original idea, not a tutorial clone — built from scratch for the UIU community.',
+      icon: '/assets/icons/ie.png'
+    },
+    {
+      id: 'ml-research-journey',
+      name: 'ml-research-journey',
+      type: 'ML/AI Learning Journey',
+      description: 'Documenting my machine learning & AI journey from the ground up — Python foundations through NumPy, Pandas, and now Classical ML, working toward neural networks.',
+      tags: ['Python', 'NumPy', 'Pandas', 'Machine Learning'],
+      link: 'https://github.com/SpicyFalcon619/ml-research-journey',
+      extra: 'What I\'m actively working on right now.',
+      icon: '/assets/icons/education.png'
+    },
     {
       id: 'wastopia',
       name: 'Wastopia',
       type: 'Blockchain Web App',
       description: 'A blockchain-powered waste-to-energy platform designed to bring transparency, efficiency, and community engagement to global waste management.',
-      tags: ['Blockchain', 'Next.js', 'Tailwind', 'Research'],
+      tags: ['Blockchain', 'Next.js', 'Research'],
       link: 'https://project-wastopia.vercel.app',
       extra: 'Won "Best Emerging Team" in Blockchain Category at UIU CSE FEST 2025.',
-      icon: '/assets/icons/ie.png' 
-    },
-    {
-      id: 'uiunest',
-      name: 'UIUNest',
-      type: 'Marketplace',
-      description: 'A comprehensive housing, flatmate matching, and peer-to-peer marketplace platform built exclusively for UIU students and landlords.',
-      tags: ['HTML', 'CSS', 'JavaScript', 'Marketplace'],
-      link: 'https://uiunest-production.up.railway.app/',
-      extra: 'Simplifying student housing and item marketplace specifically designed for the UIU community.',
       icon: '/assets/icons/ie.png'
     },
     {
@@ -63,6 +73,15 @@ When I'm not coding, you'll find me competing in esports, solving Rubik's cubes,
       link: 'https://github.com/SpicyFalcon619/YT-DeepNote',
       extra: 'Boost your productivity and never lose track of a YouTube tutorial again with Notion integration.',
       icon: '/assets/icons/explorer.png'
+    },
+    {
+      id: 'clearpath',
+      name: 'ClearPath',
+      type: 'Full-Stack Web App',
+      description: 'A full-stack university clearance system with real-time approval tracking and PDF certificate generation, replacing paper-based clearance.',
+      tags: ['PHP', 'MySQL', 'Full-Stack'],
+      link: 'https://github.com/SpicyFalcon619/ClearPath',
+      icon: '/assets/icons/ie.png'
     },
     {
       id: 'spicyfalcon-os',

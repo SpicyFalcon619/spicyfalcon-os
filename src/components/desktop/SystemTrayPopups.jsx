@@ -1,35 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useDesktopStore from '../../store/useDesktopStore';
-import { IconBattery, IconBatteryCharging, IconBattery1, IconBattery2, IconBattery3, IconBattery4, IconVolume, IconDeviceSpeaker } from '@tabler/icons-react';
+import { IconVolume } from '@tabler/icons-react';
 
 export const BatteryIcon = () => {
   const [level, setLevel] = useState(100);
   const [isCharging, setIsCharging] = useState(false);
+  const [supported, setSupported] = useState(true);
 
   useEffect(() => {
-    let batteryPromise;
-    if ('getBattery' in navigator) {
-      batteryPromise = navigator.getBattery().then(battery => {
-        const updateBattery = () => {
-          let lv = battery.level;
-          if (lv === undefined || lv === null || isNaN(lv)) {
-            setLevel(100);
-          } else {
-            setLevel(Math.round(lv * 100));
-          }
-          setIsCharging(battery.charging || false);
-        };
-        updateBattery();
-        battery.addEventListener('levelchange', updateBattery);
-        battery.addEventListener('chargingchange', updateBattery);
-        
-        return () => {
-          battery.removeEventListener('levelchange', updateBattery);
-          battery.removeEventListener('chargingchange', updateBattery);
-        };
-      });
+    if (!('getBattery' in navigator)) {
+      setSupported(false);
+      return;
     }
+
+    let battery;
+    let cancelled = false;
+
+    const updateBattery = () => {
+      const lv = battery.level;
+      setLevel(lv === undefined || lv === null || isNaN(lv) ? 100 : Math.round(lv * 100));
+      setIsCharging(!!battery.charging);
+    };
+
+    navigator.getBattery().then((b) => {
+      if (cancelled) return;
+      battery = b;
+      updateBattery();
+      battery.addEventListener('levelchange', updateBattery);
+      battery.addEventListener('chargingchange', updateBattery);
+    });
+
+    return () => {
+      cancelled = true;
+      if (battery) {
+        battery.removeEventListener('levelchange', updateBattery);
+        battery.removeEventListener('chargingchange', updateBattery);
+      }
+    };
   }, []);
+
+  // Real desktops without a battery don't show a battery tray icon at all
+  if (!supported) return null;
 
   const getBatteryIcon = () => {
     // White battery SVG matching Windows 7 system tray style
@@ -41,12 +52,15 @@ export const BatteryIcon = () => {
         {level > 50 && level <= 75 && <rect x="2.5" y="5.5" width="7" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
         {level > 25 && level <= 50 && <rect x="2.5" y="5.5" width="4.5" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
         {level <= 25 && <rect x="2.5" y="5.5" width="2.5" height="6" rx="0.5" fill="rgba(255,255,255,0.85)" />}
+        {isCharging && (
+          <path d="M7.2 4.5L4.6 9h1.7l-.9 3.5L8.8 8H7.1l1.1-3.5z" fill="#ffd43b" stroke="#8a6d00" strokeWidth="0.4" />
+        )}
       </svg>
     );
   };
 
   return (
-    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }} title={`${level}% remaining`}>
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }} title={`${level}% ${isCharging ? '(charging)' : 'remaining'}`}>
       {getBatteryIcon()}
       <span style={{ color: '#fff', fontSize: '11px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{level}%</span>
     </div>

@@ -172,12 +172,12 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
         >
           {isMaximized ? (
             <svg width="10" height="10" viewBox="0 0 10 10">
-              <path d="M 2 4 L 2 2 L 8 2 L 8 8 L 6 8" fill="none" stroke="currentColor" stroke-width="1.5" />
-              <rect x="0.5" y="4.5" width="6" height="5" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <path d="M 2 4 L 2 2 L 8 2 L 8 8 L 6 8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="0.5" y="4.5" width="6" height="5" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           ) : (
             <svg width="10" height="10" viewBox="0 0 10 10">
-              <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1" />
+              <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="1" />
               <rect x="1" y="1" width="8" height="2" fill="currentColor" />
             </svg>
           )}
@@ -189,8 +189,8 @@ const WindowTitleBar = ({ windowData, isActive, setIsInteracting }) => {
           onMouseOut={e => { e.currentTarget.style.background = closeButtonStyle.background; e.currentTarget.style.boxShadow = closeButtonStyle.boxShadow }}
         >
           <svg width="12" height="12" viewBox="0 0 12 12">
-            <path d="M 1 1 L 11 11 M 1 11 L 11 1" stroke="white" stroke-width="2" stroke-linecap="round" />
-            <path d="M 1 1 L 11 11 M 1 11 L 11 1" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+            <path d="M 1 1 L 11 11 M 1 11 L 11 1" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            <path d="M 1 1 L 11 11 M 1 11 L 11 1" stroke="black" strokeWidth="0.5" strokeLinecap="round" />
           </svg>
         </button>
       </div>

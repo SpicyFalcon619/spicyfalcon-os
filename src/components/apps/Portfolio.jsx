@@ -255,8 +255,8 @@ const Portfolio = ({ windowData }) => {
                 { name: 'HTML / CSS / JS', level: 80 },
                 { name: 'Linux (Arch)', level: 88 },
                 { name: 'Git', level: 75 },
-                { name: 'Blockchain Concepts', level: 65 },
-                { name: 'Python', level: 50 },
+                { name: 'Python', level: 72 },
+                { name: 'Machine Learning', level: 55 },
               ].map(item => (
                 <div key={item.name} style={{ marginBottom: '10px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px', fontSize: '12px' }}>
