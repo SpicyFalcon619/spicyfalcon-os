@@ -3,9 +3,9 @@ export const portfolioData = {
     name: 'Ahmad Maruf Hossain',
     gamertag: 'spicyfalcon619',
     tagline: 'CSE Undergrad • UIU',
-    bio: `I'm a self-taught CSE undergrad at United International University, currently in my 2nd year, splitting my focus between machine learning/AI and systems programming. My journey in tech started with curiosity about how things work under the hood, and that's since grown into documenting a full ML/AI learning path from Python fundamentals through Classical ML.
+    bio: `I'm a self-taught CSE undergrad at United International University, currently in my 3rd year and serving as an Undergraduate Assistant for the DBMS Lab, splitting my focus between machine learning/AI and systems programming. My journey in tech started with curiosity about how things work under the hood, and that's since grown into documenting a full ML/AI learning path from Python fundamentals through Classical ML.
 
-When I'm not coding, you'll find me competing in esports, solving Rubik's cubes, or tinkering with my Arch Linux + Hyprland setup. I believe in learning by building, which is why UIUNest — a fully original housing platform for UIU students — is the project I'm proudest of.`,
+When I'm not coding, you'll find me gaming casually, solving Rubik's cubes, or tinkering with my Arch Linux + Hyprland setup. I believe in learning by building, which is why UIUNest — a fully original housing platform for UIU students — is the project I'm proudest of.`,
     email: 'a.marufhossain619@gmail.com',
     github: 'https://github.com/SpicyFalcon619',
     linkedin: 'https://www.linkedin.com/in/ahmad-maruf-hossain/',
@@ -30,7 +30,7 @@ When I'm not coding, you'll find me competing in esports, solving Rubik's cubes,
   ],
   skills: {
     languages: ['C', 'C++', 'Java', 'Python', 'TypeScript', 'HTML/CSS/JS', 'PHP'],
-    technologies: ['React', 'Next.js', 'NumPy', 'Pandas', 'MySQL', 'Solidity', 'Linux (Arch)', 'Hyprland', 'Git', 'Notion API'],
+    technologies: ['React', 'Next.js', 'NumPy', 'Pandas', 'MySQL','Linux (Arch)', 'Hyprland', 'Git', 'Notion API'],
     soft: ['Problem Solving', 'Research', 'Team Collaboration', 'Quick Learning']
   },
   projects: [
