@@ -5,7 +5,7 @@ export const portfolioData = {
     tagline: 'CSE Undergrad • UIU',
     bio: `I'm a self-taught CSE undergrad at United International University, currently in my 3rd year and serving as an Undergraduate Assistant for the DBMS Lab, splitting my focus between machine learning/AI and systems programming. My journey in tech started with curiosity about how things work under the hood, and that's since grown into documenting a full ML/AI learning path from Python fundamentals through Classical ML.
 
-When I'm not coding, you'll find me gaming casually, solving Rubik's cubes, or tinkering with my Arch Linux + Hyprland setup. I believe in learning by building, which is why UIUNest — a fully original housing platform for UIU students — is the project I'm proudest of.`,
+When I'm not coding, you'll find me gaming casually, solving Rubik's cubes, or tinkering with my Arch Linux + Hyprland setup. I believe in learning by building, which is why Nestly — a fully original housing platform for UIU students — is the project I'm proudest of.`,
     email: 'a.marufhossain619@gmail.com',
     github: 'https://github.com/SpicyFalcon619',
     linkedin: 'https://www.linkedin.com/in/ahmad-maruf-hossain/',
@@ -36,11 +36,11 @@ When I'm not coding, you'll find me gaming casually, solving Rubik's cubes, or t
   projects: [
     {
       id: 'uiunest',
-      name: 'UIUNest',
+      name: 'Nestly',
       type: 'Marketplace',
       description: 'My proudest, fully original build — a housing & flatmate-matching platform for UIU students, with transparent all-in billing, an 8-dimension compatibility matching algorithm, and a dorm-essentials marketplace.',
       tags: ['Next.js', 'TypeScript', 'Marketplace', 'Full-Stack'],
-      link: 'https://uiu-nest-core.vercel.app',
+      link: 'https://nestly-core.vercel.app',
       extra: 'A fully original idea, not a tutorial clone — built from scratch for the UIU community.',
       icon: '/assets/icons/ie.png'
     },
