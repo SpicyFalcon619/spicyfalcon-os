@@ -3,7 +3,7 @@ export const portfolioData = {
     name: 'Ahmad Maruf Hossain',
     gamertag: 'spicyfalcon619',
     tagline: 'CSE Undergrad • UIU',
-    bio: `I'm a CSE undergrad at United International University, in my 3rd year (8th trimester), and an Undergraduate Assistant for the Database Management System Lab. I build complete, working things: Nestly, a housing platform for UIU students built with a team of four; three interactive field guides that teach Java, machine learning and AI engineering with code you can run in the page; and Drawer 378, a searchable archive of my whole degree that other students use.
+    bio: `I'm a CSE undergrad at United International University, in my 3rd year (8th trimester), and an Undergraduate Assistant for the Database Management System Lab. I build complete, working things: Nestly, a housing platform for UIU students built with three teammates; three interactive field guides that teach Java, machine learning and AI engineering with code you can run in the page; and Drawer 378, a searchable archive of my whole degree that other students use.
 
 Right now I'm learning deep learning with PyTorch and working towards full AI applications (React, FastAPI and a model behind them). Off the keyboard: casual gaming, Rubik's cubes, and tuning my Arch Linux + Hyprland setup.`,
     email: 'a.marufhossain619@gmail.com',
@@ -38,7 +38,7 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
       id: 'uiunest',
       name: 'Nestly',
       type: 'Full-Stack Platform',
-      description: 'My proudest build, made with a team of four: a platform for finding, verifying and living in shared student housing near Dhaka campuses. Every listing shows an itemised cost breakdown, flatmates get an 8-dimension compatibility score, landlords are verified by admins, mess bills split themselves, and Nestly Exchange handles second-hand furniture with offers and counter-offers. Real-time messaging and an admin analytics dashboard sit on top.',
+      description: 'My proudest build, made with Sadia Noman Tonni, Nazha Tarannum Roza and Mohammad Mahadi Hasan: a platform for finding, verifying and living in shared student housing near Dhaka campuses. Every listing shows an itemised cost breakdown, flatmates get an 8-dimension compatibility score, landlords are verified by admins, mess bills split themselves, and Nestly Exchange handles second-hand furniture with offers and counter-offers. Real-time messaging and an admin analytics dashboard sit on top.',
       tags: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Realtime'],
       link: 'https://nestly-core.vercel.app',
       extra: 'A fully original idea, not a tutorial clone: built from scratch for the UIU community.',
@@ -95,8 +95,8 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
     {
       id: 'shetu',
       name: 'Shetu',
-      type: 'AI System (team of four)',
-      description: "An AI system that keeps a job intact through a long leave, starting with maternity leave. MAP: an AI interview in Bangla, English or Banglish turns her real duties into an evidence-backed Role Map and finds the ones she forgot. HOLD: colleagues cover them, and a change typed in plain words is re-planned. FIT: her return is planned around the arrangement she needs. AI proposes, rules check, people decide. Reached Round 2 (Concept Pitch) of Grameenphone FutureMakers 2026 in Gender Equality & Inclusion; now being rebuilt properly as our Software Engineering Lab project.",
+      type: 'AI System (team project)',
+      description: "An AI system that keeps a job intact through a long leave, starting with maternity leave. MAP: an AI interview in Bangla, English or Banglish turns her real duties into an evidence-backed Role Map and finds the ones she forgot. HOLD: colleagues cover them, and a change typed in plain words is re-planned. FIT: her return is planned around the arrangement she needs. AI proposes, rules check, people decide. Selected for Round 2 (the Concept Pitch) of Grameenphone FutureMakers 2026, Gender Equality & Inclusion, with Sadia Noman Tonni and Mohammad Mahadi Hasan. Nazha Tarannum Roza joined us to rebuild it properly as our Software Engineering Lab project.",
       tags: ['AI', 'FastAPI', 'React', 'SQLite'],
       link: 'https://github.com/SpicyFalcon619/shetu-prototype',
       icon: '/assets/icons/network.png'
