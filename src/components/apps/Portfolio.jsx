@@ -196,7 +196,7 @@ const Portfolio = ({ windowData }) => {
               {[
                 { label: 'Username', value: personal.gamertag },
                 { label: 'University', value: 'UIU - CSE' },
-                { label: 'Interests', value: 'Blockchain · Linux · AI' },
+                { label: 'Interests', value: 'AI / ML · Teaching · Linux' },
                 { label: 'Location', value: 'Bangladesh' },
               ].map(item => (
                 <div key={item.label} style={{ flex: '1 1 170px', backgroundColor: '#f5f8ff', border: '1px solid #d0daea', borderRadius: '4px', padding: '10px 14px' }}>
