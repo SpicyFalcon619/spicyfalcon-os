@@ -70,7 +70,7 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
       type: 'IoT + ML (team of 6)',
       description: 'A prevention-first smart plant-care system for the Electronics Lab. One ESP32 forecasts leaf-spot risk from temperature and humidity, irrigates in calibrated pulses, runs a fan and shade, monitors the reservoir and rain, and deters pests, streaming to a Flask dashboard over WiFi. A MobileNetV2 disease detector was retrained on 87,867 images across 38 classes, reaching 94.7% validation accuracy.',
       tags: ['ESP32', 'C++', 'Flask', 'MobileNetV2', 'Transfer Learning'],
-      link: 'https://spicyfalcon619.github.io/University/#/search/phytocast',
+      link: 'https://github.com/SpicyFalcon619/PhytoCast',
       icon: '/assets/icons/device-manager.png'
     },
     {
