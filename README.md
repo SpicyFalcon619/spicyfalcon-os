@@ -1,31 +1,62 @@
-# SpicyFalcon OS 🏁
+# SpicyFalcon OS
 
-A highly interactive, deeply nostalgic Windows 7 / 2010s era web portfolio built with React and Zustand.
-Designed to showcase complex state management, window stacking algorithms, and interaction design.
+**A portfolio you boot into.** SpicyFalcon OS recreates a Windows 7 desktop in the browser: draggable windows, a taskbar, a Start menu and a dozen working apps. My projects, skills and CV live inside it as files and programs.
 
-## Features
-- **Window Manager Core**: Bulletproof dragging, z-index arbitration, minimize/maximize.
-- **Desktop Shell**: Functional Start Menu, Taskbar, Draggable Desktop Icons, Context Menus.
-- **Dynamic Apps**: Built-in fully functional applications including MS Paint clone, Calculator, Command Prompt, Internet Explorer frame, Retro Spotify Player (Spicetify), Minesweeper, Task Manager, Device Manager, Photo Viewer, and a comprehensive File Explorer (My Computer).
-- **Aesthetic**: CSS Custom Properties enforcing strict Aero Glass glassmorphism, drop shadows, and authentic period UI components.
-- **Project Showcase**: Custom "Spicyver" system information panel and text-based portfolio viewers.
+**[spicyfalcon-os.vercel.app](https://spicyfalcon-os.vercel.app)** · [Résumé (PDF)](https://spicyfalcon-os.vercel.app/resume.pdf) · [Classic portfolio](https://spicyfalcon-portfolio.vercel.app)
 
-## Getting Started Locally
+![The SpicyFalcon OS desktop with its icons, the Start menu open and the taskbar](docs/screenshot.png)
 
-1. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-2. **Run Development Server**:
-   ```bash
-   npm run dev
-   ```
-3. **Build for Production**:
-   ```bash
-   npm run build
-   ```
-   The static files will be generated in the `dist` folder, ready to be deployed to Vercel, Netlify, or GitHub Pages.
+## What you can do
 
-## Documentation
+| On the desktop | What it is |
+|---|---|
+| **About Me.txt** | The portfolio app: about, skills, education and all projects, each opening its live site |
+| **Resume.pdf** | My CV in a document viewer, with Download and Open in new tab |
+| **My Computer** | A file explorer with quick links to GitHub, LinkedIn and email |
+| **Spicetify** | A Spotify-styled music player |
+| **Start menu** | MS Paint, Minesweeper, Command Prompt, Calculator, Task Manager, Device Manager, System Properties, Internet Explorer and more |
 
-For developers looking to understand the architecture or build their own version, please see the [Step-by-Step Developer Guide](./TUTORIAL.md).
+Windows drag, focus, minimise and maximise; icons can be rearranged; right-clicking the desktop opens a context menu. There is a boot screen, a screensaver and, if you look for it, a blue screen.
+
+## How it works
+
+- **Window manager:** a Zustand store ([`useWindowStore`](src/store/useWindowStore.js)) keeps every open window's position, size and stacking order; the focused window always comes to the front. Dragging uses pointer capture, so a window never drops when the mouse moves fast.
+- **Apps load on demand:** [`AppRouter`](src/components/apps/AppRouter.jsx) lazy-loads each program the first time it is opened, which keeps the first load small.
+- **One source of content:** bio, skills, education and projects live in [`src/data/portfolioData.js`](src/data/portfolioData.js) and feed the portfolio app, Notepad, the Start menu and System Properties.
+- **No secrets in the browser:** the music player asks a small Vercel function ([`api/playlist.js`](api/playlist.js)) for the playlist, so the Spotify credentials stay on the server. Without them it plays a saved playlist.
+- **Look and feel:** CSS custom properties recreate Aero glass, with [7.css](https://khang-nd.github.io/7.css/) for period-correct controls and Tabler icons.
+
+## Tech stack
+
+React 19, Vite, Zustand, Framer Motion, 7.css, Tabler Icons, mathjs (calculator), and a Vercel serverless function. Hosted on Vercel.
+
+## Run it locally
+
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # static output in dist/
+```
+
+The music player uses its saved playlist locally. To load the live Spotify playlist, set `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` and `SPOTIFY_PLAYLIST_ID` in Vercel (see [SETUP_SPICETIFY.md](SETUP_SPICETIFY.md)) and run `vercel dev`.
+
+## Project structure
+
+```text
+src/
+  components/
+    apps/        each program (Paint, Minesweeper, Portfolio, DocumentViewer, ...)
+    desktop/     desktop, icons, taskbar, Start menu, context menu
+    window/      the window frame and its draggable title bar
+    shared/      boot screen, screensaver, blue screen
+  store/         window, desktop and settings state (Zustand)
+  data/          portfolio content and the saved playlist
+api/             serverless function for the Spotify playlist
+public/          icons, wallpapers, audio, resume.pdf
+```
+
+[TUTORIAL.md](TUTORIAL.md) walks through how the whole system was built, phase by phase.
+
+## Credits
+
+The Windows 7 look is a tribute; Windows and its icons are trademarks of Microsoft. Music in the player belongs to its artists.

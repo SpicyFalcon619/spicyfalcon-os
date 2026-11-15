@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e3e8ef"/>
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e2463c"/>
+      <stop offset="1" stop-color="#b3221a"/>
+    </linearGradient>
+  </defs>
+  <path d="M10 3h19l9 9v32a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="url(#paper)" stroke="#7d8896" stroke-width="1"/>
+  <path d="M29 3v8a1 1 0 0 0 1 1h8" fill="#cfd6df" stroke="#7d8896" stroke-width="1" stroke-linejoin="round"/>
+  <g fill="#9aa5b3">
+    <rect x="14" y="17" width="18" height="1.6" rx=".8"/>
+    <rect x="14" y="21" width="20" height="1.6" rx=".8"/>
+    <rect x="14" y="25" width="16" height="1.6" rx=".8"/>
+  </g>
+  <rect x="6" y="30" width="27" height="11" rx="1.5" fill="url(#band)" stroke="#8e1a13" stroke-width=".8"/>
+  <text x="19.5" y="38.6" font-family="Segoe UI, Tahoma, sans-serif" font-size="8.2" font-weight="700" fill="#fff" text-anchor="middle">PDF</text>
+</svg>

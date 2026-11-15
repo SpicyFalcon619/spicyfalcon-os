@@ -18,6 +18,7 @@ const Portfolio = lazy(() => import('./Portfolio'));
 const MyComputer = lazy(() => import('./MyComputer'));
 const RecycleBin = lazy(() => import('./RecycleBin'));
 const DisplayProperties = lazy(() => import('./DisplayProperties'));
+const DocumentViewer = lazy(() => import('./DocumentViewer'));
 
 const AppRouter = ({ windowData }) => {
   const { component } = windowData;
@@ -41,6 +42,7 @@ const AppRouter = ({ windowData }) => {
       case 'my-computer': return <MyComputer windowData={windowData} />;
       case 'recycle-bin': return <RecycleBin windowData={windowData} />;
       case 'display-properties': return <DisplayProperties windowData={windowData} />;
+      case 'pdf': return <DocumentViewer windowData={windowData} />;
       case 'computer':
       case 'documents':
       case 'pictures':

@@ -6,7 +6,8 @@ const initialIcons = [
   { id: 'about-me',      title: 'About Me.txt',    icon: '/assets/icons/notepad.png',       component: 'portfolio', appData: { section: 'about' }, x: 20, y: 180 },
   { id: 'wastopia-icon', title: 'Wastopia',         icon: '/assets/icons/ie.png',            component: 'external-link', appData: { url: 'https://project-wastopia.vercel.app' }, x: 20, y: 260 },
   { id: 'spicetify-icon', title: 'Spicetify',       icon: '/assets/icons/spicetify.svg',     component: 'spicetify', x: 20, y: 340 },
-  { id: 'task-manager',  title: 'Task Manager',     icon: '/assets/icons/task-manager.svg',  x: 20, y: 420 }
+  { id: 'task-manager',  title: 'Task Manager',     icon: '/assets/icons/task-manager.svg',  x: 20, y: 420 },
+  { id: 'resume',        title: 'Resume.pdf',       icon: '/assets/icons/pdf.svg',           component: 'pdf', appData: { url: '/resume.pdf', fileName: 'Ahmad_Maruf_Hossain_CV.pdf' }, x: 110, y: 20 }
 ];
 
 const useDesktopStore = create((set) => ({
