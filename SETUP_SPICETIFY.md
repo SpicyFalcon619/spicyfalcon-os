@@ -19,18 +19,19 @@ Here is how you get your keys:
 2. You will see your **Client ID**. Copy this.
 3. Click **"View client secret"** to reveal your **Client Secret**. Copy this too.
 
-### 3. Add to your `.env` File
-Create a file named `.env` in the root of your project (where `package.json` is). Add the keys like this:
+### 3. Add the keys on the server, never in the browser
+The keys are read by the serverless function `api/playlist.js`, so the client secret never reaches the browser. Do **not** give them a `VITE_` prefix: Vite copies every `VITE_` variable into the public JavaScript bundle.
+
+In Vercel, open **Project Settings, then Environment Variables**, and add:
 
 ```env
-VITE_SPOTIFY_CLIENT_ID=your_client_id_here
-VITE_SPOTIFY_CLIENT_SECRET=your_client_secret_here
-VITE_SPOTIFY_PLAYLIST_ID=37i9dQZF1DXcBWIGoYBM5M
+SPOTIFY_CLIENT_ID=your_client_id_here
+SPOTIFY_CLIENT_SECRET=your_client_secret_here
+SPOTIFY_PLAYLIST_ID=37i9dQZF1DXcBWIGoYBM5M
 ```
 
-*(Note: The playlist ID above is "Today's Top Hits", but you can replace it with the ID of any public playlist! You can find a playlist ID in its share URL: `https://open.spotify.com/playlist/[PLAYLIST_ID]?si=...`)*
+*(The playlist ID above is "Today's Top Hits"; any public playlist works. The ID is in its share URL: `https://open.spotify.com/playlist/[PLAYLIST_ID]?si=...`)*
 
-### 4. Deploying to Vercel
-When you deploy this to Vercel, you must add these exact same variables to your Vercel project's **Environment Variables** settings.
+Then redeploy. Locally, `npm run dev` has no `/api` route, so Spicetify uses the saved fallback playlist; run `vercel dev` to test the live one.
 
-Once you restart your local dev server (`npm run dev`), Spicetify will start playing music!
+

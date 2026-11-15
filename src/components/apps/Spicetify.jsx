@@ -45,53 +45,15 @@ const Spicetify = ({ windowData }) => {
 
     const init = async () => {
       try {
-        const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-        const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-        const playlistId = import.meta.env.VITE_SPOTIFY_PLAYLIST_ID;
-
         let parsedTracks = [];
 
         try {
-          if (!clientId || !clientSecret || !playlistId) {
-            throw new Error('Spotify credentials missing.');
-          }
-
-          const tokenRes = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`
-            },
-            body: 'grant_type=client_credentials'
-          });
-          
-          if (!tokenRes.ok) throw new Error('Failed to fetch Spotify token');
-          const tokenData = await tokenRes.json();
-          const token = tokenData.access_token;
-
-          const plRes = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          
-          if (!plRes.ok) {
-            const errText = await plRes.text();
-            throw new Error(`Spotify API rejected request: ${errText.substring(0, 50)}...`);
-          }
-          
-          const plData = await plRes.json();
-          parsedTracks = plData.tracks.items
-            .filter(item => item.track)
-            .map(item => ({
-              id: item.track.id,
-              title: item.track.name,
-              artist: item.track.artists.map(a => a.name).join(', '),
-              album: item.track.album.name,
-              albumArt: item.track.album.images[0]?.url ?? null,
-              previewUrl: item.track.preview_url,
-              duration: item.track.duration_ms,
-              spotifyUrl: item.track.external_urls.spotify
-            }));
-
+          // The Spotify secret lives only in the serverless function (api/playlist.js), never in the browser.
+          const res = await fetch('/api/playlist');
+          if (!res.ok) throw new Error(`playlist endpoint ${res.status}`);
+          const data = await res.json();
+          if (!Array.isArray(data.tracks) || !data.tracks.length) throw new Error('empty playlist');
+          parsedTracks = data.tracks;
         } catch (err) {
           console.warn('Using user-extracted fallback playlist due to Spotify API error:', err.message);
           parsedTracks = fallbackPlaylist;
