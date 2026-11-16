@@ -96,7 +96,7 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
       id: 'shetu',
       name: 'Shetu',
       type: 'AI System (team project)',
-      description: "An AI system that keeps a job intact through a long leave, starting with maternity leave. MAP: an AI interview in Bangla, English or Banglish turns her real duties into an evidence-backed Role Map and finds the ones she forgot. HOLD: colleagues cover them, and a change typed in plain words is re-planned. FIT: her return is planned around the arrangement she needs. AI proposes, rules check, people decide. Selected for Round 2 (the Concept Pitch) of Grameenphone FutureMakers 2026, Gender Equality & Inclusion, with Sadia Noman Tonni and Mohammad Mahadi Hasan. Nazha Tarannum Roza joined us to rebuild it properly as our Software Engineering Lab project.",
+      description: "An AI system that keeps a job intact through a long leave, starting with maternity leave. MAP: an AI interview in Bangla, English or Banglish turns her real duties into an evidence-backed Role Map and finds the ones she forgot. HOLD: colleagues cover them, and a change typed in plain words is re-planned. FIT: her return is planned around the arrangement she needs. AI proposes, rules check, people decide. Selected for Round 2 (the Concept Pitch) of Grameenphone FutureMakers 2026, Gender Equality & Inclusion, with Sadia Noman Tonni and Mohammad Mahadi Hasan.",
       tags: ['AI', 'FastAPI', 'React', 'SQLite'],
       link: 'https://github.com/SpicyFalcon619/shetu-prototype',
       icon: '/assets/icons/network.png'
