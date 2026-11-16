@@ -65,7 +65,7 @@ const IconBarChart = ({ size = 14, color = 'currentColor' }) => (
 
 const Portfolio = ({ windowData }) => {
   const [activeTab, setActiveTab] = useState(windowData?.appData?.section || 'about');
-  const { personal, education, skills, projects } = portfolioData;
+  const { personal, education, skills, projects, research } = portfolioData;
 
   const openInBrowser = (e, url) => {
     e.preventDefault();
@@ -171,6 +171,7 @@ const Portfolio = ({ windowData }) => {
       <div style={{ display: 'flex', borderBottom: '1px solid #888', padding: '0 10px', paddingTop: '6px', flexShrink: 0, gap: '2px' }}>
         {[
           { id: 'about', label: 'About Me' },
+          { id: 'research', label: 'Research' },
           { id: 'skills', label: 'Skills' },
           { id: 'education', label: 'Education' },
           { id: 'projects', label: 'Projects' },
@@ -196,7 +197,7 @@ const Portfolio = ({ windowData }) => {
               {[
                 { label: 'Username', value: personal.gamertag },
                 { label: 'University', value: 'UIU - CSE' },
-                { label: 'Interests', value: 'AI / ML · Teaching · Linux' },
+                { label: 'Research', value: 'HCI · Human-Centred AI · NLP' },
                 { label: 'Location', value: 'Bangladesh' },
               ].map(item => (
                 <div key={item.label} style={{ flex: '1 1 170px', backgroundColor: '#f5f8ff', border: '1px solid #d0daea', borderRadius: '4px', padding: '10px 14px' }}>
@@ -209,10 +210,34 @@ const Portfolio = ({ windowData }) => {
             <div style={{ marginTop: '20px', padding: '12px 16px', background: 'linear-gradient(90deg,#f0f6ff,#e8f0fe)', border: '1px solid #bdd4f8', borderRadius: '4px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
               <IconTrophy size={16} color="#1a6dbd" />
               <div>
-                <div style={{ fontWeight: 'bold', fontSize: '12px', color: '#1a6dbd', marginBottom: '4px' }}>Achievement</div>
-                <div style={{ fontSize: '13px', color: '#2c3e50' }}>Won <strong>"Best Emerging Team"</strong> - Blockchain Category at UIU CSE FEST 2025 with <em>Wastopia</em>.</div>
+                <div style={{ fontWeight: 'bold', fontSize: '12px', color: '#1a6dbd', marginBottom: '4px' }}>Blockchain honours</div>
+                <div style={{ fontSize: '13px', color: '#2c3e50', lineHeight: 1.7 }}>
+                  <div><strong>Finalist</strong> - Blockchain Olympiad Bangladesh 2025 (Team Se7en)</div>
+                  <div><strong>Third place</strong> - Decentralized Edge Blockchain Competition, UIU Computer Club (Team Se7en)</div>
+                  <div><strong>Best Emerging Team</strong> - UIU CSE FEST 2025, with <em>Wastopia</em></div>
+                </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ── RESEARCH ── */}
+        {activeTab === 'research' && (
+          <div>
+            <div style={{ borderLeft: '4px solid #1a6dbd', paddingLeft: '12px', marginBottom: '18px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '6px', color: '#0a246a' }}>Research interests</div>
+              <div style={{ lineHeight: '1.7', color: '#333' }}>
+                AI that people can understand and stay in control of, from how it explains itself to how it handles Bangla and code-mixed Banglish.
+              </div>
+            </div>
+            {research.map(group => (
+              <div key={group.area} style={{ marginBottom: '18px' }}>
+                <SectionHeader icon={<IconBrain size={14} color="#0a246a" />} label={group.area} />
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                  {group.topics.map(t => skillBadge(t, '#d4e9ff'))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

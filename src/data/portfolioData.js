@@ -12,6 +12,11 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
     instagram: 'https://www.instagram.com/spicy_falconn/',
     avatar: '/assets/avatar.jpg'
   },
+  research: [
+    { area: 'Human-Computer Interaction', topics: ['Human-centred AI', 'Explainable and controllable AI', 'Interactive ML', 'AR/VR', 'Learning technology'] },
+    { area: 'Artificial Intelligence', topics: ['Machine learning', 'NLP for Bangla and code-mixed Banglish', 'Applied AI with people in the loop'] },
+    { area: 'Systems', topics: ['Blockchain', 'IoT and embedded systems'] }
+  ],
   education: [
     {
       degree: 'Bachelor of Science in Computer Science & Engineering',
@@ -157,6 +162,10 @@ CSE Undergrad • United International University
 ABOUT ME
 --------
 ${portfolioData.personal.bio}
+
+RESEARCH INTERESTS
+------------------
+${portfolioData.research.map(r => `${r.area}: ${r.topics.join(', ')}`).join('\n')}
 
 SKILLS
 ------
