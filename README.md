@@ -1,8 +1,8 @@
 # SpicyFalcon OS
 
-**A portfolio you boot into.** SpicyFalcon OS recreates a Windows 7 desktop in the browser: draggable windows, a taskbar, a Start menu and a dozen working apps. My projects, skills and CV live inside it as files and programs.
+**A portfolio you boot into.** SpicyFalcon OS recreates a Windows 7 desktop in the browser: draggable windows, a taskbar, a Start menu and a dozen working apps. My projects, skills and resume live inside it as files and programs.
 
-**[spicyfalcon-os.vercel.app](https://spicyfalcon-os.vercel.app)** · [Résumé (PDF)](https://spicyfalcon-os.vercel.app/resume.pdf) · [Classic portfolio](https://spicyfalcon619.github.io)
+**[spicyfalcon-os.vercel.app](https://spicyfalcon-os.vercel.app)** · [Resume (PDF)](https://spicyfalcon-os.vercel.app/resume.pdf) · [Classic portfolio](https://spicyfalcon619.github.io)
 
 ![The SpicyFalcon OS desktop with its icons, the Start menu open and the taskbar](docs/screenshot.png)
 
@@ -11,7 +11,7 @@
 | On the desktop | What it is |
 |---|---|
 | **About Me.txt** | The portfolio app: about, skills, education and all projects, each opening its live site |
-| **Resume.pdf** | My CV in a document viewer, with Download and Open in new tab |
+| **Resume.pdf** | My resume in a document viewer, with Download and Open in new tab |
 | **My Computer** | A file explorer with quick links to GitHub, LinkedIn and email |
 | **Spicetify** | A Spotify-styled music player |
 | **Start menu** | MS Paint, Minesweeper, Command Prompt, Calculator, Task Manager, Device Manager, System Properties, Internet Explorer and more |
