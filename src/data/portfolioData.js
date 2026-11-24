@@ -3,7 +3,7 @@ export const portfolioData = {
     name: 'Ahmad Maruf Hossain',
     gamertag: 'spicyfalcon619',
     tagline: 'CSE Undergrad • UIU',
-    bio: `I'm a CSE undergrad at United International University, in my 3rd year (8th trimester), and an Undergraduate Assistant for the Database Management System Lab. I build complete, working things: Nestly, a housing platform for UIU students built with three teammates; three interactive field guides that teach Java, machine learning and AI engineering with code you can run in the page; and Drawer 378, a searchable archive of my whole degree that other students use.
+    bio: `I'm a CSE undergrad at United International University, in my 3rd year (8th trimester), and an Undergraduate Assistant for the Database Management System Lab. I build complete, working things: Nestly, a housing platform for UIU students built with three teammates; three interactive field guides that teach Java, machine learning and AI engineering with code you can run in the page; and Drawer 378, a searchable archive of my whole degree that other students use. With Team Anomaly I also built Shetu, an AI copilot that keeps a job safe through maternity leave and other planned leave, which is in the Final Round of the International AI Builders Congress 2026.
 
 Right now I'm learning deep learning with PyTorch and working towards full AI applications (React, FastAPI and a model behind them). Off the keyboard: casual gaming, Rubik's cubes, and tuning my Arch Linux + Hyprland setup.`,
     email: 'a.marufhossain619@gmail.com',
@@ -39,6 +39,17 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
     soft: ['Teaching', 'Technical Writing', 'Problem Solving', 'Research', 'Team Collaboration']
   },
   projects: [
+    {
+      id: 'shetu',
+      name: 'Shetu',
+      type: 'AI Copilot (team project)',
+      description: "An AI copilot that keeps a job safe through a long leave: built around maternity leave, useful for any planned leave. MAP: an interview in Bangla, English or Banglish turns the employee's real duties into an evidence-backed Role Map, with an exact quote for every duty, and surfaces the ones they forgot. HOLD: the AI proposes cover for each duty, then nine deterministic rules check coverage, capacity and fairness; approval stays locked until every rule passes, and a change typed in plain words is re-checked. GUARD: at return, nothing moves to a colleague for good without the employee's agreement. The AI proposes, rules check, people decide. Deployed end to end (FastAPI, Next.js, PostgreSQL) with 31 automated tests, CI, an audit log and a model gateway (Groq with Gemini fallback; Claude and local models supported). Built by Team Anomaly with Sadia Noman Tonni, Mohammad Mahadi Hasan, Nazha Tarannum Roza and Rowshonur Rahman Rizvy. An earlier version reached Round 2 of Grameenphone FutureMakers 2026.",
+      tags: ['AI', 'FastAPI', 'Next.js', 'PostgreSQL', 'Team project'],
+      link: 'https://shetu-congress.vercel.app',
+      repoLink: 'https://github.com/SpicyFalcon619/shetu-congress',
+      extra: 'Final Round, International AI Builders Congress 2026 (InfraSphere AI domain).',
+      icon: '/assets/icons/network.png'
+    },
     {
       id: 'uiunest',
       name: 'Nestly',
@@ -96,15 +107,6 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
       link: 'https://project-wastopia.vercel.app',
       extra: 'Won "Best Emerging Team" in the Blockchain category at UIU CSE FEST 2025.',
       icon: '/assets/icons/recycle.png'
-    },
-    {
-      id: 'shetu',
-      name: 'Shetu',
-      type: 'AI System (team project)',
-      description: "An AI system that keeps a job intact through a long leave, starting with maternity leave. MAP: an AI interview in Bangla, English or Banglish turns her real duties into an evidence-backed Role Map and finds the ones she forgot. HOLD: colleagues cover them, and a change typed in plain words is re-planned. FIT: her return is planned around the arrangement she needs. AI proposes, rules check, people decide. Selected for Round 2 (the Concept Pitch) of Grameenphone FutureMakers 2026, Gender Equality & Inclusion, with Sadia Noman Tonni and Mohammad Mahadi Hasan.",
-      tags: ['AI', 'FastAPI', 'React', 'SQLite'],
-      link: 'https://github.com/SpicyFalcon619/shetu-prototype',
-      icon: '/assets/icons/network.png'
     },
     {
       id: 'yt-deepnote',
