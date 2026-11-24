@@ -212,7 +212,7 @@ const Portfolio = ({ windowData }) => {
               <div>
                 <div style={{ fontWeight: 'bold', fontSize: '12px', color: '#1a6dbd', marginBottom: '4px' }}>Honours</div>
                 <div style={{ fontSize: '13px', color: '#2c3e50', lineHeight: 1.7 }}>
-                  <div><strong>Finalist</strong> - International AI Builders Congress 2026, Final Round (InfraSphere AI), with <em>Shetu</em> (Team Anomaly)</div>
+                  <div><strong>Finalist</strong> - International AI Builders Congress 2026, Final Round (InfraSphere AI), with <em>Shetu</em> (Team_Anomaly)</div>
                   <div><strong>Finalist</strong> - Blockchain Olympiad Bangladesh 2025 (Team Se7en)</div>
                   <div><strong>Third place</strong> - Decentralized Edge Blockchain Competition, UIU Computer Club (Team Se7en)</div>
                   <div><strong>Best Emerging Team</strong> - UIU CSE FEST 2025, with <em>Wastopia</em></div>
