@@ -3,7 +3,7 @@ export const portfolioData = {
     name: 'Ahmad Maruf Hossain',
     gamertag: 'spicyfalcon619',
     tagline: 'CSE Undergrad • UIU',
-    bio: `I'm a CSE undergrad at United International University, in my 3rd year (8th trimester), and an Undergraduate Assistant for the Database Management System Lab. I build complete, working things: Nestly, a housing platform for UIU students built with three teammates; three interactive field guides that teach Java, machine learning and AI engineering with code you can run in the page; and Drawer 378, a searchable archive of my whole degree that other students use. With Team_Anomaly I also built Shetu, an AI copilot that keeps a job safe through maternity leave and other planned leave, which is in the Final Round of the International AI Builders Congress 2026.
+    bio: `I'm a CSE undergrad at United International University, in my 3rd year (8th trimester), and an Undergraduate Assistant for CSE lab courses. I build complete, working things: Nestly, a housing platform for UIU students built with three teammates; three interactive field guides that teach Java, machine learning and AI engineering with code you can run in the page; and Drawer 378, a searchable archive of my whole degree that other students use. With Team_Anomaly I also built Shetu, an AI copilot that keeps a job safe through maternity leave and other planned leave, which is in the Final Round of the International AI Builders Congress 2026.
 
 Right now I'm learning deep learning with PyTorch and working towards full AI applications (React, FastAPI and a model behind them). Off the keyboard: casual gaming, Rubik's cubes, and tuning my Arch Linux + Hyprland setup.`,
     email: 'a.marufhossain619@gmail.com',
@@ -22,7 +22,7 @@ Right now I'm learning deep learning with PyTorch and working towards full AI ap
       degree: 'Bachelor of Science in Computer Science & Engineering',
       institution: 'United International University',
       period: 'June 2024 - Present',
-      details: '3rd year, 8th trimester. Undergraduate Assistant for the Database Management System Lab since July 2026. Every course I have taken is archived and searchable in Drawer 378.',
+      details: '3rd year, 8th trimester. Undergraduate Assistant for CSE lab courses since July 2026 (the first was the Database Management System Lab). Every course I have taken is archived and searchable in Drawer 378.',
       courses: ['Data Structures & Algorithms I, II', 'Object Oriented Programming', 'Database Management Systems', 'System Analysis & Design', 'Electronics', 'Artificial Intelligence', 'Computer Architecture', 'Software Engineering']
     },
     {
